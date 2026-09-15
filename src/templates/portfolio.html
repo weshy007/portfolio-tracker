@@ -1,0 +1,816 @@
+{% extends "base.html" %}
+{% block title %}Portfolio Holdings - {{ super() }}{% endblock %}
+{% block content %}
+<section class="page-heading">
+  <div>
+    <p class="eyebrow">Portfolio Holdings</p>
+    <h1>Asset Portfolio & Holdings</h1>
+    <p>Manage all your assets across Stocks, MMFs, REITs, Bonds, SACCO, and Cash with real-time valuations.</p>
+  </div>
+</section>
+
+<div class="grid grid-2">
+  <!-- Asset Entry Card -->
+  <section class="card">
+    <div class="card-header">
+      <h2 class="card-title">Add new holding</h2>
+    </div>
+
+    <form id="holding-form" class="grid grid-2">
+      <!-- Category Selection with Helper Text -->
+      <div class="form-group grid-span-2">
+        <label for="holding-category">Asset Category</label>
+        <select id="holding-category" name="category_id" required></select>
+        <p id="category-helper-text" class="text-muted" style="font-size:0.8rem; margin-top:0.35rem; line-height:1.4; color:var(--primary-color);"></p>
+      </div>
+
+      <!-- Stock Selector Dropdown (Prepopulated from NSE Directory based on Mansa documentation) -->
+      <div id="stock-select-field" class="form-group grid-span-2 asset-detail" hidden>
+        <label for="holding-stock-select">Select NSE Listed Stock (Prepopulated)</label>
+        <select id="holding-stock-select">
+          <option value="">-- Choose NSE Stock to auto-fill Ticker & fetch Mansa price --</option>
+        </select>
+      </div>
+
+      <!-- Asset / Fund Name -->
+      <div class="form-group grid-span-2">
+        <label id="name-label" for="holding-name">Asset Name / Ticker</label>
+        <input id="holding-name" name="name" required maxlength="120" placeholder="e.g. SCOM, Safaricom, CIC MMF" list="nse-stocks-datalist">
+        <datalist id="nse-stocks-datalist"></datalist>
+        <!-- Ticker Quick Suggestion Chips for Stocks -->
+        <div id="stock-ticker-chips" class="ticker-suggestions" hidden>
+          <span class="text-muted" style="font-size:0.75rem; align-self:center;">Popular NSE:</span>
+          <span class="ticker-chip" data-ticker="SCOM" data-name="Safaricom Plc">SCOM</span>
+          <span class="ticker-chip" data-ticker="EQTY" data-name="Equity Group">EQTY</span>
+          <span class="ticker-chip" data-ticker="KCB" data-name="KCB Group">KCB</span>
+          <span class="ticker-chip" data-ticker="EABL" data-name="East African Breweries">EABL</span>
+          <span class="ticker-chip" data-ticker="BAT" data-name="BAT Kenya">BAT</span>
+          <span class="ticker-chip" data-ticker="ABSA" data-name="ABSA Bank Kenya">ABSA</span>
+          <span class="ticker-chip" data-ticker="SCBK" data-name="Standard Chartered">SCBK</span>
+          <span class="ticker-chip" data-ticker="COOP" data-name="Co-operative Bank">COOP</span>
+          <span class="ticker-chip" data-ticker="NCBA" data-name="NCBA Group">NCBA</span>
+        </div>
+      </div>
+
+      <!-- MMF Institution Selector (Specific for MMF) -->
+      <div id="institution-field" class="form-group grid-span-2 asset-detail" hidden>
+        <label for="holding-institution">Select Financial Institution</label>
+        <select id="holding-institution">
+          <option value="">-- Choose Institution to match yield --</option>
+        </select>
+        <p class="text-muted" style="font-size:0.78rem; margin-top:0.25rem;">
+          Selecting an institution automatically retrieves its daily effective yield from tracked PesaCalc rates.
+        </p>
+      </div>
+
+      <!-- Balance / Market Value (for non-unit assets) -->
+      <div id="balance-field" class="form-group grid-span-2">
+        <label id="balance-label" for="holding-amount">Current Balance / Market Value</label>
+        <input id="holding-amount" name="amount" type="number" min="0" step="0.01" placeholder="0.00">
+      </div>
+
+      <!-- Units / Shares Held -->
+      <div id="units-field" class="form-group asset-detail" hidden>
+        <label id="units-label" for="holding-units">Units / Shares Held</label>
+        <input id="holding-units" name="units" type="number" min="0" step="0.000001" placeholder="e.g. 1000">
+      </div>
+
+      <!-- Average Buy Price -->
+      <div id="buy-price-field" class="form-group asset-detail" hidden>
+        <label id="buy-price-label" for="holding-buy-price">Average Buy Price (KES)</label>
+        <input id="holding-buy-price" name="average_buy_price" type="number" min="0" step="0.0001" placeholder="e.g. 15.50">
+      </div>
+
+      <!-- Current Price per Unit (with Mansa API button) -->
+      <div id="current-price-field" class="form-group grid-span-2 asset-detail" hidden>
+        <div style="display:flex; justify-content:space-between; align-items:center;">
+          <label for="holding-current-price">Current Market Price (KES)</label>
+          <button id="btn-fetch-mansa" type="button" class="btn btn-sm btn-secondary" style="margin-bottom:0.25rem;">
+            ⚡ Fetch from Mansa API
+          </button>
+        </div>
+        <input id="holding-current-price" name="current_price" type="number" min="0" step="0.0001" placeholder="e.g. 17.20">
+        <span id="price-fetch-status" class="text-muted" style="font-size:0.75rem;"></span>
+      </div>
+
+      <!-- Annual Yield / Coupon Rate (%) -->
+      <div id="yield-field" class="form-group asset-detail" hidden>
+        <label id="yield-label" for="holding-rate">Annual Yield / Coupon (%)</label>
+        <input id="holding-rate" name="annual_rate" type="number" min="0" step="0.01" placeholder="e.g. 15.20">
+      </div>
+
+      <!-- Maturity Date -->
+      <div id="maturity-field" class="form-group asset-detail" hidden>
+        <label for="holding-maturity">Maturity Date <span class="text-muted">(optional)</span></label>
+        <input id="holding-maturity" name="maturity_date" type="date">
+      </div>
+
+      <!-- Dynamic Live Calculation Preview -->
+      <div id="calc-preview" class="calc-preview grid-span-2" hidden></div>
+
+      <!-- Guidance Notice -->
+      <p id="asset-guidance" class="notice grid-span-2">
+        Enter the asset details to track its value and performance.
+      </p>
+
+      <!-- Currency & Notes -->
+      <div class="form-group">
+        <label for="holding-currency">Currency</label>
+        <select id="holding-currency" name="currency"></select>
+      </div>
+      <div class="form-group">
+        <label for="holding-notes">Notes <span class="text-muted">(optional)</span></label>
+        <input id="holding-notes" name="notes" maxlength="500" placeholder="e.g. Brokerage, Custody, Notes">
+      </div>
+
+      <div class="form-group grid-span-2 form-actions">
+        <button id="btn-save-holding" class="btn btn-primary" style="width:100%;">Save Holding</button>
+      </div>
+    </form>
+  </section>
+
+  <!-- Categories Management Card -->
+  <section class="card">
+    <div class="card-header">
+      <h2 class="card-title">Asset Categories</h2>
+    </div>
+    <form id="category-form" class="inline-form">
+      <input name="name" required maxlength="80" placeholder="Custom category name">
+      <select name="category_type">
+        <option>Safety</option>
+        <option>Cash</option>
+        <option>Fixed Income</option>
+        <option selected>Equities</option>
+        <option>Real Estate</option>
+        <option>Retirement</option>
+        <option>Business</option>
+        <option>Alternative</option>
+        <option>Other</option>
+      </select>
+      <button class="btn btn-secondary">Add</button>
+    </form>
+    <div id="category-list" class="record-list"></div>
+    <div class="notice" style="margin-top:1rem; font-size:0.78rem;">
+      <strong>Asset Category Guide:</strong>
+      <ul style="margin:0.35rem 0 0 1rem; padding:0; display:flex; flex-direction:column; gap:0.25rem;">
+        <li><strong>Equities:</strong> Stocks (NSE & global) for growth and dividends.</li>
+        <li><strong>Fixed Income:</strong> MMFs, Bonds, & T-Bills for steady interest.</li>
+        <li><strong>Safety:</strong> Emergency reserves protecting against sudden shocks.</li>
+        <li><strong>Real Estate:</strong> Property & REITs for rental income and appreciation.</li>
+        <li><strong>Other:</strong> SACCO deposits (10-13% dividends) and Chamas.</li>
+      </ul>
+    </div>
+  </section>
+</div>
+
+<!-- Holdings List Section -->
+<section class="card">
+  <div class="card-header table-heading">
+    <div>
+      <h2 class="card-title">My Holdings</h2>
+      <!-- <p class="text-muted">All balances and valuations formatted to 2 decimal places.</p> -->
+    </div>
+    <select id="category-filter" aria-label="Filter holdings by category"></select>
+  </div>
+
+  <div id="holdings-empty" class="empty-state"></div>
+  <div id="holdings-content" class="table-wrapper" hidden>
+    <table>
+      <thead>
+        <tr>
+          <th>Asset / Ticker</th>
+          <th>Category</th>
+          <th class="numeric">Units</th>
+          <th class="numeric">Buy Price</th>
+          <th class="numeric">Current Price</th>
+          <th class="numeric">Current Value</th>
+          <th class="numeric">Profit / Loss</th>
+          <th>Rate / Yield</th>
+          <th aria-label="Actions"></th>
+        </tr>
+      </thead>
+      <tbody id="holdings-body"></tbody>
+    </table>
+  </div>
+</section>
+
+<!-- Allocation by Category Section -->
+<section class="card">
+  <div class="card-header">
+    <h2 class="card-title">Portfolio Allocation by Category</h2>
+  </div>
+  <div id="allocation-empty" class="empty-state"></div>
+  <div id="allocation-content" hidden>
+    <div class="allocation-visual">
+      <div id="allocation-chart" class="donut-chart">
+        <span id="allocation-chart-total"></span>
+      </div>
+      <p class="text-muted">Portfolio allocation normalized to base currency (KES).</p>
+    </div>
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Category</th>
+            <th class="numeric">Base Value (KES)</th>
+            <th class="numeric">Allocation Share</th>
+          </tr>
+        </thead>
+        <tbody id="allocation-body"></tbody>
+      </table>
+    </div>
+  </div>
+</section>
+
+<script type="module">
+import Storage from '/static/js/storage.js';
+import API from '/static/js/api.js';
+import { amount, button, currencies, emptyState, formatMoney, formatPercent, row, totalInBase } from '/static/js/ui.js';
+
+const defaults = [
+  ['NSE Stocks', 'Equities'],
+  ['Money Market Fund', 'Fixed Income'],
+  ['REITs', 'Real Estate'],
+  ['Government Bonds', 'Fixed Income'],
+  ['Treasury Bills', 'Fixed Income'],
+  ['Cash & Bank', 'Cash'],
+  ['Emergency Fund', 'Safety'],
+  ['SACCO', 'Other'],
+  ['US Stocks', 'Equities'],
+  ['Pension', 'Retirement'],
+  ['Business', 'Business'],
+  ['Crypto', 'Alternative'],
+  ['Other', 'Other'],
+];
+
+let cachedInstitutions = [];
+let cachedNSETickers = [];
+
+async function ensureCategories() {
+  const existing = await Storage.getAll(Storage.STORES.categories);
+  if (existing.length) return existing;
+  await Promise.all(
+    defaults.map(([name, category_type]) =>
+      Storage.setItem(Storage.STORES.categories, {
+        id: crypto.randomUUID(),
+        name,
+        category_type,
+        is_default: true,
+        created_at: new Date().toISOString(),
+      })
+    )
+  );
+  return Storage.getAll(Storage.STORES.categories);
+}
+
+function options(select, categories, includeAll = false) {
+  select.replaceChildren();
+  if (includeAll) select.add(new Option('All categories', ''));
+  categories.forEach(category => select.add(new Option(category.name, category.id)));
+}
+
+async function loadNSETickers() {
+  try {
+    cachedNSETickers = await API.getNSETickers();
+    const stockSelect = document.getElementById('holding-stock-select');
+    const datalist = document.getElementById('nse-stocks-datalist');
+    stockSelect.replaceChildren(new Option('-- Choose NSE Stock to auto-fill Ticker & fetch Mansa price --', ''));
+    datalist.replaceChildren();
+
+    cachedNSETickers.forEach(stock => {
+      const opt = new Option(`${stock.ticker} - ${stock.name} (${stock.sector})`, stock.ticker);
+      opt.dataset.ticker = stock.ticker;
+      opt.dataset.name = stock.name;
+      stockSelect.add(opt);
+
+      const dOpt = document.createElement('option');
+      dOpt.value = stock.ticker;
+      dOpt.label = `${stock.name} (${stock.sector})`;
+      datalist.append(dOpt);
+    });
+  } catch (err) {
+    console.warn('NSE tickers unavailable', err);
+  }
+}
+
+async function loadInstitutions() {
+  try {
+    cachedInstitutions = await API.getInstitutions();
+    const instSelect = document.getElementById('holding-institution');
+    instSelect.replaceChildren(new Option('-- Choose Institution to match yield --', ''));
+    cachedInstitutions.forEach(item => {
+      const opt = new Option(`${item.institution} (${item.yield_percentage}% p.a.)`, item.institution);
+      opt.dataset.yield = item.yield_percentage;
+      opt.dataset.fund = item.fund_name;
+      instSelect.add(opt);
+    });
+  } catch (err) {
+    console.warn('Institutions list unavailable', err);
+  }
+}
+
+const CATEGORY_DESCRIPTIONS = {
+  'NSE Stocks': '📊 Equities: Ownership shares in companies listed on the Nairobi Securities Exchange. Offers dividends and capital growth.',
+  'US Stocks': '🌐 Equities: Shares listed on US markets (NYSE, NASDAQ) providing global market exposure and USD dollar hedge.',
+  'Money Market Fund': '🏦 Fixed Income: Highly liquid unit trust investing in short-term interest instruments with 24-hr daily compound interest.',
+  'Government Bonds': '📜 Fixed Income: Medium to long-term Treasury debt securities (FXD and tax-free Infrastructure Bonds IFB) paying semi-annual coupons.',
+  'Treasury Bills': '⏳ Fixed Income: Short-term sovereign debt instruments issued at a discount with maturities of 91, 182, or 364 days.',
+  'REITs': '🏢 Real Estate: Real Estate Investment Trusts providing liquid exposure to commercial and residential real estate with rental yields.',
+  'SACCO': '🤝 Other: Cooperative society member deposits and share capital typically earning high annual dividends (10% - 13% p.a.).',
+  'Cash & Bank': '💵 Cash: Immediately accessible balances in checking accounts, savings accounts, or mobile money (M-Pesa).',
+  'Emergency Fund': '🛡️ Safety: 3 to 6 months of essential living expenses reserved in low-risk liquid accounts to protect against shocks.',
+  'Pension': '🌱 Retirement: Tax-advantaged retirement schemes (NSSF, umbrella schemes, individual retirement funds) for long-term growth.',
+  'Business': '💼 Business: Capital invested in private enterprises, operating businesses, or partnership equity.',
+  'Crypto': '⚡ Alternative: Digital assets with higher return potential and higher market volatility.',
+  'Other': '📦 Other: Miscellaneous investments, investment clubs (Chamas), and alternative holdings.',
+};
+
+function configureAssetFields(categories) {
+  const categoryId = document.getElementById('holding-category').value;
+  const category = categories.find(item => item.id === categoryId);
+  const name = category?.name || '';
+  const catType = category?.category_type || '';
+
+  // Update Category Helper Text
+  const helperEl = document.getElementById('category-helper-text');
+  if (helperEl) {
+    const desc = CATEGORY_DESCRIPTIONS[name] || `${catType}: Asset category for financial portfolio allocation.`;
+    helperEl.textContent = desc;
+  }
+
+  const isStock = /Stocks|Equities/i.test(name);
+  const isREIT = /REIT/i.test(name);
+  const isMMF = /Money Market/i.test(name);
+  const isBond = /Government Bonds|Treasury Bonds|Bonds/i.test(name);
+  const isTBill = /Treasury Bills|Bills/i.test(name);
+  const isSACCO = /SACCO/i.test(name);
+  const isUnitAsset = isStock || isREIT;
+
+  // Reset fields visibility
+  document.querySelectorAll('.asset-detail').forEach(field => field.hidden = true);
+  document.getElementById('stock-select-field').hidden = !isStock;
+  document.getElementById('stock-ticker-chips').hidden = !isStock;
+  document.getElementById('institution-field').hidden = !isMMF;
+
+  // Amount vs Units
+  const balanceField = document.getElementById('balance-field');
+  const amountInput = document.getElementById('holding-amount');
+  const balanceLabel = document.getElementById('balance-label');
+
+  if (isUnitAsset) {
+    balanceField.hidden = true;
+    amountInput.required = false;
+    document.getElementById('units-field').hidden = false;
+    document.getElementById('buy-price-field').hidden = false;
+    document.getElementById('current-price-field').hidden = false;
+    document.getElementById('units-label').textContent = isStock ? 'Shares Owned' : 'Units Held';
+    document.getElementById('buy-price-label').textContent = isStock ? 'Average Buy Price per Share (KES)' : 'Average Buy Price per Unit (KES)';
+  } else {
+    balanceField.hidden = false;
+    amountInput.required = true;
+    if (isMMF) {
+      balanceLabel.textContent = 'Current Principal Balance (KES)';
+    } else if (isBond) {
+      balanceLabel.textContent = 'Face Value / Bond Principal (KES)';
+    } else if (isTBill) {
+      balanceLabel.textContent = 'Face / Maturity Value (KES)';
+    } else if (isSACCO) {
+      balanceLabel.textContent = 'Deposit / Member Shares Balance (KES)';
+    } else {
+      balanceLabel.textContent = 'Current Balance / Market Value';
+    }
+  }
+
+  // Yield fields
+  if (isMMF || isBond || isTBill || isSACCO || isREIT) {
+    document.getElementById('yield-field').hidden = false;
+    const yieldLabel = document.getElementById('yield-label');
+    if (isMMF) yieldLabel.textContent = 'Daily Effective Annual Yield (%)';
+    else if (isBond) yieldLabel.textContent = 'Annual Coupon Rate (% p.a.)';
+    else if (isTBill) yieldLabel.textContent = 'Discount Rate / Annual Yield (%)';
+    else if (isSACCO) yieldLabel.textContent = 'Expected Dividend Rate on Deposits (%)';
+    else if (isREIT) yieldLabel.textContent = 'Distribution / Dividend Yield (%)';
+  }
+
+  if (isBond || isTBill) {
+    document.getElementById('maturity-field').hidden = false;
+  }
+
+  // Guidance texts
+  const guidance = document.getElementById('asset-guidance');
+  if (isStock) {
+    guidance.textContent = 'Stocks: Enter shares owned and average purchase price. Use Mansa API to fetch the latest closing price and compute profit/loss.';
+  } else if (isMMF) {
+    guidance.textContent = 'MMF: Select the financial institution to automatically match its yield. Daily compound interest accrues at (Yield / 365.25).';
+  } else if (isREIT) {
+    guidance.textContent = 'REITs: Track units held, acquisition price, and latest valuation with dividend distribution yield.';
+  } else if (isBond) {
+    guidance.textContent = 'Government Bonds (IFB/FXD): Enter face value and coupon rate. Semi-annual coupons and maturity are tracked.';
+  } else if (isTBill) {
+    guidance.textContent = 'Treasury Bills: Enter maturity face value, discount purchase price, and maturity date.';
+  } else if (isSACCO) {
+    guidance.textContent = 'SACCO: Track member deposits and expected annual interest/dividends on deposits.';
+  } else {
+    guidance.textContent = 'Enter current balance or market valuation. All calculations update dynamically.';
+  }
+
+  updateLivePreview();
+}
+
+function updateLivePreview() {
+  const categoryId = document.getElementById('holding-category').value;
+  const categories = window.__categories || [];
+  const category = categories.find(item => item.id === categoryId);
+  const name = category?.name || '';
+
+  const isStock = /Stocks|Equities/i.test(name);
+  const isREIT = /REIT/i.test(name);
+  const isMMF = /Money Market/i.test(name);
+  const isBond = /Government Bonds|Treasury Bonds|Bonds/i.test(name);
+  const preview = document.getElementById('calc-preview');
+
+  if (isStock || isREIT) {
+    const units = amount(document.getElementById('holding-units').value);
+    const buyPrice = amount(document.getElementById('holding-buy-price').value);
+    const currPrice = amount(document.getElementById('holding-current-price').value);
+
+    if (units > 0 && buyPrice > 0) {
+      const cost = units * buyPrice;
+      const val = currPrice > 0 ? units * currPrice : cost;
+      const pl = val - cost;
+      const plPct = cost > 0 ? (pl / cost) * 100 : 0;
+      const plClass = pl >= 0 ? 'text-positive' : 'text-negative';
+
+      preview.hidden = false;
+      preview.replaceChildren();
+      preview.innerHTML = `
+        <div class="calc-item"><span class="calc-label">Total Cost Basis</span><span class="calc-val">${formatMoney(cost)}</span></div>
+        <div class="calc-item"><span class="calc-label">Current Value</span><span class="calc-val">${formatMoney(val)}</span></div>
+        <div class="calc-item"><span class="calc-label">Gain / Loss</span><span class="calc-val ${plClass}">${formatMoney(pl)} (${formatPercent(plPct)})</span></div>
+      `;
+      return;
+    }
+  } else if (isMMF) {
+    const bal = amount(document.getElementById('holding-amount').value);
+    const rate = amount(document.getElementById('holding-rate').value);
+
+    if (bal > 0 && rate > 0) {
+      const dailyYield = rate / 100 / 365.25;
+      const dailyInterest = bal * dailyYield;
+      const annualInterest = bal * (rate / 100);
+
+      preview.hidden = false;
+      preview.replaceChildren();
+      preview.innerHTML = `
+        <div class="calc-item"><span class="calc-label">Principal Balance</span><span class="calc-val">${formatMoney(bal)}</span></div>
+        <div class="calc-item"><span class="calc-label">Daily Accrual (Est.)</span><span class="calc-val text-positive">${formatMoney(dailyInterest)}</span></div>
+        <div class="calc-item"><span class="calc-label">Expected Annual Return</span><span class="calc-val">${formatMoney(annualInterest)} (${rate.toFixed(2)}%)</span></div>
+      `;
+      return;
+    }
+  } else if (isBond) {
+    const face = amount(document.getElementById('holding-amount').value);
+    const coupon = amount(document.getElementById('holding-rate').value);
+
+    if (face > 0 && coupon > 0) {
+      const annualCoupon = face * (coupon / 100);
+      const semiAnnual = annualCoupon / 2;
+
+      preview.hidden = false;
+      preview.replaceChildren();
+      preview.innerHTML = `
+        <div class="calc-item"><span class="calc-label">Bond Face Value</span><span class="calc-val">${formatMoney(face)}</span></div>
+        <div class="calc-item"><span class="calc-label">Semi-Annual Coupon</span><span class="calc-val text-positive">${formatMoney(semiAnnual)}</span></div>
+        <div class="calc-item"><span class="calc-label">Annual Coupon Payout</span><span class="calc-val">${formatMoney(annualCoupon)}</span></div>
+      `;
+      return;
+    }
+  }
+
+  preview.hidden = true;
+}
+
+// Attach input listeners for live calculation
+['holding-units', 'holding-buy-price', 'holding-current-price', 'holding-amount', 'holding-rate'].forEach(id => {
+  const el = document.getElementById(id);
+  if (el) el.addEventListener('input', updateLivePreview);
+});
+
+// Stock select change listener
+document.getElementById('holding-stock-select').addEventListener('change', event => {
+  const ticker = event.target.value;
+  if (!ticker) return;
+  const stock = cachedNSETickers.find(s => s.ticker === ticker);
+  if (stock) {
+    document.getElementById('holding-name').value = `${stock.ticker} - ${stock.name}`;
+  } else {
+    document.getElementById('holding-name').value = ticker;
+  }
+  document.getElementById('btn-fetch-mansa').click();
+});
+
+// Ticker chip click
+document.getElementById('stock-ticker-chips').addEventListener('click', event => {
+  const chip = event.target.closest('.ticker-chip');
+  if (!chip) return;
+  document.getElementById('holding-name').value = chip.dataset.ticker;
+  document.getElementById('btn-fetch-mansa').click();
+});
+
+// Institution change listener
+document.getElementById('holding-institution').addEventListener('change', event => {
+  const opt = event.target.selectedOptions[0];
+  if (!opt || !opt.value) return;
+  if (opt.dataset.yield) {
+    document.getElementById('holding-rate').value = opt.dataset.yield;
+  }
+  if (opt.dataset.fund) {
+    document.getElementById('holding-name').value = opt.dataset.fund;
+  }
+  updateLivePreview();
+});
+
+// Mansa API fetch button
+document.getElementById('btn-fetch-mansa').addEventListener('click', async () => {
+  const nameInput = document.getElementById('holding-name');
+  const ticker = nameInput.value.trim().split(' ')[0].toUpperCase();
+  const statusSpan = document.getElementById('price-fetch-status');
+
+  if (!ticker) {
+    statusSpan.textContent = 'Please enter a ticker symbol first (e.g. SCOM).';
+    statusSpan.className = 'text-negative';
+    return;
+  }
+
+  statusSpan.textContent = `Fetching price for ${ticker} from Mansa API...`;
+  statusSpan.className = 'text-muted';
+
+  try {
+    const data = await API.getStockPrice(ticker);
+    document.getElementById('holding-current-price').value = data.price;
+    statusSpan.textContent = `✓ Mansa EOD Close: KES ${data.price.toFixed(2)}`;
+    statusSpan.className = 'text-positive';
+    updateLivePreview();
+  } catch (err) {
+    statusSpan.textContent = `Mansa API unavailable: ${err.message}. You may enter the price manually.`;
+    statusSpan.className = 'text-muted';
+  }
+});
+
+async function render() {
+  const categories = await ensureCategories();
+  window.__categories = categories;
+  await Promise.all([loadInstitutions(), loadNSETickers()]);
+
+  const holdings = await Storage.getAll(Storage.STORES.holdings);
+  const filter = document.getElementById('category-filter');
+  const selectedFilter = filter.value;
+  const categorySelect = document.getElementById('holding-category');
+  const selectedCategory = categorySelect.value;
+
+  options(categorySelect, categories);
+  categorySelect.value = selectedCategory || categories[0]?.id;
+  options(filter, categories, true);
+  filter.value = selectedFilter;
+
+  configureAssetFields(categories);
+
+  if (!document.getElementById('holding-currency').options.length) {
+    currencies.forEach(c => document.getElementById('holding-currency').add(new Option(c, c)));
+  }
+  document.getElementById('holding-currency').value = Storage.getBaseCurrency();
+
+  // Render categories management list
+  const categoryList = document.getElementById('category-list');
+  categoryList.replaceChildren();
+  categories.forEach(category => {
+    const item = document.createElement('div');
+    item.className = 'record-line';
+    const label = document.createElement('span');
+    label.textContent = `${category.name} · ${category.category_type}`;
+    item.append(label);
+    if (!category.is_default) {
+      item.append(
+        button('Delete', 'btn btn-sm btn-danger', async () => {
+          if (holdings.some(h => h.category_id === category.id)) {
+            return alert('Move or delete its holdings first.');
+          }
+          await Storage.deleteItem(Storage.STORES.categories, category.id);
+          render();
+        })
+      );
+    }
+    categoryList.append(item);
+  });
+
+  // Render holdings table
+  const visible = filter.value ? holdings.filter(h => h.category_id === filter.value) : holdings;
+  const body = document.getElementById('holdings-body');
+  body.replaceChildren();
+
+  for (const holding of visible) {
+    const cat = categories.find(c => c.id === holding.category_id);
+    const catName = cat?.name || 'Unknown';
+    const isStockOrREIT = /Stocks|REITs|Equities/i.test(catName);
+
+    const unitsDisplay = holding.units ? Number(holding.units).toLocaleString(undefined, { maximumFractionDigits: 4 }) : '—';
+    const buyPriceDisplay = holding.average_buy_price ? formatMoney(holding.average_buy_price, holding.currency) : '—';
+    const currentPriceDisplay = holding.current_price ? formatMoney(holding.current_price, holding.currency) : '—';
+    const valDisplay = formatMoney(holding.amount, holding.currency);
+
+    let plCell = { value: '—' };
+    if (isStockOrREIT && holding.units && holding.average_buy_price && holding.current_price) {
+      const cost = holding.units * holding.average_buy_price;
+      const val = holding.units * holding.current_price;
+      const pl = val - cost;
+      const plPct = cost > 0 ? (pl / cost) * 100 : 0;
+      const plClass = pl >= 0 ? 'numeric text-positive' : 'numeric text-negative';
+      plCell = { value: `${formatMoney(pl, holding.currency)} (${formatPercent(plPct)})`, className: plClass };
+    }
+
+    const rateDisplay = holding.annual_rate ? `${Number(holding.annual_rate).toFixed(2)}%` : '—';
+
+    const item = row([
+      { value: holding.name },
+      { value: catName },
+      { value: unitsDisplay, className: 'numeric' },
+      { value: buyPriceDisplay, className: 'numeric' },
+      { value: currentPriceDisplay, className: 'numeric' },
+      { value: valDisplay, className: 'numeric' },
+      plCell,
+      { value: rateDisplay },
+    ]);
+
+    const action = document.createElement('td');
+    action.append(
+      button('Delete', 'btn btn-sm btn-danger', async () => {
+        if (confirm(`Delete ${holding.name}?`)) {
+          await Storage.deleteItem(Storage.STORES.holdings, holding.id);
+          // Also clean up in market db if backend position exists
+          if (holding.backend_stock_id) {
+            try { await API.deleteStock(holding.backend_stock_id); } catch(e){}
+          }
+          if (holding.backend_mmf_id) {
+            try { await API.deleteMMFAccount(holding.backend_mmf_id); } catch(e){}
+          }
+          render();
+        }
+      })
+    );
+    item.append(action);
+    body.append(item);
+  }
+
+  document.getElementById('holdings-content').hidden = visible.length === 0;
+  if (!visible.length) {
+    emptyState(document.getElementById('holdings-empty'), 'Your portfolio is empty.', 'Add your first holding to start tracking your wealth.');
+  } else {
+    document.getElementById('holdings-empty').replaceChildren();
+  }
+
+  // Allocation calculation
+  const values = await Promise.all(holdings.map(async h => ({ h, value: await totalInBase([h], API) })));
+  const total = values.reduce((sum, item) => sum + item.value, 0);
+
+  const allocation = new Map();
+  values.forEach(({ h, value }) => {
+    const name = categories.find(c => c.id === h.category_id)?.name || 'Unknown';
+    allocation.set(name, (allocation.get(name) || 0) + value);
+  });
+
+  const sortedAllocation = [...allocation.entries()].sort((a, b) => b[1] - a[1]);
+  const allocationBody = document.getElementById('allocation-body');
+  allocationBody.replaceChildren();
+
+  sortedAllocation.forEach(([name, value]) => {
+    allocationBody.append(
+      row([
+        { value: name },
+        { value: formatMoney(value), className: 'numeric' },
+        { value: total ? `${((value / total) * 100).toFixed(2)}%` : '—', className: 'numeric' },
+      ])
+    );
+  });
+
+  const colors = ['#0f766e', '#10b981', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#334155'];
+  let offset = 0;
+  document.getElementById('allocation-chart').style.background = `conic-gradient(${sortedAllocation
+    .map(([, val], index) => {
+      const start = offset;
+      offset += total ? (val / total) * 100 : 0;
+      return `${colors[index % colors.length]} ${start}% ${offset}%`;
+    })
+    .join(',')})`;
+
+  document.getElementById('allocation-chart-total').textContent = formatMoney(total);
+  document.getElementById('allocation-content').hidden = !holdings.length;
+
+  if (!holdings.length) {
+    emptyState(document.getElementById('allocation-empty'), 'No allocation yet.', 'Allocation will appear after you add a holding.');
+  } else {
+    document.getElementById('allocation-empty').replaceChildren();
+  }
+}
+
+// Holding Form Submission
+document.getElementById('holding-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const data = new FormData(event.currentTarget);
+  const categories = window.__categories || [];
+  const categoryId = data.get('category_id');
+  const category = categories.find(c => c.id === categoryId);
+  const catName = category?.name || '';
+
+  const isStock = /Stocks|Equities/i.test(catName);
+  const isREIT = /REIT/i.test(catName);
+  const isMMF = /Money Market/i.test(catName);
+
+  const units = amount(data.get('units'));
+  const buyPrice = amount(data.get('average_buy_price'));
+  let currentPrice = amount(data.get('current_price'));
+  if (isStock && !currentPrice && buyPrice) currentPrice = buyPrice;
+
+  const value = (isStock || isREIT) && units && currentPrice
+    ? units * currentPrice
+    : amount(data.get('amount'));
+
+  const holdingId = crypto.randomUUID();
+  let backendStockId = null;
+  let backendMMFId = null;
+
+  // Sync with backend SQLite database for 24-hour update cadence
+  if (isStock) {
+    try {
+      const ticker = data.get('name').trim().split(' ')[0].toUpperCase();
+      const res = await API.createStock({
+        ticker,
+        exchange: 'NSE',
+        shares_owned: units,
+        average_buy_price: buyPrice,
+        current_price: currentPrice || buyPrice,
+      });
+      backendStockId = res.id;
+    } catch (e) {
+      console.warn('Backend stock sync error', e);
+    }
+  } else if (isMMF) {
+    try {
+      const res = await API.createMMFAccount({
+        fund_name: data.get('name').trim(),
+        current_principal_balance: value,
+      });
+      backendMMFId = res.id;
+    } catch (e) {
+      console.warn('Backend MMF sync error', e);
+    }
+  }
+
+  await Storage.setItem(Storage.STORES.holdings, {
+    id: holdingId,
+    name: data.get('name').trim(),
+    category_id: categoryId,
+    amount: value,
+    units: units || null,
+    average_buy_price: buyPrice || null,
+    current_price: currentPrice || null,
+    annual_rate: amount(data.get('annual_rate')) || null,
+    maturity_date: data.get('maturity_date') || null,
+    currency: data.get('currency'),
+    notes: data.get('notes').trim(),
+    backend_stock_id: backendStockId,
+    backend_mmf_id: backendMMFId,
+    created_at: new Date().toISOString(),
+    updated_at: new Date().toISOString(),
+  });
+
+  event.currentTarget.reset();
+  await render();
+  window.showToast?.('Holding saved successfully.');
+});
+
+// Category Form Submission
+document.getElementById('category-form').addEventListener('submit', async event => {
+  event.preventDefault();
+  const data = new FormData(event.currentTarget);
+  await Storage.setItem(Storage.STORES.categories, {
+    id: crypto.randomUUID(),
+    name: data.get('name').trim(),
+    category_type: data.get('category_type'),
+    is_default: false,
+    created_at: new Date().toISOString(),
+  });
+  event.currentTarget.reset();
+  render();
+});
+
+document.getElementById('holding-category').addEventListener('change', async () => {
+  configureAssetFields(await ensureCategories());
+});
+
+document.getElementById('category-filter').addEventListener('change', render);
+
+render().catch(error => {
+  emptyState(document.getElementById('holdings-empty'), 'Portfolio unavailable', error.message);
+});
+</script>
+{% endblock %}

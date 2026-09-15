@@ -1,0 +1,180 @@
+{% extends "base.html" %}
+
+{% block title %}Settings - {{ super() }}{% endblock %}
+
+{% block content %}
+<div class="grid grid-2">
+    <!-- Preferences -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">User Preferences</h3>
+        </div>
+
+        <div class="form-group">
+            <label for="base-currency">Base Currency</label>
+            <select id="base-currency">
+                <option value="KES">KES - Kenya Shilling</option>
+                <option value="USD">USD - US Dollar</option>
+                <option value="EUR">EUR - Euro</option>
+                <option value="GBP">GBP - British Pound</option>
+                <option value="ZAR">ZAR - South African Rand</option>
+                <option value="UGX">UGX - Uganda Shilling</option>
+                <option value="TZS">TZS - Tanzania Shilling</option>
+            </select>
+            <p class="text-sm text-muted" style="margin-top: 0.5rem;">
+                Used as default currency for new transactions
+            </p>
+        </div>
+
+        <div class="form-group" style="margin-top: 1.5rem;">
+            <label for="theme">Theme</label>
+            <select id="theme">
+                <option value="light">Light</option>
+                <option value="dark">Dark</option>
+                <option value="auto">Auto (System)</option>
+            </select>
+            <p class="text-sm text-muted" style="margin-top: 0.5rem;">
+                Choose your preferred visual theme
+            </p>
+        </div>
+    </div>
+
+    <!-- Data Management -->
+    <div class="card">
+        <div class="card-header">
+            <h3 class="card-title">Data Management</h3>
+        </div>
+
+        <button id="export-btn" class="btn btn-primary" style="width: 100%; margin-bottom: 1rem;">
+            📥 Export Data as JSON
+        </button>
+        <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">
+            Download all your financial data as a JSON file for backup
+        </p>
+
+        <button id="import-btn" class="btn btn-secondary" style="width: 100%; margin-bottom: 1rem;">
+            📤 Import Data
+        </button>
+        <input type="file" id="import-file" accept=".json" style="display: none;">
+        <p class="text-sm text-muted" style="margin-bottom: 1.5rem;">
+            Restore your data from a previously exported JSON file
+        </p>
+
+        <button id="delete-btn" class="btn btn-danger" style="width: 100%;">
+            🗑️ Delete All Data
+        </button>
+        <p class="text-sm text-muted" style="margin-top: 0.5rem;">
+            Permanently delete all financial data. This cannot be undone.
+        </p>
+    </div>
+</div>
+
+<!-- Privacy Notice -->
+<div class="card" style="background-color: #f0f9ff; border-left: 4px solid #0284c7;">
+    <div class="card-header">
+        <h3 class="card-title">🔒 Privacy & Security</h3>
+    </div>
+    <p>
+        Your financial data is stored <strong>locally on this device only</strong>. 
+        It is never sent to a remote server unless you explicitly choose to use a 
+        future cloud-sync feature. Your data is completely under your control.
+    </p>
+    <ul style="margin-top: 1rem; margin-left: 2rem;">
+        <li>✓ All calculations happen in your browser</li>
+        <li>✓ Data persists using browser's IndexedDB</li>
+        <li>✓ You can export or delete data anytime</li>
+        <li>✓ No cloud tracking or analytics</li>
+    </ul>
+</div>
+
+<script type="module">
+    import Storage from '/static/js/storage.js';
+
+    // Load preferences on page load
+    async function loadPreferences() {
+        const baseCurrency = Storage.getBaseCurrency();
+        const theme = Storage.getPreference('theme', 'light');
+        
+        document.getElementById('base-currency').value = baseCurrency;
+        document.getElementById('theme').value = theme;
+    }
+
+    // Save currency preference
+    document.getElementById('base-currency').addEventListener('change', (e) => {
+        Storage.setBaseCurrency(e.target.value);
+        alert('Base currency updated to ' + e.target.value);
+    });
+
+    // Save theme preference
+    document.getElementById('theme').addEventListener('change', (e) => {
+        Storage.setPreference('theme', e.target.value);
+        document.documentElement.dataset.theme = e.target.value === 'auto'
+            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
+            : e.target.value;
+        window.showToast?.('Theme preference saved');
+    });
+
+    // Export data
+    document.getElementById('export-btn').addEventListener('click', async () => {
+        try {
+            const data = await Storage.exportData();
+            const json = JSON.stringify(data, null, 2);
+            const blob = new Blob([json], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `portfolio-tracker-export-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            alert('✓ Data exported successfully');
+        } catch (error) {
+            alert('Error exporting data: ' + error.message);
+        }
+    });
+
+    // Import data
+    document.getElementById('import-btn').addEventListener('click', () => {
+        document.getElementById('import-file').click();
+    });
+
+    document.getElementById('import-file').addEventListener('change', async (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        try {
+            const text = await file.text();
+            const data = JSON.parse(text);
+            
+            if (!confirm('This will replace all your current data. Continue?')) {
+                return;
+            }
+
+            await Storage.importData(data);
+            alert('✓ Data imported successfully. Page will refresh...');
+            location.reload();
+        } catch (error) {
+            alert('Error importing data: ' + error.message);
+        }
+    });
+
+    // Delete all data
+    document.getElementById('delete-btn').addEventListener('click', async () => {
+        if (!confirm('Are you sure? This will delete ALL your financial data permanently.')) {
+            return;
+        }
+        if (!confirm('Last chance! Delete everything?')) {
+            return;
+        }
+
+        try {
+            await Storage.deleteAllData();
+            alert('✓ All data deleted. Page will refresh...');
+            location.reload();
+        } catch (error) {
+            alert('Error deleting data: ' + error.message);
+        }
+    });
+
+    loadPreferences();
+</script>
+{% endblock %}
