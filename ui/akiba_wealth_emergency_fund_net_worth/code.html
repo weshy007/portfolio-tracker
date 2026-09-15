@@ -1,0 +1,620 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Akiba Finance — Emergency Fund &amp; Net Worth Analysis</title>
+<!-- Google Fonts: Manrope, Inter, JetBrains Mono -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-on-surface": "#eaf1ff",
+            "surface-variant": "#d3e4fe",
+            "secondary-fixed": "#dae2fd",
+            "on-surface-variant": "#3e4947",
+            "primary-container": "#0f766e",
+            "surface-container-high": "#dce9ff",
+            "surface": "#f8f9ff",
+            "primary-fixed-dim": "#80d5cb",
+            "background": "#f8f9ff",
+            "on-primary-fixed-variant": "#00504a",
+            "outline-variant": "#bdc9c6",
+            "error-container": "#ffdad6",
+            "surface-dim": "#cbdbf5",
+            "on-secondary-fixed": "#131b2e",
+            "surface-bright": "#f8f9ff",
+            "surface-container": "#e5eeff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-primary-container": "#a3faef",
+            "on-background": "#0b1c30",
+            "on-error-container": "#93000a",
+            "surface-container-highest": "#d3e4fe",
+            "tertiary-fixed-dim": "#4edea3",
+            "on-error": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "on-secondary-container": "#5c647a",
+            "secondary-fixed-dim": "#bec6e0",
+            "error": "#ba1a1a",
+            "primary-fixed": "#9cf2e8",
+            "surface-container-lowest": "#ffffff",
+            "inverse-surface": "#213145",
+            "secondary-container": "#dae2fd",
+            "tertiary-fixed": "#6ffbbe",
+            "on-tertiary-fixed": "#002113",
+            "secondary": "#565e74",
+            "on-surface": "#0b1c30",
+            "on-tertiary-container": "#99ffcd",
+            "surface-tint": "#006a63",
+            "on-primary": "#ffffff",
+            "tertiary-container": "#007952",
+            "outline": "#6e7977",
+            "tertiary": "#005e3f",
+            "on-secondary": "#ffffff",
+            "inverse-primary": "#80d5cb",
+            "on-secondary-fixed-variant": "#3f465c",
+            "on-primary-fixed": "#00201d",
+            "primary": "#005c55",
+            "surface-container-low": "#eff4ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem",
+            "gutter-mobile": "1rem",
+            "gutter": "1.5rem",
+            "margin-mobile": "1rem",
+            "space-md": "1rem",
+            "margin": "2rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2rem"
+          },
+          "fontFamily": {
+            "display-lg": ["Manrope"],
+            "headline-lg": ["Manrope"],
+            "body-sm": ["Inter"],
+            "label-currency-lg": ["Manrope"],
+            "label-numeric": ["JetBrains Mono"],
+            "display-lg-mobile": ["Manrope"],
+            "label-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-md": ["Manrope"],
+            "title-sm": ["Inter"],
+            "headline-xl": ["Manrope"]
+          },
+          "fontSize": {
+            "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "label-currency-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-numeric": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "title-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+            "headline-xl": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+  </style>
+</head>
+<body class="bg-surface text-on-surface antialiased min-h-screen flex">
+<!-- ========================================================================= -->
+<!-- SIDE NAVIGATION (Shared Component: SideNavBar)                            -->
+<!-- ========================================================================= -->
+<aside class="fixed top-0 left-0 h-screen w-64 flex flex-col justify-between bg-surface border-r border-outline-variant shadow-sm z-30 shrink-0">
+<div class="p-4 flex flex-col gap-6">
+<!-- Brand Anchor Header -->
+<div class="flex items-center gap-3 px-2 pt-2">
+<div class="w-10 h-10 rounded-xl bg-primary flex items-center justify-center text-on-primary font-headline-md text-headline-md shadow-sm">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">savings</span>
+</div>
+<div>
+<h1 class="text-headline-md font-headline-md font-bold text-primary tracking-tight">Akiba Finance</h1>
+<p class="text-label-sm font-label-sm text-secondary">Base: KES</p>
+</div>
+</div>
+<!-- Action Button CTA -->
+<button class="w-full h-10 px-4 rounded-lg bg-primary-container text-on-primary font-title-sm text-title-sm flex items-center justify-center gap-2 hover:bg-primary transition-colors active:scale-95 duration-150 shadow-sm">
+<span class="material-symbols-outlined text-xl">add</span>
+<span>Add Transaction</span>
+</button>
+<!-- Nav Items List -->
+<nav class="flex flex-col gap-1">
+<!-- 1. Dashboard -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" href="#dashboard">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- 2. Portfolio -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" href="#portfolio">
+<span class="material-symbols-outlined">account_balance</span>
+<span>Portfolio</span>
+</a>
+<!-- 3. Budget -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" href="#budget">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span>Budget</span>
+</a>
+<!-- 4. Monthly Allocation -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" href="#monthly-allocation">
+<span class="material-symbols-outlined">pie_chart</span>
+<span>Monthly Allocation</span>
+</a>
+<!-- 5. Emergency Fund (ACTIVE TARGET) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-title-sm text-title-sm active:scale-98" href="#emergency-fund">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">savings</span>
+<span>Emergency Fund</span>
+</a>
+<!-- 6. Net Worth -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" href="#net-worth">
+<span class="material-symbols-outlined">trending_up</span>
+<span>Net Worth</span>
+</a>
+<!-- 7. Projection -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" href="#projection">
+<span class="material-symbols-outlined">query_stats</span>
+<span>Projection</span>
+</a>
+</nav>
+</div>
+<!-- Footer Controls -->
+<div class="p-4 border-t border-outline-variant/60 flex flex-col gap-2">
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" href="#settings">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</a>
+<div class="flex items-center gap-2 px-3 py-2 text-label-sm font-label-sm text-on-surface-variant bg-surface-container-low rounded-lg">
+<span class="material-symbols-outlined text-sm text-primary">cloud_done</span>
+<span>Local Encrypted Sync</span>
+</div>
+</div>
+</aside>
+<!-- ========================================================================= -->
+<!-- MAIN VIEW CANVAS                                                          -->
+<!-- ========================================================================= -->
+<div class="ml-64 flex-1 flex flex-col min-w-0 bg-background min-h-screen">
+<!-- Top Navigation Bar (Shared Component: TopNavBar) -->
+<header class="sticky top-0 z-20 flex justify-between items-center w-full px-6 py-3.5 bg-surface-container-lowest border-b border-outline-variant shadow-sm backdrop-blur-md">
+<div class="flex items-center gap-8">
+<span class="text-title-sm font-title-sm font-bold text-on-surface">Akiba Finance</span>
+<!-- Category Segment Links -->
+<nav class="hidden lg:flex items-center gap-6">
+<a class="text-secondary hover:text-on-surface font-body-md text-body-md pb-1" href="#">All</a>
+<a class="text-primary border-b-2 border-primary font-title-sm text-title-sm pb-1" href="#">Safety</a>
+<a class="text-secondary hover:text-on-surface font-body-md text-body-md pb-1" href="#">Cash</a>
+<a class="text-secondary hover:text-on-surface font-body-md text-body-md pb-1" href="#">Fixed Income</a>
+<a class="text-secondary hover:text-on-surface font-body-md text-body-md pb-1" href="#">Equities</a>
+<a class="text-secondary hover:text-on-surface font-body-md text-body-md pb-1" href="#">SACCO</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<!-- Currency Pill Indicator -->
+<div class="flex items-center bg-surface-container-low border border-outline-variant/60 rounded-md px-2.5 py-1 text-label-numeric font-label-numeric text-primary font-semibold">
+<span>KES</span>
+<span class="text-secondary mx-1">/</span>
+<span class="text-secondary hover:text-on-surface cursor-pointer">USD</span>
+</div>
+<!-- Sync and Notification Icons -->
+<button class="p-2 text-secondary hover:text-primary rounded-full hover:bg-surface-container transition-colors active:scale-95" title="Sync ledger">
+<span class="material-symbols-outlined text-xl">sync</span>
+</button>
+<button class="p-2 text-secondary hover:text-primary rounded-full hover:bg-surface-container transition-colors active:scale-95" title="Notifications">
+<span class="material-symbols-outlined text-xl">notifications</span>
+</button>
+<!-- Profile Avatar -->
+<div class="flex items-center gap-2 pl-2 border-l border-outline-variant">
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary font-title-sm text-title-sm flex items-center justify-center font-bold">
+            DK
+          </div>
+<span class="text-body-md font-body-md font-semibold text-on-surface hidden sm:inline">David</span>
+</div>
+</div>
+</header>
+<!-- Page Body -->
+<main class="p-8 max-w-[1440px] mx-auto w-full space-y-8">
+<!-- Breadcrumb + Page Headline -->
+<div class="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-secondary uppercase tracking-wider mb-1">
+<span>Wealth Protection</span>
+<span class="material-symbols-outlined text-xs">chevron_right</span>
+<span class="text-primary font-semibold">Resilience Engine</span>
+</div>
+<h2 class="text-headline-xl font-headline-xl text-on-surface">Emergency Fund &amp; Net Worth Analysis</h2>
+<p class="text-body-md font-body-md text-secondary mt-1">Institutional clarity for personal solvency and structured capital allocation.</p>
+</div>
+<!-- Quick Primary Action Group -->
+<div class="flex items-center gap-2.5">
+<button class="h-10 px-3.5 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface font-title-sm text-title-sm flex items-center gap-1.5 hover:bg-surface-container-low transition-colors shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-lg text-primary">tune</span>
+<span>Adjust Emergency Plan</span>
+</button>
+<button class="h-10 px-3.5 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface font-title-sm text-title-sm flex items-center gap-1.5 hover:bg-surface-container-low transition-colors shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-lg text-primary">add_card</span>
+<span>+ Add Liability</span>
+</button>
+<button class="h-10 px-4 rounded-lg bg-primary-container text-on-primary font-title-sm text-title-sm flex items-center gap-1.5 hover:bg-primary transition-colors shadow-sm active:scale-95">
+<span class="material-symbols-outlined text-lg">add_circle</span>
+<span>+ Add Asset</span>
+</button>
+</div>
+</div>
+<!-- ===================================================================== -->
+<!-- SECTION 1: EMERGENCY FUND ENGINE                                      -->
+<!-- ===================================================================== -->
+<section class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 space-y-6 shadow-sm">
+<!-- Emergency Fund Card Header -->
+<div class="flex flex-col md:flex-row md:items-center justify-between pb-5 border-b border-outline-variant/60 gap-4">
+<div class="flex items-center gap-3">
+<div class="w-10 h-10 rounded-lg bg-surface-container-low flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-2xl" style="font-variation-settings: 'FILL' 1;">verified_user</span>
+</div>
+<div>
+<div class="flex items-center gap-2">
+<h3 class="text-headline-md font-headline-md text-on-surface">Emergency Liquidity Reserve</h3>
+<span class="px-2 py-0.5 rounded-full bg-secondary-container text-on-secondary-container text-label-sm font-label-sm font-semibold">Tier 1 Safety</span>
+</div>
+<p class="text-body-sm font-body-sm text-secondary">Target based on KES 30,000 essential monthly living expenses.</p>
+</div>
+</div>
+<!-- Target Settings Selector Pills -->
+<div class="flex items-center bg-surface-container-low p-1 rounded-lg border border-outline-variant/50">
+<button class="px-3 py-1.5 rounded-md text-body-sm font-body-md text-secondary hover:text-on-surface transition-colors">3 Months</button>
+<button class="px-3.5 py-1.5 rounded-md text-body-sm font-title-sm bg-primary-container text-on-primary shadow-sm font-medium">6 Months</button>
+<button class="px-3 py-1.5 rounded-md text-body-sm font-body-md text-secondary hover:text-on-surface transition-colors">9 Months</button>
+<button class="px-3 py-1.5 rounded-md text-body-sm font-body-md text-secondary hover:text-on-surface transition-colors">12 Months</button>
+<button class="px-3 py-1.5 rounded-md text-body-sm font-body-md text-secondary hover:text-on-surface transition-colors">Custom</button>
+</div>
+</div>
+<!-- Hero Metric & Visual Progress Meter -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-center pt-2">
+<!-- Left Column: Hero Amount & Progress -->
+<div class="lg:col-span-7 space-y-4">
+<div class="flex items-baseline justify-between flex-wrap gap-2">
+<div>
+<span class="text-label-sm font-label-sm text-secondary uppercase tracking-wider block mb-1">Funded Progress</span>
+<div class="flex items-baseline gap-2">
+<span class="font-label-numeric text-primary text-headline-xl font-bold tracking-tight">KES 90,000</span>
+<span class="text-body-md font-body-md text-secondary">of KES 180,000 Target</span>
+</div>
+</div>
+<div class="text-right">
+<span class="inline-flex items-center px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-label-numeric font-bold text-headline-md">
+                  50.0% Funded
+                </span>
+</div>
+</div>
+<!-- Clean Rounded Progress Bar -->
+<div class="w-full bg-surface-container-low rounded-full h-4 p-0.5 border border-outline-variant/40">
+<div class="bg-primary-container h-full rounded-full transition-all duration-500 ease-out" style="width: 50%;"></div>
+</div>
+<!-- Contextual Expense Baseline Note -->
+<div class="flex items-center justify-between text-body-sm font-body-sm text-secondary pt-1">
+<span class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-base text-primary">local_fire_department</span>
+                Baseline Essential Burn: <strong class="text-on-surface font-label-numeric font-semibold">KES 30,000 / mo</strong>
+</span>
+<span class="text-tertiary font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-sm">check_circle</span> On Track
+              </span>
+</div>
+</div>
+<!-- Right Column: Coverage KPI Triad Cards -->
+<div class="lg:col-span-5 grid grid-cols-3 gap-3">
+<div class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant/40">
+<span class="text-label-sm font-label-sm text-secondary block">Current Coverage</span>
+<span class="text-headline-md font-headline-md font-bold text-on-surface block mt-1">3.0</span>
+<span class="text-body-sm font-body-sm text-primary font-medium">Months of Safety</span>
+</div>
+<div class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant/40">
+<span class="text-label-sm font-label-sm text-secondary block">Target Buffer</span>
+<span class="text-headline-md font-headline-md font-bold text-on-surface block mt-1">6.0</span>
+<span class="text-body-sm font-body-sm text-secondary">Months Desired</span>
+</div>
+<div class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant/40">
+<span class="text-label-sm font-label-sm text-secondary block">Remaining Needed</span>
+<span class="text-headline-md font-headline-md font-bold text-error block mt-1">90k</span>
+<span class="text-body-sm font-body-sm text-secondary font-label-numeric">KES to 100%</span>
+</div>
+</div>
+</div>
+<!-- Contribution-only Timeline Projection -->
+<div class="pt-4 border-t border-outline-variant/40">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary text-lg">calendar_month</span>
+<h4 class="text-title-sm font-title-sm font-semibold text-on-surface">Contribution-only Timeline Projection</h4>
+</div>
+<span class="text-label-sm font-label-sm text-secondary">Paced at <strong class="text-primary font-label-numeric font-semibold">KES 15,000 / month</strong></span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+<!-- Milestone 1 -->
+<div class="p-4 rounded-lg bg-surface-container-low/60 border border-outline-variant/40 flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-label-numeric font-bold text-body-sm shrink-0">
+                +3m
+              </div>
+<div class="space-y-1">
+<span class="text-label-sm font-label-sm text-secondary uppercase">In 3 Months</span>
+<p class="font-label-numeric text-headline-md font-bold text-on-surface">KES 135,000</p>
+<p class="text-body-sm font-body-sm text-primary font-medium">4.5 Months Coverage</p>
+</div>
+</div>
+<!-- Milestone 2 (Goal Complete) -->
+<div class="p-4 rounded-lg bg-secondary-container/40 border-2 border-primary/30 flex items-start gap-3 relative overflow-hidden">
+<div class="absolute top-2 right-2">
+<span class="px-2 py-0.5 bg-primary-container text-on-primary text-[10px] font-bold rounded">TARGET REACHED</span>
+</div>
+<div class="w-8 h-8 rounded-full bg-primary-container text-on-primary flex items-center justify-center font-label-numeric font-bold text-body-sm shrink-0">
+                +6m
+              </div>
+<div class="space-y-1">
+<span class="text-label-sm font-label-sm text-primary uppercase font-bold">In 6 Months</span>
+<p class="font-label-numeric text-headline-md font-bold text-on-surface">KES 180,000</p>
+<p class="text-body-sm font-body-sm text-tertiary font-semibold flex items-center gap-1">
+<span class="material-symbols-outlined text-xs">verified</span> Target reached 100%
+                </p>
+</div>
+</div>
+<!-- Milestone 3 (Surplus/Extended) -->
+<div class="p-4 rounded-lg bg-surface-container-low/60 border border-outline-variant/40 flex items-start gap-3">
+<div class="w-8 h-8 rounded-full bg-surface-container-high flex items-center justify-center text-primary font-label-numeric font-bold text-body-sm shrink-0">
+                +12m
+              </div>
+<div class="space-y-1">
+<span class="text-label-sm font-label-sm text-secondary uppercase">In 12 Months</span>
+<p class="font-label-numeric text-headline-md font-bold text-on-surface">KES 270,000</p>
+<p class="text-body-sm font-body-sm text-secondary">9.0 Months Surplus Coverage</p>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ===================================================================== -->
+<!-- SECTION 2: NET WORTH ANALYSIS                                         -->
+<!-- ===================================================================== -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Left 7 Cols: Net Worth Overview & Ratio Bar Chart -->
+<div class="lg:col-span-7 space-y-6">
+<!-- Net Worth Master Stat Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm space-y-6">
+<div class="flex items-center justify-between">
+<div>
+<span class="text-label-sm font-label-sm text-secondary uppercase tracking-wider">Total Consolidated Net Worth</span>
+<div class="flex items-center gap-3 mt-1">
+<h3 class="font-label-currency-lg text-display-lg font-bold text-on-surface tracking-tight">KES 650,000</h3>
+<span class="inline-flex items-center gap-0.5 px-2.5 py-1 rounded-full bg-surface-container-high text-primary font-label-numeric text-label-sm font-semibold">
+<span class="material-symbols-outlined text-xs">trending_up</span> +8.4% YoY
+                  </span>
+</div>
+</div>
+<button class="h-9 px-3 rounded-lg border border-outline-variant hover:bg-surface-container-low text-secondary hover:text-on-surface text-label-sm font-label-sm flex items-center gap-1.5 transition-colors">
+<span class="material-symbols-outlined text-base">download</span> Export Ledger
+              </button>
+</div>
+<!-- Assets vs Liabilities Balance Strip Ratio Chart -->
+<div class="space-y-3 pt-2">
+<div class="flex justify-between items-center text-body-sm font-body-sm">
+<span class="font-semibold text-on-surface flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary-container inline-block"></span>
+                  Gross Assets: <span class="font-label-numeric font-bold text-primary">KES 800,000</span> (84.2%)
+                </span>
+<span class="font-semibold text-on-surface flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-error inline-block"></span>
+                  Liabilities: <span class="font-label-numeric font-bold text-error">KES 150,000</span> (15.8%)
+                </span>
+</div>
+<!-- Segmented Ratio Bar -->
+<div class="h-6 w-full flex rounded-lg overflow-hidden p-0.5 bg-surface-container-low border border-outline-variant/40">
+<div class="bg-primary-container h-full rounded-l-md transition-all" style="width: 84.2%;" title="Assets: KES 800,000 (84.2%)"></div>
+<div class="bg-error h-full rounded-r-md transition-all" style="width: 15.8%;" title="Liabilities: KES 150,000 (15.8%)"></div>
+</div>
+<div class="flex justify-between text-label-sm font-label-sm text-secondary">
+<span>Asset-to-Debt Solvency Ratio: <strong class="text-on-surface font-label-numeric font-semibold">5.33x</strong></span>
+<span>Debt-to-Asset Load: <strong class="text-on-surface font-label-numeric font-semibold">18.75%</strong></span>
+</div>
+</div>
+<!-- Net Worth Delta Breakdown / Historical Context -->
+<div class="grid grid-cols-3 gap-4 pt-4 border-t border-outline-variant/60">
+<div>
+<span class="text-label-sm font-label-sm text-secondary uppercase block">Liquid Cash Cushion</span>
+<span class="font-label-numeric text-headline-md font-bold text-on-surface block mt-0.5">KES 535,000</span>
+<span class="text-body-sm font-body-sm text-primary">82.3% of Net Worth</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-secondary uppercase block">Illiquid Equity</span>
+<span class="font-label-numeric text-headline-md font-bold text-on-surface block mt-0.5">KES 265,000</span>
+<span class="text-body-sm font-body-sm text-secondary">Business &amp; Goods</span>
+</div>
+<div>
+<span class="text-label-sm font-label-sm text-secondary uppercase block">Annual Delta</span>
+<span class="font-label-numeric text-headline-md font-bold text-tertiary block mt-0.5">+KES 50,400</span>
+<span class="text-body-sm font-body-sm text-secondary">Net Expansion</span>
+</div>
+</div>
+</div>
+<!-- Interactive Ledger Tabs -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h4 class="text-title-sm font-title-sm font-bold text-on-surface">Asset Allocation Matrix</h4>
+<span class="text-label-sm font-label-sm text-secondary">4 Asset Categories Reported</span>
+</div>
+<div class="space-y-3">
+<!-- Asset Item 1 -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors border-b border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg">insights</span>
+</div>
+<div>
+<p class="text-body-md font-body-md font-semibold text-on-surface">Liquid Investments</p>
+<p class="text-body-sm font-body-sm text-secondary">MMF, SACCO shares &amp; T-Bills</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-numeric text-body-md font-bold text-on-surface">KES 485,000</p>
+<p class="text-label-sm font-label-sm text-secondary">60.6% of Assets</p>
+</div>
+</div>
+<!-- Asset Item 2 -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors border-b border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg">storefront</span>
+</div>
+<div>
+<p class="text-body-md font-body-md font-semibold text-on-surface">Business Equity</p>
+<p class="text-body-sm font-body-sm text-secondary">Retail venture stake</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-numeric text-body-md font-bold text-on-surface">KES 200,000</p>
+<p class="text-label-sm font-label-sm text-secondary">25.0% of Assets</p>
+</div>
+</div>
+<!-- Asset Item 3 -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors border-b border-outline-variant/30">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg">category</span>
+</div>
+<div>
+<p class="text-body-md font-body-md font-semibold text-on-surface">Other Tangible Assets</p>
+<p class="text-body-sm font-body-sm text-secondary">Hardware &amp; equipment</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-numeric text-body-md font-bold text-on-surface">KES 65,000</p>
+<p class="text-label-sm font-label-sm text-secondary">8.1% of Assets</p>
+</div>
+</div>
+<!-- Asset Item 4 -->
+<div class="flex items-center justify-between p-3 rounded-lg hover:bg-surface-container-low transition-colors">
+<div class="flex items-center gap-3">
+<div class="w-9 h-9 rounded-lg bg-surface-container-high flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-lg">payments</span>
+</div>
+<div>
+<p class="text-body-md font-body-md font-semibold text-on-surface">Cash &amp; On-call Deposits</p>
+<p class="text-body-sm font-body-sm text-secondary">Current accounts &amp; MPESA</p>
+</div>
+</div>
+<div class="text-right">
+<p class="font-label-numeric text-body-md font-bold text-on-surface">KES 50,000</p>
+<p class="text-label-sm font-label-sm text-secondary">6.3% of Assets</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right 5 Cols: Liabilities Breakdown & Financial Strategy Card -->
+<div class="lg:col-span-5 space-y-6">
+<!-- Liabilities Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm space-y-4">
+<div class="flex items-center justify-between pb-3 border-b border-outline-variant/50">
+<div>
+<span class="text-label-sm font-label-sm text-secondary uppercase">Total Outstanding Debt</span>
+<h4 class="font-label-numeric text-headline-lg font-bold text-error">KES 150,000</h4>
+</div>
+<span class="px-2.5 py-1 rounded-full bg-error-container text-on-error-container font-label-numeric font-semibold text-label-sm">
+                2 Obligations
+              </span>
+</div>
+<!-- Liabilities Ledger -->
+<div class="space-y-3">
+<div class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant/40 space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">account_balance</span>
+<span class="font-title-sm text-title-sm font-semibold text-on-surface">Bank Loan</span>
+</div>
+<span class="font-label-numeric text-body-md font-bold text-on-surface">KES 100,000</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-secondary">
+<span>Interest rate: 12.5% p.a.</span>
+<span>Due in 14 mos</span>
+</div>
+<div class="w-full bg-outline-variant/30 h-1.5 rounded-full overflow-hidden">
+<div class="bg-secondary h-full rounded-full" style="width: 66.6%;"></div>
+</div>
+</div>
+<div class="p-3.5 rounded-lg bg-surface-container-low border border-outline-variant/40 space-y-2">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary text-base">credit_card</span>
+<span class="font-title-sm text-title-sm font-semibold text-on-surface">Credit Facility</span>
+</div>
+<span class="font-label-numeric text-body-md font-bold text-on-surface">KES 50,000</span>
+</div>
+<div class="flex items-center justify-between text-body-sm font-body-sm text-secondary">
+<span>Revolving short-term</span>
+<span>Due in 30 days</span>
+</div>
+<div class="w-full bg-outline-variant/30 h-1.5 rounded-full overflow-hidden">
+<div class="bg-error h-full rounded-full" style="width: 33.4%;"></div>
+</div>
+</div>
+</div>
+<div class="pt-2">
+<button class="w-full py-2.5 rounded-lg border border-outline-variant hover:bg-surface-container-low text-primary font-title-sm text-title-sm flex items-center justify-center gap-2 transition-colors">
+<span class="material-symbols-outlined text-base">receipt_long</span>
+<span>Debt Amortization Schedule</span>
+</button>
+</div>
+</div>
+<!-- Strategy & Solvency Insights Card -->
+<div class="bg-surface-container-lowest rounded-xl border border-outline-variant p-6 shadow-sm space-y-4">
+<div class="flex items-center gap-2.5">
+<span class="material-symbols-outlined text-primary">lightbulb</span>
+<h4 class="text-title-sm font-title-sm font-bold text-on-surface">Akiba Wealth Advisory</h4>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-low/70 border border-outline-variant/40 space-y-2">
+<span class="text-label-sm font-label-sm text-primary font-bold uppercase">Optimal Priority</span>
+<p class="text-body-md font-body-md text-on-surface">
+                Your emergency fund currently holds <strong class="font-semibold">3.0 months</strong> of essentials. 
+                At a monthly contribution of <strong class="font-semibold font-label-numeric">KES 15,000</strong>, your 6-month buffer will be fully funded in exactly <strong class="font-semibold">6 months</strong> without altering your SACCO and investment cash flows.
+              </p>
+</div>
+<div class="space-y-2 pt-1">
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-secondary">
+<span class="material-symbols-outlined text-tertiary text-sm">check_circle</span>
+<span>Liquidity ratio exceeds institutional baseline (3.0x vs 1.5x)</span>
+</div>
+<div class="flex items-center gap-2 text-body-sm font-body-sm text-secondary">
+<span class="material-symbols-outlined text-tertiary text-sm">check_circle</span>
+<span>Zero unsecured high-interest consumer debt</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</body></html>

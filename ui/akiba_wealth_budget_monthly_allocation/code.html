@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Akiba Finance — Monthly Allocation</title>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "inverse-on-surface": "#eaf1ff",
+            "surface-variant": "#d3e4fe",
+            "secondary-fixed": "#dae2fd",
+            "on-surface-variant": "#3e4947",
+            "primary-container": "#0f766e",
+            "surface-container-high": "#dce9ff",
+            "surface": "#f8f9ff",
+            "primary-fixed-dim": "#80d5cb",
+            "background": "#f8f9ff",
+            "on-primary-fixed-variant": "#00504a",
+            "outline-variant": "#bdc9c6",
+            "error-container": "#ffdad6",
+            "surface-dim": "#cbdbf5",
+            "on-secondary-fixed": "#131b2e",
+            "surface-bright": "#f8f9ff",
+            "surface-container": "#e5eeff",
+            "on-tertiary-fixed-variant": "#005236",
+            "on-primary-container": "#a3faef",
+            "on-background": "#0b1c30",
+            "on-error-container": "#93000a",
+            "surface-container-highest": "#d3e4fe",
+            "tertiary-fixed-dim": "#4edea3",
+            "on-error": "#ffffff",
+            "on-tertiary": "#ffffff",
+            "on-secondary-container": "#5c647a",
+            "secondary-fixed-dim": "#bec6e0",
+            "error": "#ba1a1a",
+            "primary-fixed": "#9cf2e8",
+            "surface-container-lowest": "#ffffff",
+            "inverse-surface": "#213145",
+            "secondary-container": "#dae2fd",
+            "tertiary-fixed": "#6ffbbe",
+            "on-tertiary-fixed": "#002113",
+            "secondary": "#565e74",
+            "on-surface": "#0b1c30",
+            "on-tertiary-container": "#99ffcd",
+            "surface-tint": "#006a63",
+            "on-primary": "#ffffff",
+            "tertiary-container": "#007952",
+            "outline": "#6e7977",
+            "tertiary": "#005e3f",
+            "on-secondary": "#ffffff",
+            "inverse-primary": "#80d5cb",
+            "on-secondary-fixed-variant": "#3f465c",
+            "on-primary-fixed": "#00201d",
+            "primary": "#005c55",
+            "surface-container-low": "#eff4ff"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-sm": "0.5rem",
+            "space-lg": "1.5rem",
+            "gutter-mobile": "1rem",
+            "gutter": "1.5rem",
+            "margin-mobile": "1rem",
+            "space-md": "1rem",
+            "margin": "2rem",
+            "space-xs": "0.25rem",
+            "space-xl": "2rem"
+          },
+          "fontFamily": {
+            "display-lg": ["Manrope"],
+            "headline-lg": ["Manrope"],
+            "body-sm": ["Inter"],
+            "label-currency-lg": ["Manrope"],
+            "label-numeric": ["JetBrains Mono"],
+            "display-lg-mobile": ["Manrope"],
+            "label-sm": ["Inter"],
+            "body-lg": ["Inter"],
+            "body-md": ["Inter"],
+            "headline-md": ["Manrope"],
+            "title-sm": ["Inter"],
+            "headline-xl": ["Manrope"]
+          },
+          "fontSize": {
+            "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "label-currency-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-numeric": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "title-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+            "headline-xl": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }]
+          }
+        }
+      }
+    }
+  </script>
+</head>
+<body class="bg-surface text-on-surface font-body-md min-h-screen antialiased flex flex-col md:flex-row overflow-x-hidden selection:bg-primary selection:text-on-primary">
+<!-- Desktop SideNav Anchor from JSON -->
+<aside class="fixed top-0 left-0 h-screen w-64 flex flex-col justify-between bg-surface dark:bg-inverse-surface border-r border-outline-variant dark:border-outline shadow-sm z-30 hidden md:flex">
+<div class="w-64 h-full p-4 flex flex-col justify-between shrink-0">
+<div>
+<!-- Brand Header -->
+<div class="flex items-center gap-3 px-3 py-3 mb-6">
+<div class="w-9 h-9 rounded-lg bg-primary flex items-center justify-center text-on-primary shadow-sm">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+</div>
+<div>
+<div class="text-headline-md font-headline-md font-bold text-primary dark:text-inverse-primary tracking-tight">Akiba Finance</div>
+<div class="text-label-sm font-label-sm text-secondary">Base: KES</div>
+</div>
+</div>
+<!-- Main Navigation Links -->
+<nav class="space-y-1">
+<!-- Dashboard (Inactive) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span>Dashboard</span>
+</a>
+<!-- Portfolio (Inactive) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance</span>
+<span>Portfolio</span>
+</a>
+<!-- Budget (Inactive) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+<span>Budget</span>
+</a>
+<!-- Monthly Allocation (ACTIVE MATCH) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg bg-secondary-container text-on-secondary-container dark:bg-secondary dark:text-on-secondary font-title-sm text-title-sm" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">pie_chart</span>
+<span>Monthly Allocation</span>
+</a>
+<!-- Emergency Fund (Inactive) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[20px]">savings</span>
+<span>Emergency Fund</span>
+</a>
+<!-- Net Worth (Inactive) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[20px]">trending_up</span>
+<span>Net Worth</span>
+</a>
+<!-- Projection (Inactive) -->
+<a class="flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary dark:text-secondary-fixed-dim hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[20px]">query_stats</span>
+<span>Projection</span>
+</a>
+</nav>
+</div>
+<!-- Footer & Add CTA -->
+<div class="space-y-4 pt-4 border-t border-outline-variant">
+<button class="w-full bg-primary text-on-primary py-2.5 px-4 rounded-lg font-title-sm text-title-sm shadow hover:bg-primary-container transition-all flex items-center justify-center gap-2" onclick="document.getElementById('slideoutModal').classList.remove('translate-x-full')">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span>Add Transaction</span>
+</button>
+<a class="flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span>Settings</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main View Envelope -->
+<div class="md:pl-64 flex-1 flex flex-col min-w-0">
+<!-- TopNavBar Anchor from JSON -->
+<header class="bg-surface-container-lowest dark:bg-inverse-surface border-b border-outline-variant dark:border-outline shadow-sm sticky top-0 z-20">
+<div class="flex justify-between items-center w-full px-6 py-3.5">
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-2 md:hidden">
+<div class="w-7 h-7 rounded bg-primary flex items-center justify-center text-on-primary">
+<span class="material-symbols-outlined text-[16px]">account_balance_wallet</span>
+</div>
+<span class="text-title-sm font-title-sm font-bold text-on-surface">Akiba Finance</span>
+</div>
+<!-- Top Navigation Category Bar -->
+<nav class="hidden sm:flex items-center gap-5 text-label-sm font-label-sm">
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface font-body-md text-body-md pb-1" href="#">All</a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface font-body-md text-body-md pb-1" href="#">Safety</a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface font-body-md text-body-md pb-1" href="#">Cash</a>
+<a class="text-primary dark:text-inverse-primary border-b-2 border-primary dark:border-inverse-primary font-title-sm text-title-sm pb-1" href="#">Fixed Income</a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface font-body-md text-body-md pb-1" href="#">Equities</a>
+<a class="text-secondary dark:text-secondary-fixed-dim hover:text-on-surface font-body-md text-body-md pb-1" href="#">SACCO</a>
+</nav>
+</div>
+<div class="flex items-center gap-4">
+<!-- Currency switcher pill -->
+<span class="px-2.5 py-1 bg-surface-container rounded font-label-numeric text-label-numeric text-on-surface-variant flex items-center gap-1.5 border border-outline-variant">
+<span class="material-symbols-outlined text-[14px]">payments</span>
+<span>KES / USD</span>
+</span>
+<!-- Local storage sync badge -->
+<span class="hidden lg:flex items-center gap-1 text-label-sm font-label-sm text-tertiary px-2 py-0.5 rounded bg-emerald-50 text-emerald-800 border border-emerald-200">
+<span class="material-symbols-outlined text-[14px]">cloud_done</span>
+<span>Local Sync Ready</span>
+</span>
+<div class="flex items-center gap-1 text-secondary">
+<button class="p-1.5 rounded-lg hover:bg-surface-container transition-colors" title="Sync now">
+<span class="material-symbols-outlined text-[20px]">sync</span>
+</button>
+<button class="p-1.5 rounded-lg hover:bg-surface-container transition-colors" title="Notifications">
+<span class="material-symbols-outlined text-[20px]">notifications</span>
+</button>
+</div>
+<button class="bg-primary hover:bg-primary-container text-on-primary px-3.5 py-1.5 rounded-lg text-title-sm font-title-sm flex items-center gap-1.5 shadow-sm transition-transform active:scale-95" onclick="document.getElementById('slideoutModal').classList.remove('translate-x-full')">
+<span class="material-symbols-outlined text-[18px]">add</span>
+<span class="hidden sm:inline">+ Add Transaction</span>
+</button>
+</div>
+</div>
+</header>
+<!-- Content Workspace -->
+<main class="p-4 md:p-8 max-w-[1440px] w-full mx-auto space-y-6">
+<!-- Breadcrumb & Header Title Area -->
+<div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
+<div>
+<div class="flex items-center gap-2 text-label-sm font-label-sm text-secondary mb-1">
+<span>FINANCIAL PLANNING</span>
+<span class="material-symbols-outlined text-[12px]">chevron_right</span>
+<span class="text-primary font-semibold">MONTHLY ALLOCATION</span>
+</div>
+<h1 class="text-headline-xl font-headline-xl text-on-surface tracking-tight">Monthly Allocation Planning</h1>
+<p class="text-body-md font-body-md text-secondary">Target distribution model for zero-based income allocation (October 2024 Cycle).</p>
+</div>
+<!-- Segment Filter Tabs -->
+<div class="inline-flex p-1 bg-surface-container rounded-lg border border-outline-variant self-start md:self-auto">
+<button class="px-3.5 py-1.5 rounded-md text-label-sm font-label-sm text-secondary hover:text-on-surface transition-colors">
+            Budget Overview
+          </button>
+<button class="px-3.5 py-1.5 rounded-md bg-surface-container-lowest text-primary font-title-sm text-title-sm shadow-sm">
+            Monthly Allocation Plan
+          </button>
+<button class="px-3.5 py-1.5 rounded-md text-label-sm font-label-sm text-secondary hover:text-on-surface transition-colors">
+            Income Sources
+          </button>
+</div>
+</div>
+<!-- Top Summary Metrics Grid -->
+<div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+<!-- Metric 1: Monthly Inflow -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between text-label-sm font-label-sm text-secondary uppercase tracking-wider mb-2">
+<span>Monthly Inflow</span>
+<span class="material-symbols-outlined text-primary text-[18px]">south_east</span>
+</div>
+<div class="text-label-currency-lg font-label-currency-lg text-on-surface">
+            KES 100,000
+          </div>
+<div class="mt-2 flex items-center gap-1 text-label-sm font-label-sm text-tertiary">
+<span class="material-symbols-outlined text-[14px]">check_circle</span>
+<span>100% Verified Net Income</span>
+</div>
+</div>
+<!-- Metric 2: Planned Outflow -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between text-label-sm font-label-sm text-secondary uppercase tracking-wider mb-2">
+<span>Planned Outflow</span>
+<span class="material-symbols-outlined text-on-secondary-container text-[18px]">north_east</span>
+</div>
+<div class="text-label-currency-lg font-label-currency-lg text-on-surface">
+            KES 90,000
+          </div>
+<div class="mt-2 flex items-center gap-1 text-label-sm font-label-sm text-secondary">
+<span>Expenses • Savings • Investments</span>
+</div>
+</div>
+<!-- Metric 3: Monthly Surplus -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between text-label-sm font-label-sm text-secondary uppercase tracking-wider mb-2">
+<span>Monthly Surplus</span>
+<span class="material-symbols-outlined text-primary text-[18px]">savings</span>
+</div>
+<div class="text-label-currency-lg font-label-currency-lg text-primary">
+            KES 10,000
+          </div>
+<div class="mt-2 flex items-center gap-1.5">
+<span class="px-2 py-0.5 rounded-full bg-emerald-50 text-emerald-800 text-label-sm font-label-sm font-semibold">
+              +10.0% Buffer
+            </span>
+<span class="text-label-sm font-label-sm text-secondary">Discretionary</span>
+</div>
+</div>
+<!-- Metric 4: Allocation Status -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm relative overflow-hidden">
+<div class="flex items-center justify-between text-label-sm font-label-sm text-secondary uppercase tracking-wider mb-1">
+<span>Allocation Status</span>
+<span class="px-2 py-0.5 text-label-sm font-label-sm rounded font-bold bg-primary text-on-primary">Healthy</span>
+</div>
+<div class="text-label-currency-lg font-label-currency-lg text-on-surface">
+            90% Allocated
+          </div>
+<!-- Progress bar -->
+<div class="w-full bg-surface-container rounded-full h-2 mt-3 overflow-hidden">
+<div class="bg-primary h-2 rounded-full transition-all duration-500" style="width: 90%"></div>
+</div>
+<div class="flex justify-between items-center mt-1 text-label-sm font-label-sm text-secondary">
+<span>KES 90,000 deployed</span>
+<span>KES 10,000 free</span>
+</div>
+</div>
+</div>
+<!-- Overallocated State Demo Card / Alert Banner -->
+<div class="hidden p-4 rounded-xl bg-error-container border border-error/30 text-on-error-container flex items-start justify-between shadow-sm" id="overallocatedBanner">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error text-[24px]">warning</span>
+<div>
+<div class="font-title-sm text-title-sm font-bold text-error">Overallocated by KES 5,000</div>
+<div class="text-body-md font-body-md text-on-error-container">Total planned allocation currently sits at 105% (KES 105,000). Rebalance or lower discretionary commitments before committing this cycle.</div>
+</div>
+</div>
+<button class="text-error font-semibold hover:underline text-body-sm font-body-sm shrink-0 ml-4" onclick="toggleOverallocated(false)">Dismiss Warning</button>
+</div>
+<!-- Demo State Simulator Bar -->
+<div class="flex items-center justify-between px-4 py-2.5 rounded-lg bg-surface-container border border-outline-variant text-label-sm font-label-sm text-secondary">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-[16px] text-primary">tune</span>
+<span>Interactive Preview: Test Plan Behavior</span>
+</div>
+<div class="flex items-center gap-3">
+<span>Simulate Limit Breach:</span>
+<button class="px-2.5 py-1 rounded bg-surface-container-lowest text-on-surface border border-outline-variant font-label-sm text-label-sm hover:bg-surface transition-colors" id="toggleLimitBtn" onclick="toggleSimulatedOverallocated()">
+            Toggle Overallocated Alert
+          </button>
+</div>
+</div>
+<!-- Bento Grid: Income Breakdown Matrix (8 Cols + 4 Cols) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- Left 8 Columns: "Where Your Income Goes" Breakdown Cards -->
+<div class="lg:col-span-8 space-y-4">
+<div class="flex items-center justify-between">
+<h2 class="text-headline-md font-headline-md text-on-surface">Where Your Income Goes</h2>
+<span class="text-label-sm font-label-sm text-secondary">KES 100,000 Base Inflow</span>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+<!-- Card 1: Essential Expenses (55%) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary"></span>
+<h3 class="font-title-sm text-title-sm text-on-surface font-semibold">Essential Expenses</h3>
+</div>
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm font-bold bg-secondary-container text-on-secondary-fixed">Essential</span>
+</div>
+<div class="flex items-baseline justify-between">
+<div class="text-label-currency-lg font-label-currency-lg text-on-surface">KES 55,000</div>
+<div class="font-label-numeric text-label-numeric text-secondary font-semibold">55% Share</div>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-primary h-1.5 rounded-full" style="width: 55%"></div>
+</div>
+<!-- Sub item line elements -->
+<div class="pt-2 border-t border-surface-container text-body-sm font-body-sm space-y-1.5">
+<div class="flex justify-between text-secondary">
+<span>Rent &amp; Living Space</span>
+<span class="font-label-numeric text-label-numeric text-on-surface">KES 25,000</span>
+</div>
+<div class="flex justify-between text-secondary">
+<span>Food &amp; Groceries</span>
+<span class="font-label-numeric text-label-numeric text-on-surface">KES 15,000</span>
+</div>
+<div class="flex justify-between text-secondary">
+<span>Utilities &amp; Transport</span>
+<span class="font-label-numeric text-label-numeric text-on-surface">KES 15,000</span>
+</div>
+</div>
+</div>
+<!-- Card 2: Savings & Emergency (15%) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-tertiary"></span>
+<h3 class="font-title-sm text-title-sm text-on-surface font-semibold">Savings &amp; Emergency</h3>
+</div>
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm font-bold bg-emerald-100 text-emerald-800">Safety Buffer</span>
+</div>
+<div class="flex items-baseline justify-between">
+<div class="text-label-currency-lg font-label-currency-lg text-on-surface">KES 15,000</div>
+<div class="font-label-numeric text-label-numeric text-secondary font-semibold">15% Share</div>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-tertiary h-1.5 rounded-full" style="width: 15%"></div>
+</div>
+<div class="pt-2 border-t border-surface-container text-body-sm font-body-sm space-y-1.5">
+<div class="flex justify-between text-secondary">
+<span>Emergency Buffer (MMF)</span>
+<span class="font-label-numeric text-label-numeric text-on-surface">KES 15,000</span>
+</div>
+<div class="flex justify-between text-secondary">
+<span class="text-body-sm font-body-sm text-tertiary">Target coverage: 6 mos</span>
+<span class="font-label-numeric text-label-numeric text-secondary">Currently 4.2 mos</span>
+</div>
+</div>
+</div>
+<!-- Card 3: Investments (20%) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary"></span>
+<h3 class="font-title-sm text-title-sm text-on-surface font-semibold">Investments</h3>
+</div>
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm font-bold bg-surface-container text-secondary">Growth Assets</span>
+</div>
+<div class="flex items-baseline justify-between">
+<div class="text-label-currency-lg font-label-currency-lg text-on-surface">KES 20,000</div>
+<div class="font-label-numeric text-label-numeric text-secondary font-semibold">20% Share</div>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-secondary h-1.5 rounded-full" style="width: 20%"></div>
+</div>
+<div class="pt-2 border-t border-surface-container text-body-sm font-body-sm space-y-1.5">
+<div class="flex justify-between text-secondary">
+<span>US Equities VOO</span>
+<span class="font-label-numeric text-label-numeric text-on-surface">KES 10,000</span>
+</div>
+<div class="flex justify-between text-secondary">
+<span>NSE Safaricom</span>
+<span class="font-label-numeric text-label-numeric text-on-surface">KES 5,000</span>
+</div>
+<div class="flex justify-between text-secondary">
+<span>Stima SACCO</span>
+<span class="font-label-numeric text-label-numeric text-on-surface">KES 5,000</span>
+</div>
+</div>
+</div>
+<!-- Card 4: Unallocated Surplus (10%) -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm space-y-3">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary-container"></span>
+<h3 class="font-title-sm text-title-sm text-on-surface font-semibold">Unallocated Surplus</h3>
+</div>
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm font-bold bg-amber-100 text-amber-900">Flexible Cash</span>
+</div>
+<div class="flex items-baseline justify-between">
+<div class="text-label-currency-lg font-label-currency-lg text-primary">KES 10,000</div>
+<div class="font-label-numeric text-label-numeric text-secondary font-semibold">10% Share</div>
+</div>
+<div class="w-full bg-surface-container rounded-full h-1.5 overflow-hidden">
+<div class="bg-amber-400 h-1.5 rounded-full" style="width: 10%"></div>
+</div>
+<div class="pt-2 border-t border-surface-container text-body-sm font-body-sm space-y-1.5">
+<div class="flex justify-between text-secondary">
+<span>Discretionary Pocket</span>
+<span class="font-label-numeric text-label-numeric text-on-surface">KES 10,000</span>
+</div>
+<div class="text-body-sm font-body-sm text-secondary">
+                  Available for roll-over or unplanned lifestyle expenses.
+                </div>
+</div>
+</div>
+</div>
+</div>
+<!-- Right 4 Columns: Target Allocation Distribution Donut & Logic Summary -->
+<div class="lg:col-span-4 bg-surface-container-lowest border border-outline-variant rounded-xl p-5 shadow-sm flex flex-col justify-between">
+<div>
+<div class="flex items-center justify-between mb-4">
+<h3 class="text-headline-md font-headline-md text-on-surface">Distribution Ratio</h3>
+<span class="text-label-sm font-label-sm font-label-numeric text-secondary">55/15/20/10</span>
+</div>
+<!-- SVG Visualizer Ring mimicking high-clarity fintech donut -->
+<div class="relative flex items-center justify-center my-6">
+<svg class="w-48 h-48 transform -rotate-90" viewbox="0 0 100 100">
+<!-- Background ring -->
+<circle cx="50" cy="50" fill="transparent" r="38" stroke="#e2e8f0" stroke-width="12"></circle>
+<!-- Essential: 55% -> 55 * 2.3876 = 131.3 -->
+<circle cx="50" cy="50" fill="transparent" r="38" stroke="#005c55" stroke-dasharray="131.3 238.76" stroke-dashoffset="0" stroke-width="12"></circle>
+<!-- Investments: 20% -> 20 * 2.3876 = 47.75 -->
+<circle cx="50" cy="50" fill="transparent" r="38" stroke="#565e74" stroke-dasharray="47.75 238.76" stroke-dashoffset="-131.3" stroke-width="12"></circle>
+<!-- Savings: 15% -> 15 * 2.3876 = 35.8 -->
+<circle cx="50" cy="50" fill="transparent" r="38" stroke="#005e3f" stroke-dasharray="35.8 238.76" stroke-dashoffset="-179.05" stroke-width="12"></circle>
+<!-- Surplus: 10% -> 10 * 2.3876 = 23.8 -->
+<circle cx="50" cy="50" fill="transparent" r="38" stroke="#f59e0b" stroke-dasharray="23.8 238.76" stroke-dashoffset="-214.85" stroke-width="12"></circle>
+</svg>
+<!-- Center Metric Text -->
+<div class="absolute inset-0 flex flex-col items-center justify-center text-center">
+<span class="text-label-sm font-label-sm text-secondary uppercase tracking-wider">Total Net</span>
+<span class="text-title-sm font-title-sm font-bold text-on-surface font-headline-md">KES 100K</span>
+<span class="text-body-sm font-body-sm text-tertiary">90% Active</span>
+</div>
+</div>
+<!-- Legend Table -->
+<div class="space-y-2.5 text-body-sm font-body-sm">
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded bg-primary"></span>
+<span class="text-on-surface">Essential Living</span>
+</div>
+<span class="font-label-numeric text-label-numeric font-semibold">55%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded bg-secondary"></span>
+<span class="text-on-surface">Growth &amp; Equities</span>
+</div>
+<span class="font-label-numeric text-label-numeric font-semibold">20%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded bg-tertiary"></span>
+<span class="text-on-surface">Emergency Buffer</span>
+</div>
+<span class="font-label-numeric text-label-numeric font-semibold">15%</span>
+</div>
+<div class="flex items-center justify-between">
+<div class="flex items-center gap-2">
+<span class="w-2.5 h-2.5 rounded bg-amber-500"></span>
+<span class="text-on-surface">Surplus Reserve</span>
+</div>
+<span class="font-label-numeric text-label-numeric font-semibold">10%</span>
+</div>
+</div>
+</div>
+<!-- Quick insight pod -->
+<div class="mt-6 p-3 rounded-lg bg-surface-container text-label-sm font-label-sm text-on-surface-variant flex items-start gap-2.5">
+<span class="material-symbols-outlined text-primary text-[18px]">verified</span>
+<div>
+<span class="font-semibold text-on-surface">Sound Strategy:</span> In accordance with the 50/30/20 rule adjusted for Nairobi urban living, your 55% essential commitment remains within safe resiliency bounds.
+            </div>
+</div>
+</div>
+</div>
+<!-- Editable Planned Allocation Table Section -->
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl shadow-sm overflow-hidden">
+<div class="p-5 border-b border-surface-container flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+<div>
+<h2 class="text-headline-md font-headline-md text-on-surface">Planned Allocation Items</h2>
+<p class="text-body-md font-body-md text-secondary">Manage target monthly transfers and toggle active status.</p>
+</div>
+<div class="flex items-center gap-3">
+<button class="bg-primary hover:bg-primary-container text-on-primary px-4 py-2 rounded-lg text-title-sm font-title-sm flex items-center gap-2 transition-transform active:scale-95 shadow-sm" onclick="document.getElementById('slideoutModal').classList.remove('translate-x-full')">
+<span class="material-symbols-outlined text-[18px]">add_circle</span>
+<span>Add Planned Allocation</span>
+</button>
+</div>
+</div>
+<!-- Desktop Ledger Table -->
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface border-b border-outline-variant text-label-sm font-label-sm text-secondary uppercase tracking-wider">
+<th class="py-3.5 px-5">Item Name</th>
+<th class="py-3.5 px-4">Type</th>
+<th class="py-3.5 px-4">Category</th>
+<th class="py-3.5 px-4 text-right">Monthly Amount (KES)</th>
+<th class="py-3.5 px-4 text-right">Share %</th>
+<th class="py-3.5 px-4 text-center">Status</th>
+<th class="py-3.5 px-5 text-right">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-surface-container text-body-md font-body-md" id="allocationTableBody">
+<!-- Item 1: Rent -->
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-5 font-semibold text-on-surface flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">home</span>
+</div>
+<span>Rent</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm font-semibold bg-rose-50 text-rose-700 border border-rose-200">Expense</span>
+</td>
+<td class="py-3.5 px-4 text-secondary">Housing</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric font-semibold text-on-surface">25,000</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric text-secondary">25.0%</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="py-3.5 px-5 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 text-secondary hover:text-primary rounded"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 text-secondary hover:text-error rounded"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Item 2: Food & Groceries -->
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-5 font-semibold text-on-surface flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">shopping_cart</span>
+</div>
+<span>Food &amp; Groceries</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm font-semibold bg-rose-50 text-rose-700 border border-rose-200">Expense</span>
+</td>
+<td class="py-3.5 px-4 text-secondary">Living</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric font-semibold text-on-surface">15,000</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric text-secondary">15.0%</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="py-3.5 px-5 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 text-secondary hover:text-primary rounded"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 text-secondary hover:text-error rounded"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Item 3: Utilities & Transport -->
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-5 font-semibold text-on-surface flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-secondary-container text-on-secondary-container flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">commute</span>
+</div>
+<span>Utilities &amp; Transport</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm font-semibold bg-rose-50 text-rose-700 border border-rose-200">Expense</span>
+</td>
+<td class="py-3.5 px-4 text-secondary">Bills</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric font-semibold text-on-surface">15,000</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric text-secondary">15.0%</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="py-3.5 px-5 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 text-secondary hover:text-primary rounded"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 text-secondary hover:text-error rounded"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Item 4: Emergency Buffer -->
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-5 font-semibold text-on-surface flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-emerald-100 text-emerald-800 flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">shield</span>
+</div>
+<span>Emergency Buffer</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm font-semibold bg-emerald-50 text-emerald-800 border border-emerald-200">Saving</span>
+</td>
+<td class="py-3.5 px-4 text-secondary">Emergency Fund</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric font-semibold text-on-surface">15,000</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric text-secondary">15.0%</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="py-3.5 px-5 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 text-secondary hover:text-primary rounded"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 text-secondary hover:text-error rounded"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Item 5: US Equities VOO -->
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-5 font-semibold text-on-surface flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-surface-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">public</span>
+</div>
+<span>US Equities VOO</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm font-semibold bg-secondary-container text-on-secondary-container">Investment</span>
+</td>
+<td class="py-3.5 px-4 text-secondary">Global Equities</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric font-semibold text-on-surface">10,000</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric text-secondary">10.0%</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="py-3.5 px-5 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 text-secondary hover:text-primary rounded"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 text-secondary hover:text-error rounded"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Item 6: NSE Safaricom -->
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-5 font-semibold text-on-surface flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-surface-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">show_chart</span>
+</div>
+<span>NSE Safaricom</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm font-semibold bg-secondary-container text-on-secondary-container">Investment</span>
+</td>
+<td class="py-3.5 px-4 text-secondary">Local Equities</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric font-semibold text-on-surface">5,000</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric text-secondary">5.0%</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="py-3.5 px-5 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 text-secondary hover:text-primary rounded"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 text-secondary hover:text-error rounded"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+<!-- Item 7: Stima SACCO -->
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-5 font-semibold text-on-surface flex items-center gap-3">
+<div class="w-7 h-7 rounded-md bg-surface-container text-primary flex items-center justify-center">
+<span class="material-symbols-outlined text-[16px]">corporate_fare</span>
+</div>
+<span>Stima SACCO</span>
+</td>
+<td class="py-3.5 px-4">
+<span class="px-2 py-0.5 rounded text-label-sm font-label-sm font-semibold bg-secondary-container text-on-secondary-container">Investment</span>
+</td>
+<td class="py-3.5 px-4 text-secondary">SACCO Deposits</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric font-semibold text-on-surface">5,000</td>
+<td class="py-3.5 px-4 text-right font-label-numeric text-label-numeric text-secondary">5.0%</td>
+<td class="py-3.5 px-4 text-center">
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</td>
+<td class="py-3.5 px-5 text-right">
+<div class="flex items-center justify-end gap-1">
+<button class="p-1 text-secondary hover:text-primary rounded"><span class="material-symbols-outlined text-[18px]">edit</span></button>
+<button class="p-1 text-secondary hover:text-error rounded"><span class="material-symbols-outlined text-[18px]">delete</span></button>
+</div>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+<!-- Table Summary Row -->
+<div class="p-4 bg-surface border-t border-outline-variant flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-body-md font-body-md">
+<div class="flex items-center gap-2 text-secondary">
+<span class="material-symbols-outlined text-[18px] text-tertiary">check</span>
+<span>All 7 allocation rows accounted for zero-leakage tracking.</span>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<span class="text-label-sm font-label-sm text-secondary">Total Committed: </span>
+<span class="font-label-numeric text-label-numeric font-bold text-on-surface">KES 90,000</span>
+</div>
+<div class="text-right">
+<span class="text-label-sm font-label-sm text-secondary">Remaining: </span>
+<span class="font-label-numeric text-label-numeric font-bold text-primary">KES 10,000 (10%)</span>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Mobile Bottom Navigation (Responsive Pivot: shown only on mobile) -->
+<nav class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest border-t border-outline-variant py-2 px-4 flex justify-around items-center z-30 shadow-lg">
+<a class="flex flex-col items-center gap-1 text-secondary" href="#">
+<span class="material-symbols-outlined text-[20px]">dashboard</span>
+<span class="text-label-sm font-label-sm">Home</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-secondary" href="#">
+<span class="material-symbols-outlined text-[20px]">account_balance_wallet</span>
+<span class="text-label-sm font-label-sm">Budget</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-primary font-bold" href="#">
+<span class="material-symbols-outlined text-[20px]" style="font-variation-settings: 'FILL' 1;">pie_chart</span>
+<span class="text-label-sm font-label-sm">Allocation</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-secondary" href="#">
+<span class="material-symbols-outlined text-[20px]">savings</span>
+<span class="text-label-sm font-label-sm">Vault</span>
+</a>
+<a class="flex flex-col items-center gap-1 text-secondary" href="#">
+<span class="material-symbols-outlined text-[20px]">settings</span>
+<span class="text-label-sm font-label-sm">Settings</span>
+</a>
+</nav>
+</div>
+<!-- Slide-out Modal / Drawer: "Add Planned Allocation" -->
+<div class="fixed inset-0 z-50 overflow-hidden transform translate-x-full transition-transform duration-300 ease-in-out" id="slideoutModal">
+<!-- Backdrop -->
+<div class="absolute inset-0 bg-inverse-surface/40 backdrop-blur-sm transition-opacity" onclick="document.getElementById('slideoutModal').classList.add('translate-x-full')"></div>
+<div class="fixed inset-y-0 right-0 pl-10 max-w-full flex">
+<div class="w-screen max-w-md bg-surface-container-lowest border-l border-outline-variant shadow-2xl flex flex-col justify-between">
+<!-- Drawer Header -->
+<div class="p-6 border-b border-surface-container">
+<div class="flex items-center justify-between">
+<div>
+<span class="text-label-sm font-label-sm text-primary uppercase font-bold tracking-wider">Target Allocation</span>
+<h2 class="text-headline-lg font-headline-lg text-on-surface">Add Planned Allocation</h2>
+</div>
+<button class="p-2 text-secondary hover:text-on-surface rounded-lg hover:bg-surface-container" onclick="document.getElementById('slideoutModal').classList.add('translate-x-full')">
+<span class="material-symbols-outlined text-[22px]">close</span>
+</button>
+</div>
+<p class="text-body-md font-body-md text-secondary mt-1">Configure automated monthly reserve allocation rule.</p>
+</div>
+<!-- Drawer Form Body -->
+<div class="p-6 space-y-5 overflow-y-auto flex-1">
+<!-- Field 1: Item Name -->
+<div>
+<label class="block text-label-sm font-label-sm font-semibold text-on-surface mb-1.5">Item Name</label>
+<input class="w-full h-10 px-3.5 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface focus:border-primary focus:ring-1 focus:ring-primary text-body-md font-body-md" placeholder="e.g. Health Insurance, Treasury Bills" type="text"/>
+</div>
+<!-- Field 2: Type Selector Pills -->
+<div>
+<label class="block text-label-sm font-label-sm font-semibold text-on-surface mb-1.5">Allocation Type</label>
+<div class="grid grid-cols-3 gap-2">
+<label class="cursor-pointer">
+<input checked="" class="peer sr-only" name="alloc_type" type="radio"/>
+<div class="p-2.5 rounded-lg border border-outline-variant text-center font-title-sm text-title-sm peer-checked:border-primary peer-checked:bg-secondary-container peer-checked:text-on-secondary-container hover:bg-surface-container transition-all">
+                  Expense
+                </div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="alloc_type" type="radio"/>
+<div class="p-2.5 rounded-lg border border-outline-variant text-center font-title-sm text-title-sm peer-checked:border-primary peer-checked:bg-secondary-container peer-checked:text-on-secondary-container hover:bg-surface-container transition-all">
+                  Saving
+                </div>
+</label>
+<label class="cursor-pointer">
+<input class="peer sr-only" name="alloc_type" type="radio"/>
+<div class="p-2.5 rounded-lg border border-outline-variant text-center font-title-sm text-title-sm peer-checked:border-primary peer-checked:bg-secondary-container peer-checked:text-on-secondary-container hover:bg-surface-container transition-all">
+                  Investment
+                </div>
+</label>
+</div>
+</div>
+<!-- Field 3: Category Dropdown -->
+<div>
+<label class="block text-label-sm font-label-sm font-semibold text-on-surface mb-1.5">Category</label>
+<select class="w-full h-10 px-3.5 rounded-lg border border-outline-variant bg-surface-container-lowest text-on-surface focus:border-primary focus:ring-1 focus:ring-primary text-body-md font-body-md">
+<option>Housing &amp; Utilities</option>
+<option>Food &amp; Subsistence</option>
+<option>Emergency Fund (MMF)</option>
+<option>Equities &amp; Stocks (NSE / US)</option>
+<option>SACCO &amp; Credit Unions</option>
+<option>Fixed Income / Government Bonds</option>
+<option>Discretionary / Leisure</option>
+</select>
+</div>
+<!-- Field 4: Monthly Amount input & Currency -->
+<div>
+<label class="block text-label-sm font-label-sm font-semibold text-on-surface mb-1.5">Monthly Amount</label>
+<div class="flex rounded-lg border border-outline-variant overflow-hidden focus-within:border-primary focus-within:ring-1 focus-within:ring-primary">
+<span class="inline-flex items-center px-3.5 bg-surface-container font-label-numeric text-label-numeric text-secondary border-r border-outline-variant font-semibold">
+                KES
+              </span>
+<input class="w-full h-10 px-3.5 border-none bg-surface-container-lowest text-on-surface font-label-numeric text-label-numeric focus:ring-0" id="inputAmount" placeholder="5,000" type="number"/>
+</div>
+<p class="text-body-sm font-body-sm text-secondary mt-1">Available unallocated surplus: <span class="font-semibold text-primary">KES 10,000</span></p>
+</div>
+<!-- Field 5: Auto-transfer recurrence toggle -->
+<div class="p-4 rounded-xl bg-surface-container-low border border-outline-variant space-y-2">
+<div class="flex items-center justify-between">
+<span class="text-title-sm font-title-sm font-semibold text-on-surface">Mark as Auto-Commit</span>
+<label class="relative inline-flex items-center cursor-pointer">
+<input checked="" class="sr-only peer" type="checkbox"/>
+<div class="w-9 h-5 bg-surface-variant peer-focus:outline-none rounded-full peer peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-[2px] after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-4 after:w-4 after:transition-all peer-checked:bg-primary"></div>
+</label>
+</div>
+<p class="text-body-sm font-body-sm text-secondary">Deducts automatically on the 1st of every month from checking account ledger.</p>
+</div>
+</div>
+<!-- Drawer Footer -->
+<div class="p-6 border-t border-surface-container bg-surface flex items-center justify-end gap-3">
+<button class="px-4 py-2.5 rounded-lg border border-outline-variant text-on-surface hover:bg-surface-container text-title-sm font-title-sm" onclick="document.getElementById('slideoutModal').classList.add('translate-x-full')">
+            Cancel
+          </button>
+<button class="px-5 py-2.5 rounded-lg bg-primary hover:bg-primary-container text-on-primary text-title-sm font-title-sm shadow transition-transform active:scale-95 flex items-center gap-2" onclick="saveNewAllocation()">
+<span class="material-symbols-outlined text-[18px]">save</span>
+<span>Save Allocation</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+    // Toggle Overallocated banner for demonstration purposes
+    function toggleOverallocated(show) {
+      const banner = document.getElementById('overallocatedBanner');
+      if (show) {
+        banner.classList.remove('hidden');
+      } else {
+        banner.classList.add('hidden');
+      }
+    }
+
+    let isOverallocated = false;
+    function toggleSimulatedOverallocated() {
+      isOverallocated = !isOverallocated;
+      toggleOverallocated(isOverallocated);
+      const btn = document.getElementById('toggleLimitBtn');
+      if (isOverallocated) {
+        btn.textContent = "Reset to Normal (90%)";
+        btn.classList.add('bg-error-container', 'text-on-error-container');
+      } else {
+        btn.textContent = "Toggle Overallocated Alert";
+        btn.classList.remove('bg-error-container', 'text-on-error-container');
+      }
+    }
+
+    // Interactive handler for form save
+    function saveNewAllocation() {
+      const modal = document.getElementById('slideoutModal');
+      modal.classList.add('translate-x-full');
+      // Gentle notification simulation
+      const banner = document.getElementById('overallocatedBanner');
+      banner.className = "p-4 rounded-xl bg-emerald-100 border border-emerald-300 text-emerald-900 flex items-start justify-between shadow-sm transition-all";
+      banner.innerHTML = `
+        <div class="flex items-center gap-3">
+          <span class="material-symbols-outlined text-emerald-700 text-[24px]">check_circle</span>
+          <div>
+            <div class="font-title-sm text-title-sm font-bold text-emerald-800">Allocation Added Successfully</div>
+            <div class="text-body-md font-body-md text-emerald-900">Your monthly allocation plan has been persisted locally. Target recalculations ready.</div>
+          </div>
+        </div>
+        <button onclick="this.parentElement.classList.add('hidden')" class="text-emerald-800 font-semibold hover:underline text-body-sm font-body-sm shrink-0 ml-4">Close</button>
+      `;
+      banner.classList.remove('hidden');
+    }
+  </script>
+</body></html>

@@ -1,0 +1,1330 @@
+<!DOCTYPE html>
+
+<html lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Akiba Wealth — Modern Personal Wealth Planning</title>
+<!-- Fonts -->
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&amp;family=JetBrains+Mono:wght@400;500;600&amp;family=Manrope:wght@500;600;700;800&amp;display=swap" rel="stylesheet"/>
+<!-- Material Symbols Outlined -->
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<!-- Tailwind CSS with plugins -->
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<!-- Tailwind Theme Config strictly matching provided specs -->
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          "colors": {
+            "primary": "#005c55",
+            "tertiary-fixed-dim": "#4edea3",
+            "primary-container": "#0f766e",
+            "inverse-on-surface": "#eaf1ff",
+            "inverse-primary": "#80d5cb",
+            "primary-fixed": "#9cf2e8",
+            "on-tertiary-fixed-variant": "#005236",
+            "secondary-fixed-dim": "#bec6e0",
+            "on-secondary": "#ffffff",
+            "on-secondary-fixed-variant": "#3f465c",
+            "on-primary-fixed-variant": "#00504a",
+            "tertiary": "#005e3f",
+            "on-secondary-fixed": "#131b2e",
+            "on-error": "#ffffff",
+            "surface-variant": "#d3e4fe",
+            "on-tertiary-container": "#99ffcd",
+            "background": "#f8f9ff",
+            "on-primary": "#ffffff",
+            "secondary": "#565e74",
+            "on-surface": "#0b1c30",
+            "secondary-container": "#dae2fd",
+            "surface-container": "#e5eeff",
+            "secondary-fixed": "#dae2fd",
+            "surface": "#f8f9ff",
+            "surface-container-lowest": "#ffffff",
+            "primary-fixed-dim": "#80d5cb",
+            "surface-tint": "#006a63",
+            "inverse-surface": "#213145",
+            "tertiary-fixed": "#6ffbbe",
+            "on-error-container": "#93000a",
+            "on-tertiary-fixed": "#002113",
+            "surface-container-low": "#eff4ff",
+            "outline-variant": "#bdc9c6",
+            "on-tertiary": "#ffffff",
+            "tertiary-container": "#007952",
+            "error-container": "#ffdad6",
+            "error": "#ba1a1a",
+            "on-primary-fixed": "#00201d",
+            "surface-container-high": "#dce9ff",
+            "on-primary-container": "#a3faef",
+            "outline": "#6e7977",
+            "on-secondary-container": "#5c647a",
+            "surface-dim": "#cbdbf5",
+            "on-surface-variant": "#3e4947",
+            "surface-bright": "#f8f9ff",
+            "on-background": "#0b1c30",
+            "surface-container-highest": "#d3e4fe"
+          },
+          "borderRadius": {
+            "DEFAULT": "0.25rem",
+            "lg": "0.5rem",
+            "xl": "0.75rem",
+            "full": "9999px"
+          },
+          "spacing": {
+            "space-lg": "1.5rem",
+            "space-xl": "2rem",
+            "margin": "2rem",
+            "space-md": "1rem",
+            "space-sm": "0.5rem",
+            "space-xs": "0.25rem",
+            "gutter": "1.5rem",
+            "margin-mobile": "1rem",
+            "gutter-mobile": "1rem"
+          },
+          "fontFamily": {
+            "body-lg": ["Inter"],
+            "headline-md": ["Manrope"],
+            "headline-xl": ["Manrope"],
+            "title-sm": ["Inter"],
+            "headline-lg": ["Manrope"],
+            "body-sm": ["Inter"],
+            "display-lg": ["Manrope"],
+            "label-numeric": ["JetBrains Mono"],
+            "label-sm": ["Inter"],
+            "display-lg-mobile": ["Manrope"],
+            "label-currency-lg": ["Manrope"],
+            "body-md": ["Inter"]
+          },
+          "fontSize": {
+            "body-lg": ["16px", { "lineHeight": "24px", "fontWeight": "400" }],
+            "headline-md": ["20px", { "lineHeight": "28px", "letterSpacing": "-0.01em", "fontWeight": "600" }],
+            "headline-xl": ["30px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "600" }],
+            "title-sm": ["16px", { "lineHeight": "24px", "letterSpacing": "-0.005em", "fontWeight": "600" }],
+            "headline-lg": ["24px", { "lineHeight": "32px", "letterSpacing": "-0.015em", "fontWeight": "600" }],
+            "body-sm": ["12px", { "lineHeight": "16px", "fontWeight": "400" }],
+            "display-lg": ["40px", { "lineHeight": "48px", "letterSpacing": "-0.03em", "fontWeight": "700" }],
+            "label-numeric": ["14px", { "lineHeight": "20px", "letterSpacing": "-0.01em", "fontWeight": "500" }],
+            "label-sm": ["11px", { "lineHeight": "14px", "letterSpacing": "0.04em", "fontWeight": "600" }],
+            "display-lg-mobile": ["32px", { "lineHeight": "38px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "label-currency-lg": ["28px", { "lineHeight": "34px", "letterSpacing": "-0.02em", "fontWeight": "700" }],
+            "body-md": ["14px", { "lineHeight": "20px", "fontWeight": "400" }]
+          }
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      display: inline-block;
+      vertical-align: middle;
+      line-height: 1;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #cbd5e1;
+      border-radius: 4px;
+    }
+  </style>
+</head>
+<body class="bg-background text-on-surface font-body-md text-body-md antialiased overflow-x-hidden min-h-screen flex flex-col selection:bg-primary selection:text-on-primary">
+<!-- Desktop & Tablet Side Navigation Shell (Shared Component JSON Conformance) -->
+<aside class="hidden md:flex fixed top-0 left-0 h-screen w-64 flex-col justify-between bg-surface shadow-sm border-r border-outline-variant z-30 transition-all duration-300" id="main-sidebar">
+<div class="p-4 flex flex-col h-full justify-between">
+<div>
+<!-- Brand & Workspace Header -->
+<div class="flex items-center gap-3 px-2 py-3 mb-2">
+<div class="w-9 h-9 rounded-xl bg-primary text-on-primary flex items-center justify-center shadow-sm">
+<span class="material-symbols-outlined text-xl">savings</span>
+</div>
+<div>
+<div class="font-headline-md text-headline-md font-bold text-primary tracking-tight leading-none">Akiba Finance</div>
+<div class="font-body-sm text-body-sm text-secondary mt-0.5">Base: KES • Personal</div>
+</div>
+</div>
+<!-- Currency Switcher Pill -->
+<div class="mb-4 px-2">
+<div class="bg-surface-container-low border border-outline-variant rounded-lg p-2 flex items-center justify-between">
+<div class="flex items-center gap-1.5">
+<span class="material-symbols-outlined text-secondary text-sm">currency_exchange</span>
+<span class="font-label-numeric text-body-sm font-medium text-on-surface">Base: KES</span>
+</div>
+<span class="inline-flex items-center px-1.5 py-0.5 rounded text-[10px] font-label-sm bg-surface-container-high text-secondary">Live 2h ago</span>
+</div>
+</div>
+<!-- Navigation Tab Items (Exact JSON Matching) -->
+<nav aria-label="Main Navigation" class="space-y-1" id="nav-list">
+<button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-title-sm text-title-sm active:scale-98 transition-all" data-view="dashboard">
+<span class="material-symbols-outlined">dashboard</span>
+<span>Dashboard</span>
+</button>
+<button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" data-view="portfolio">
+<span class="material-symbols-outlined">account_balance</span>
+<span>Portfolio</span>
+</button>
+<button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" data-view="budget">
+<span class="material-symbols-outlined">account_balance_wallet</span>
+<span>Budget</span>
+</button>
+<button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" data-view="monthly-allocation">
+<span class="material-symbols-outlined">pie_chart</span>
+<span>Monthly Allocation</span>
+</button>
+<button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" data-view="emergency-fund">
+<span class="material-symbols-outlined">savings</span>
+<span>Emergency Fund</span>
+</button>
+<button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" data-view="net-worth">
+<span class="material-symbols-outlined">trending_up</span>
+<span>Net Worth</span>
+</button>
+<button class="nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" data-view="projection">
+<span class="material-symbols-outlined">query_stats</span>
+<span>Projection</span>
+</button>
+</nav>
+</div>
+<!-- Sidebar Bottom Cluster -->
+<div class="pt-4 border-t border-outline-variant space-y-2">
+<button class="nav-item w-full flex items-center gap-3 px-3 py-2 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98" data-view="settings">
+<span class="material-symbols-outlined">settings</span>
+<span>Settings</span>
+</button>
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant">
+<div class="flex items-center gap-2 text-primary font-title-sm text-body-sm">
+<span class="material-symbols-outlined text-sm">lock</span>
+<span class="font-medium text-xs">Local Device Storage</span>
+</div>
+<p class="font-body-sm text-[11px] text-secondary mt-1 leading-tight">Financial ledger runs entirely in your private browser memory.</p>
+</div>
+</div>
+</div>
+</aside>
+<!-- Top Navigation Bar (Shared Component JSON Execution) -->
+<header class="md:pl-64 sticky top-0 bg-surface-container-lowest z-20 transition-all border-b border-outline-variant shadow-sm">
+<div class="flex justify-between items-center w-full px-6 py-3.5">
+<!-- Title & Greeting -->
+<div class="flex items-center gap-4">
+<button class="md:hidden p-1 rounded-lg text-secondary hover:bg-surface-container" id="mobile-menu-toggle">
+<span class="material-symbols-outlined">menu</span>
+</button>
+<div>
+<div class="flex items-center gap-2">
+<h1 class="font-headline-md text-headline-md font-bold text-on-surface" id="page-greeting">Good evening, David</h1>
+<span class="hidden sm:inline-flex items-center px-2 py-0.5 rounded text-xs font-medium bg-tertiary-fixed text-on-tertiary-fixed">Active Plan: 2025</span>
+</div>
+<p class="font-body-sm text-body-sm text-secondary" id="page-subtitle">Financial Overview • August 2025 • Base: KES</p>
+</div>
+</div>
+<!-- Top Action Items & JSON Actions -->
+<div class="flex items-center gap-3">
+<!-- Interactive Demo State Switcher (Reviewer Convenience) -->
+<div class="hidden lg:flex items-center bg-surface-container-low border border-outline-variant rounded-lg p-1 text-xs">
+<span class="px-2 py-1 font-medium text-secondary">Demo Mode:</span>
+<button class="px-2 py-1 rounded font-medium bg-surface-container-lowest text-primary shadow-xs" id="toggle-normal-state">Normal</button>
+<button class="px-2 py-1 rounded font-medium text-secondary hover:text-on-surface" id="toggle-warning-state">Over-Allocated</button>
+</div>
+<!-- Sync Icon -->
+<button class="p-2 rounded-lg text-secondary hover:bg-surface-container active:scale-95 transition-transform" title="Sync Rates">
+<span class="material-symbols-outlined text-xl">sync</span>
+</button>
+<!-- Notification Bell -->
+<button class="p-2 rounded-lg text-secondary hover:bg-surface-container relative active:scale-95 transition-transform" title="Notifications">
+<span class="material-symbols-outlined text-xl">notifications</span>
+<span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-primary"></span>
+</button>
+<!-- Primary Add Transaction Button -->
+<button class="flex items-center gap-1.5 px-4 py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-title-sm text-body-md font-medium shadow-sm transition-all duration-150 active:scale-95" id="open-add-modal-btn">
+<span class="material-symbols-outlined text-lg">add</span>
+<span>+ Add Transaction</span>
+</button>
+</div>
+</div>
+<!-- Subcategory Quick Filter Strip (TopNavBar navigation_links JSON conformance) -->
+<div class="flex items-center gap-6 px-6 border-t border-outline-variant/60 bg-surface text-body-sm overflow-x-auto custom-scrollbar" id="subnav-filter-strip">
+<button class="filter-pill py-2.5 text-primary border-b-2 border-primary font-title-sm pb-1 whitespace-nowrap active:scale-95" data-category="all">All</button>
+<button class="filter-pill py-2.5 text-secondary hover:text-on-surface font-body-md pb-1 whitespace-nowrap transition-colors" data-category="safety">Safety</button>
+<button class="filter-pill py-2.5 text-secondary hover:text-on-surface font-body-md pb-1 whitespace-nowrap transition-colors" data-category="cash">Cash</button>
+<button class="filter-pill py-2.5 text-secondary hover:text-on-surface font-body-md pb-1 whitespace-nowrap transition-colors" data-category="fixed-income">Fixed Income</button>
+<button class="filter-pill py-2.5 text-secondary hover:text-on-surface font-body-md pb-1 whitespace-nowrap transition-colors" data-category="equities">Equities</button>
+<button class="filter-pill py-2.5 text-secondary hover:text-on-surface font-body-md pb-1 whitespace-nowrap transition-colors" data-category="sacco">SACCO</button>
+</div>
+</header>
+<!-- Main Responsive Canvas Wrapper -->
+<main class="md:pl-64 flex-1 pb-24 md:pb-12 bg-background">
+<div class="max-w-[1440px] mx-auto p-4 sm:p-6 lg:p-8">
+<!-- ======================================================== -->
+<!-- VIEW 1: DASHBOARD (Default view)                         -->
+<!-- ======================================================== -->
+<section class="space-y-6" id="view-dashboard">
+<!-- Over-allocation Warning Banner (Toggled via demo button or state) -->
+<div class="hidden p-4 rounded-xl border border-error/20 bg-error-container text-on-error-container flex items-center justify-between shadow-sm" id="allocation-alert-banner">
+<div class="flex items-center gap-3">
+<span class="material-symbols-outlined text-error">warning</span>
+<div>
+<div class="font-title-sm font-semibold">Overallocation Flag: KES 5,000 in excess of monthly earnings</div>
+<p class="font-body-sm text-body-sm">Your planned budget and investment contributions total KES 105,000 against monthly income of KES 100,000.</p>
+</div>
+</div>
+<button class="px-3 py-1.5 rounded-lg bg-surface-container-lowest text-error font-title-sm text-body-sm border border-outline-variant shadow-xs" onclick="switchView('monthly-allocation')">Rebalance Plan</button>
+</div>
+<!-- 4 Top KPI Summary Cards -->
+<div class="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
+<!-- KPI 1: Net Worth -->
+<div class="p-5 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm hover:translate-y-[-1px] transition-all">
+<div class="flex items-center justify-between text-secondary font-label-sm uppercase tracking-wider mb-2">
+<span>Net Worth</span>
+<span class="inline-flex items-center gap-0.5 px-2 py-0.5 rounded-full text-xs font-semibold bg-tertiary-fixed text-on-tertiary-fixed">
+<span class="material-symbols-outlined text-xs">arrow_upward</span> +8.4%
+              </span>
+</div>
+<div class="font-label-currency-lg text-label-currency-lg text-on-surface tracking-tight font-bold">KES 650,000</div>
+<div class="font-body-sm text-body-sm text-secondary mt-1">Assets KES 800k — Liabilities KES 150k</div>
+</div>
+<!-- KPI 2: Portfolio -->
+<div class="p-5 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm hover:translate-y-[-1px] transition-all">
+<div class="flex items-center justify-between text-secondary font-label-sm uppercase tracking-wider mb-2">
+<span>Portfolio Total</span>
+<span class="material-symbols-outlined text-primary text-base">pie_chart</span>
+</div>
+<div class="font-label-currency-lg text-label-currency-lg text-on-surface tracking-tight font-bold">KES 485,000</div>
+<div class="font-body-sm text-body-sm text-secondary mt-1">6 asset classes across 12 holdings</div>
+</div>
+<!-- KPI 3: Monthly Income -->
+<div class="p-5 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm hover:translate-y-[-1px] transition-all">
+<div class="flex items-center justify-between text-secondary font-label-sm uppercase tracking-wider mb-2">
+<span>Monthly Income</span>
+<span class="text-xs font-medium px-2 py-0.5 rounded bg-surface-container text-secondary">Verified</span>
+</div>
+<div class="font-label-currency-lg text-label-currency-lg text-on-surface tracking-tight font-bold">KES 100,000</div>
+<div class="font-body-sm text-body-sm text-secondary mt-1">Salary KES 92k + Dividends KES 8k</div>
+</div>
+<!-- KPI 4: Monthly Surplus -->
+<div class="p-5 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm hover:translate-y-[-1px] transition-all">
+<div class="flex items-center justify-between text-secondary font-label-sm uppercase tracking-wider mb-2">
+<span>Monthly Surplus</span>
+<span class="inline-flex items-center px-2 py-0.5 rounded-full text-xs font-semibold bg-tertiary-fixed text-on-tertiary-fixed">25% of Income</span>
+</div>
+<div class="font-label-currency-lg text-label-currency-lg text-on-surface tracking-tight font-bold">KES 25,000</div>
+<div class="font-body-sm text-body-sm text-secondary mt-1">Available for savings &amp; compounding</div>
+</div>
+</div>
+<!-- 2-Column Dashboard Grid Layout (8 cols / 4 cols) -->
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<!-- LEFT COLUMN (8 cols) -->
+<div class="lg:col-span-7 space-y-6">
+<!-- Card 1: Current Portfolio Donut & Allocation -->
+<div class="p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Current Portfolio</h3>
+<p class="font-body-sm text-body-sm text-secondary">Where your liquid &amp; capital investments reside</p>
+</div>
+<button class="text-primary hover:underline font-title-sm text-body-sm inline-flex items-center gap-1" onclick="switchView('portfolio')">
+                  View breakdown <span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<div class="grid grid-cols-1 sm:grid-cols-12 gap-6 items-center pt-2">
+<!-- SVG Donut Chart (Thin stroke 20px) -->
+<div class="sm:col-span-5 flex flex-col items-center justify-center relative">
+<svg class="w-44 h-44 transform -rotate-90" viewbox="0 0 160 160">
+<!-- Circle radius 60, circumference = 2 * PI * 60 = 376.99 -->
+<!-- 1. NSE Stocks: 25% = 94.24 -->
+<circle cx="80" cy="80" fill="transparent" r="60" stroke="#005c55" stroke-dasharray="94.24 282.75" stroke-dashoffset="0" stroke-width="20"></circle>
+<!-- 2. US Stocks: 20% = 75.39 -->
+<circle cx="80" cy="80" fill="transparent" r="60" stroke="#0f766e" stroke-dasharray="75.39 301.6" stroke-dashoffset="-94.24" stroke-width="20"></circle>
+<!-- 3. Emergency: 20% = 75.39 -->
+<circle cx="80" cy="80" fill="transparent" r="60" stroke="#4edea3" stroke-dasharray="75.39 301.6" stroke-dashoffset="-169.63" stroke-width="20"></circle>
+<!-- 4. MMF: 15% = 56.54 -->
+<circle cx="80" cy="80" fill="transparent" r="60" stroke="#10b981" stroke-dasharray="56.54 320.45" stroke-dashoffset="-245.02" stroke-width="20"></circle>
+<!-- 5. SACCO: 10% = 37.69 -->
+<circle cx="80" cy="80" fill="transparent" r="60" stroke="#565e74" stroke-dasharray="37.69 339.3" stroke-dashoffset="-301.56" stroke-width="20"></circle>
+<!-- 6. Cash: 10% = 37.69 -->
+<circle cx="80" cy="80" fill="transparent" r="60" stroke="#bdc9c6" stroke-dasharray="37.69 339.3" stroke-dashoffset="-339.25" stroke-width="20"></circle>
+</svg>
+<div class="absolute flex flex-col items-center justify-center pointer-events-none text-center">
+<span class="font-body-sm text-[10px] uppercase font-bold text-secondary tracking-wider">Total</span>
+<span class="font-headline-md text-headline-md font-bold text-on-surface">485k</span>
+<span class="font-label-sm text-[11px] text-primary font-medium">KES</span>
+</div>
+</div>
+<!-- Donut Legend Breakdown -->
+<div class="sm:col-span-7 space-y-2">
+<div class="flex items-center justify-between text-body-sm">
+<span class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-sm bg-[#005c55]"></span>
+<span class="font-medium text-on-surface">NSE Stocks</span>
+</span>
+<div class="text-right">
+<span class="font-label-numeric font-medium">KES 121,250</span>
+<span class="text-secondary text-xs ml-1 font-label-numeric">25%</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-sm bg-[#0f766e]"></span>
+<span class="font-medium text-on-surface">US Equities</span>
+</span>
+<div class="text-right">
+<span class="font-label-numeric font-medium">KES 97,000</span>
+<span class="text-secondary text-xs ml-1 font-label-numeric">20%</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-sm bg-[#4edea3]"></span>
+<span class="font-medium text-on-surface">Emergency Fund</span>
+</span>
+<div class="text-right">
+<span class="font-label-numeric font-medium">KES 97,000</span>
+<span class="text-secondary text-xs ml-1 font-label-numeric">20%</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-sm bg-[#10b981]"></span>
+<span class="font-medium text-on-surface">Money Market (MMF)</span>
+</span>
+<div class="text-right">
+<span class="font-label-numeric font-medium">KES 72,750</span>
+<span class="text-secondary text-xs ml-1 font-label-numeric">15%</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-sm bg-[#565e74]"></span>
+<span class="font-medium text-on-surface">SACCO Shares</span>
+</span>
+<div class="text-right">
+<span class="font-label-numeric font-medium">KES 48,500</span>
+<span class="text-secondary text-xs ml-1 font-label-numeric">10%</span>
+</div>
+</div>
+<div class="flex items-center justify-between text-body-sm">
+<span class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-sm bg-[#bdc9c6]"></span>
+<span class="font-medium text-on-surface">Liquid Bank Cash</span>
+</span>
+<div class="text-right">
+<span class="font-label-numeric font-medium">KES 48,500</span>
+<span class="text-secondary text-xs ml-1 font-label-numeric">10%</span>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Card 2: Where Your Monthly Income Goes -->
+<div class="p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Where Your Income Goes</h3>
+<p class="font-body-sm text-body-sm text-secondary">Monthly Salary &amp; Inflow Allocation (Total: KES 100,000)</p>
+</div>
+<span class="inline-flex items-center px-2.5 py-1 rounded text-xs font-label-sm bg-surface-container text-secondary">Zero-Sum Framework</span>
+</div>
+<!-- Horizontal Stacked Progress Bar -->
+<div class="w-full h-4 bg-surface-container rounded-full overflow-hidden flex mb-4">
+<div class="bg-[#ba1a1a] transition-all" style="width: 55%" title="Expenses: 55%"></div>
+<div class="bg-[#005c55] transition-all" style="width: 15%" title="Savings: 15%"></div>
+<div class="bg-[#10b981] transition-all" style="width: 25%" title="Investments: 25%"></div>
+<div class="bg-[#bec6e0] transition-all" style="width: 5%" title="Unallocated: 5%"></div>
+</div>
+<div class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant/50">
+<div class="flex items-center gap-1.5 text-xs text-secondary mb-1">
+<span class="w-2 h-2 rounded-full bg-[#ba1a1a]"></span>
+<span>Expenses (55%)</span>
+</div>
+<div class="font-label-numeric font-bold text-on-surface">KES 55,000</div>
+<div class="text-[11px] text-secondary">Rent, Food, Bills</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant/50">
+<div class="flex items-center gap-1.5 text-xs text-secondary mb-1">
+<span class="w-2 h-2 rounded-full bg-[#005c55]"></span>
+<span>Savings (15%)</span>
+</div>
+<div class="font-label-numeric font-bold text-on-surface">KES 15,000</div>
+<div class="text-[11px] text-secondary">Emergency Buffer</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant/50">
+<div class="flex items-center gap-1.5 text-xs text-secondary mb-1">
+<span class="w-2 h-2 rounded-full bg-[#10b981]"></span>
+<span>Investing (25%)</span>
+</div>
+<div class="font-label-numeric font-bold text-on-surface">KES 25,000</div>
+<div class="text-[11px] text-secondary">Stocks, SACCO, MMF</div>
+</div>
+<div class="p-3 bg-surface-container-low rounded-lg border border-outline-variant/50">
+<div class="flex items-center gap-1.5 text-xs text-secondary mb-1">
+<span class="w-2 h-2 rounded-full bg-[#bec6e0]"></span>
+<span>Unallocated (5%)</span>
+</div>
+<div class="font-label-numeric font-bold text-on-surface">KES 5,000</div>
+<div class="text-[11px] text-secondary">Discretionary Cash</div>
+</div>
+</div>
+</div>
+</div>
+<!-- RIGHT COLUMN (4 cols) -->
+<div class="lg:col-span-5 space-y-6">
+<!-- Card 3: Emergency Fund Snapshot -->
+<div class="p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm">
+<div class="flex items-center justify-between mb-3">
+<div class="flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">savings</span>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Emergency Fund</h3>
+</div>
+<span class="px-2 py-0.5 rounded text-xs font-semibold bg-tertiary-fixed text-on-tertiary-fixed">50% Funded</span>
+</div>
+<div class="flex items-baseline gap-2 mb-2">
+<span class="font-label-currency-lg text-headline-lg font-bold text-on-surface">KES 90,000</span>
+<span class="text-secondary font-label-numeric">/ KES 180,000 Target</span>
+</div>
+<!-- Track Progress Bar -->
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden mb-4">
+<div class="h-full bg-primary-container rounded-full transition-all duration-500" style="width: 50%"></div>
+</div>
+<div class="grid grid-cols-3 gap-2 text-center mb-4">
+<div class="p-2 rounded bg-surface-container-low border border-outline-variant/40">
+<div class="text-[11px] text-secondary font-medium">Coverage</div>
+<div class="font-label-numeric font-bold text-on-surface">3.0 Mos</div>
+</div>
+<div class="p-2 rounded bg-surface-container-low border border-outline-variant/40">
+<div class="text-[11px] text-secondary font-medium">Target</div>
+<div class="font-label-numeric font-bold text-on-surface">6.0 Mos</div>
+</div>
+<div class="p-2 rounded bg-surface-container-low border border-outline-variant/40">
+<div class="text-[11px] text-secondary font-medium">Remaining</div>
+<div class="font-label-numeric font-bold text-on-surface">90,000 KES</div>
+</div>
+</div>
+<p class="font-body-sm text-[12px] text-secondary mb-4 leading-normal">
+                Target computed against KES 30,000 baseline essential living expenses. 3 more months to full peace of mind.
+              </p>
+<button class="w-full py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-primary font-title-sm text-body-md transition-colors flex items-center justify-center gap-1" onclick="switchView('emergency-fund')">
+<span>Manage Emergency Plan</span>
+<span class="material-symbols-outlined text-sm">arrow_forward</span>
+</button>
+</div>
+<!-- Card 4: Monthly Allocation Plan Quick Look -->
+<div class="p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Monthly Allocation</h3>
+<button class="text-primary text-xs font-semibold hover:underline" onclick="switchView('monthly-allocation')">Edit Plan</button>
+</div>
+<ul class="space-y-3 font-body-sm">
+<li class="flex items-center justify-between py-1 border-b border-outline-variant/40">
+<span class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-sm text-primary">savings</span> Emergency Fund (MMF)
+                  </span>
+<span class="font-label-numeric font-medium">KES 15,000</span>
+</li>
+<li class="flex items-center justify-between py-1 border-b border-outline-variant/40">
+<span class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-sm text-tertiary">query_stats</span> US Equities Index (VOO)
+                  </span>
+<span class="font-label-numeric font-medium">KES 10,000</span>
+</li>
+<li class="flex items-center justify-between py-1 border-b border-outline-variant/40">
+<span class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-sm text-secondary">show_chart</span> NSE Stocks (Safaricom)
+                  </span>
+<span class="font-label-numeric font-medium">KES 5,000</span>
+</li>
+<li class="flex items-center justify-between py-1 border-b border-outline-variant/40">
+<span class="flex items-center gap-2 text-on-surface">
+<span class="material-symbols-outlined text-sm text-secondary">groups</span> Stima SACCO Shares
+                  </span>
+<span class="font-label-numeric font-medium">KES 5,000</span>
+</li>
+</ul>
+<div class="mt-4 p-3 bg-surface-container-low rounded-lg flex items-center justify-between text-body-sm">
+<span class="font-medium text-secondary">Total Planned Inflow:</span>
+<span class="font-label-numeric font-bold text-primary">KES 35,000 / mo</span>
+</div>
+</div>
+<!-- Card 5: Core Real Metrics (Transparent financial metrics, no fake health score) -->
+<div class="p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm">
+<div class="flex items-center justify-between mb-4">
+<div>
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Financial Health</h3>
+<p class="font-body-sm text-[12px] text-secondary">Deterministic metrics, zero opaque algorithms</p>
+</div>
+<span class="material-symbols-outlined text-primary">verified</span>
+</div>
+<div class="grid grid-cols-2 gap-3">
+<div class="p-2.5 rounded-lg bg-surface border border-outline-variant/50">
+<div class="text-[11px] text-secondary uppercase font-semibold">Savings Rate</div>
+<div class="font-label-numeric font-bold text-lg text-primary">15.0%</div>
+<div class="text-[10px] text-secondary">Recommended: 15-20%</div>
+</div>
+<div class="p-2.5 rounded-lg bg-surface border border-outline-variant/50">
+<div class="text-[11px] text-secondary uppercase font-semibold">Invest Rate</div>
+<div class="font-label-numeric font-bold text-lg text-primary">25.0%</div>
+<div class="text-[10px] text-secondary">Wealth accumulation</div>
+</div>
+<div class="p-2.5 rounded-lg bg-surface border border-outline-variant/50">
+<div class="text-[11px] text-secondary uppercase font-semibold">Emergency Net</div>
+<div class="font-label-numeric font-bold text-lg text-on-surface">3.0 Mos</div>
+<div class="text-[10px] text-secondary">Goal: 6 Mos min.</div>
+</div>
+<div class="p-2.5 rounded-lg bg-surface border border-outline-variant/50">
+<div class="text-[11px] text-secondary uppercase font-semibold">Diversity</div>
+<div class="font-label-numeric font-bold text-lg text-on-surface">6 Classes</div>
+<div class="text-[10px] text-secondary">Well-distributed risk</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================== -->
+<!-- VIEW 2: PORTFOLIO SCREEN                                 -->
+<!-- ======================================================== -->
+<section class="hidden space-y-6" id="view-portfolio">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<div>
+<h2 class="font-headline-xl text-headline-xl font-bold text-on-surface">Portfolio</h2>
+<p class="font-body-md text-body-md text-secondary">Everything you currently own across domestic &amp; offshore assets.</p>
+</div>
+<button class="px-4 py-2.5 rounded-lg bg-primary text-on-primary font-title-sm text-body-md hover:bg-primary-container inline-flex items-center gap-2 shadow-sm" onclick="document.getElementById('add-holding-modal').classList.remove('hidden')">
+<span class="material-symbols-outlined">add</span> + Add New Holding
+          </button>
+</div>
+<!-- Portfolio Top Stats -->
+<div class="grid grid-cols-2 md:grid-cols-4 gap-4">
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant">
+<span class="text-xs text-secondary font-label-sm uppercase">Total Portfolio</span>
+<div class="font-label-currency-lg text-headline-lg font-bold text-on-surface mt-1">KES 485,000</div>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant">
+<span class="text-xs text-secondary font-label-sm uppercase">Holdings Count</span>
+<div class="font-label-currency-lg text-headline-lg font-bold text-on-surface mt-1">12 Assets</div>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant">
+<span class="text-xs text-secondary font-label-sm uppercase">Asset Classes</span>
+<div class="font-label-currency-lg text-headline-lg font-bold text-on-surface mt-1">6 Categories</div>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant">
+<span class="text-xs text-secondary font-label-sm uppercase">Top Performer (1Y)</span>
+<div class="font-label-currency-lg text-headline-lg font-bold text-primary mt-1">US Stocks +18.2%</div>
+</div>
+</div>
+<!-- Filter Pills Strip -->
+<div class="flex items-center gap-2 overflow-x-auto pb-2 custom-scrollbar">
+<button class="px-3.5 py-1.5 rounded-full text-xs font-title-sm bg-primary text-on-primary shadow-xs">All Holdings</button>
+<button class="px-3.5 py-1.5 rounded-full text-xs font-title-sm bg-surface-container hover:bg-surface-container-high text-secondary">Safety &amp; Emergency</button>
+<button class="px-3.5 py-1.5 rounded-full text-xs font-title-sm bg-surface-container hover:bg-surface-container-high text-secondary">Cash</button>
+<button class="px-3.5 py-1.5 rounded-full text-xs font-title-sm bg-surface-container hover:bg-surface-container-high text-secondary">Fixed Income / MMF</button>
+<button class="px-3.5 py-1.5 rounded-full text-xs font-title-sm bg-surface-container hover:bg-surface-container-high text-secondary">Equities (NSE &amp; US)</button>
+<button class="px-3.5 py-1.5 rounded-full text-xs font-title-sm bg-surface-container hover:bg-surface-container-high text-secondary">SACCO</button>
+</div>
+<!-- Comprehensive Holdings Ledger Table -->
+<div class="rounded-xl bg-surface-container-lowest border border-outline-variant overflow-hidden shadow-sm">
+<div class="overflow-x-auto">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-secondary font-label-sm text-[11px] uppercase tracking-wider border-b border-outline-variant">
+<th class="py-3.5 px-4 font-semibold">Holding Name</th>
+<th class="py-3.5 px-4 font-semibold">Category</th>
+<th class="py-3.5 px-4 font-semibold">Original Value</th>
+<th class="py-3.5 px-4 font-semibold">Currency</th>
+<th class="py-3.5 px-4 font-semibold">Exchange Rate</th>
+<th class="py-3.5 px-4 font-semibold text-right">Value (KES)</th>
+<th class="py-3.5 px-4 font-semibold text-right">Weight</th>
+<th class="py-3.5 px-4 font-semibold text-center">Actions</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/60 font-body-sm" id="holdings-table-body">
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-4 font-medium text-on-surface">Sanlam Kenya MMF</td>
+<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-surface-container text-secondary">Fixed Income</span></td>
+<td class="py-3.5 px-4 font-label-numeric">75,000.00</td>
+<td class="py-3.5 px-4"><span class="font-label-numeric font-medium">KES</span></td>
+<td class="py-3.5 px-4 font-label-numeric">1.00</td>
+<td class="py-3.5 px-4 font-label-numeric font-bold text-right">KES 75,000</td>
+<td class="py-3.5 px-4 font-label-numeric text-right">15.5%</td>
+<td class="py-3.5 px-4 text-center">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-base">edit</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-4 font-medium text-on-surface">Apple Inc. (AAPL)</td>
+<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-surface-container text-secondary">US Stocks</span></td>
+<td class="py-3.5 px-4 font-label-numeric">$800.00</td>
+<td class="py-3.5 px-4"><span class="font-label-numeric font-medium">USD</span></td>
+<td class="py-3.5 px-4 font-label-numeric">130.00</td>
+<td class="py-3.5 px-4 font-label-numeric font-bold text-right">KES 104,000</td>
+<td class="py-3.5 px-4 font-label-numeric text-right">21.4%</td>
+<td class="py-3.5 px-4 text-center">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-base">edit</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-4 font-medium text-on-surface">Safaricom PLC (SCOM)</td>
+<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-surface-container text-secondary">NSE Stocks</span></td>
+<td class="py-3.5 px-4 font-label-numeric">70,000.00</td>
+<td class="py-3.5 px-4"><span class="font-label-numeric font-medium">KES</span></td>
+<td class="py-3.5 px-4 font-label-numeric">1.00</td>
+<td class="py-3.5 px-4 font-label-numeric font-bold text-right">KES 70,000</td>
+<td class="py-3.5 px-4 font-label-numeric text-right">14.4%</td>
+<td class="py-3.5 px-4 text-center">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-base">edit</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-4 font-medium text-on-surface">Stima SACCO Prime Shares</td>
+<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-surface-container text-secondary">SACCO</span></td>
+<td class="py-3.5 px-4 font-label-numeric">50,000.00</td>
+<td class="py-3.5 px-4"><span class="font-label-numeric font-medium">KES</span></td>
+<td class="py-3.5 px-4 font-label-numeric">1.00</td>
+<td class="py-3.5 px-4 font-label-numeric font-bold text-right">KES 50,000</td>
+<td class="py-3.5 px-4 font-label-numeric text-right">10.3%</td>
+<td class="py-3.5 px-4 text-center">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-base">edit</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-4 font-medium text-on-surface">NCBA Bank Liquid Cash</td>
+<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-surface-container text-secondary">Cash</span></td>
+<td class="py-3.5 px-4 font-label-numeric">48,500.00</td>
+<td class="py-3.5 px-4"><span class="font-label-numeric font-medium">KES</span></td>
+<td class="py-3.5 px-4 font-label-numeric">1.00</td>
+<td class="py-3.5 px-4 font-label-numeric font-bold text-right">KES 48,500</td>
+<td class="py-3.5 px-4 font-label-numeric text-right">10.0%</td>
+<td class="py-3.5 px-4 text-center">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-base">edit</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-4 font-medium text-on-surface">CIC Money Market Fund</td>
+<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-surface-container text-secondary">Safety / Emergency</span></td>
+<td class="py-3.5 px-4 font-label-numeric">90,000.00</td>
+<td class="py-3.5 px-4"><span class="font-label-numeric font-medium">KES</span></td>
+<td class="py-3.5 px-4 font-label-numeric">1.00</td>
+<td class="py-3.5 px-4 font-label-numeric font-bold text-right">KES 90,000</td>
+<td class="py-3.5 px-4 font-label-numeric text-right">18.6%</td>
+<td class="py-3.5 px-4 text-center">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-base">edit</span></button>
+</td>
+</tr>
+<tr class="hover:bg-surface transition-colors">
+<td class="py-3.5 px-4 font-medium text-on-surface">Vanguard S&amp;P 500 (VOO)</td>
+<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-surface-container text-secondary">US Stocks</span></td>
+<td class="py-3.5 px-4 font-label-numeric">$365.00</td>
+<td class="py-3.5 px-4"><span class="font-label-numeric font-medium">USD</span></td>
+<td class="py-3.5 px-4 font-label-numeric">130.00</td>
+<td class="py-3.5 px-4 font-label-numeric font-bold text-right">KES 47,500</td>
+<td class="py-3.5 px-4 font-label-numeric text-right">9.8%</td>
+<td class="py-3.5 px-4 text-center">
+<button class="p-1 hover:text-primary"><span class="material-symbols-outlined text-base">edit</span></button>
+</td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</section>
+<!-- ======================================================== -->
+<!-- VIEW 3: BUDGET SCREEN (Monthly Cash Flow)                -->
+<!-- ======================================================== -->
+<section class="hidden space-y-6" id="view-budget">
+<div class="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+<div>
+<h2 class="font-headline-xl text-headline-xl font-bold text-on-surface">Monthly Budget</h2>
+<p class="font-body-md text-body-md text-secondary">Understand where your monthly income comes and goes.</p>
+</div>
+<button class="px-4 py-2.5 rounded-lg bg-primary text-on-primary font-title-sm text-body-md hover:bg-primary-container inline-flex items-center gap-2 shadow-sm">
+<span class="material-symbols-outlined">add_circle</span> + Add Expense
+          </button>
+</div>
+<!-- Budget 4 KPIs -->
+<div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant">
+<span class="text-xs text-secondary font-label-sm uppercase">Monthly Income</span>
+<div class="font-label-currency-lg text-headline-lg font-bold text-on-surface mt-1">KES 100,000</div>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant">
+<span class="text-xs text-secondary font-label-sm uppercase">Monthly Expenses</span>
+<div class="font-label-currency-lg text-headline-lg font-bold text-on-surface mt-1">KES 75,000</div>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant">
+<span class="text-xs text-secondary font-label-sm uppercase">Net Monthly Surplus</span>
+<div class="font-label-currency-lg text-headline-lg font-bold text-primary mt-1">KES 25,000</div>
+</div>
+<div class="p-4 rounded-xl bg-surface-container-lowest border border-outline-variant">
+<span class="text-xs text-secondary font-label-sm uppercase">Savings Rate</span>
+<div class="font-label-currency-lg text-headline-lg font-bold text-tertiary mt-1">15.0%</div>
+</div>
+</div>
+<!-- Budget Categories Breakdown Cards -->
+<div class="rounded-xl bg-surface-container-lowest border border-outline-variant p-6 shadow-sm space-y-6">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Category Actuals vs Targets</h3>
+<div class="flex items-center gap-2">
+<button class="px-3 py-1 rounded text-xs font-medium bg-primary text-on-primary">All Items</button>
+<button class="px-3 py-1 rounded text-xs font-medium bg-surface-container text-secondary">Essential Only</button>
+<button class="px-3 py-1 rounded text-xs font-medium bg-surface-container text-secondary">Discretionary</button>
+</div>
+</div>
+<div class="space-y-4">
+<!-- 1. Rent -->
+<div class="p-4 rounded-lg bg-surface border border-outline-variant/60">
+<div class="flex justify-between items-center mb-1.5">
+<span class="font-title-sm text-body-md font-medium text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">home</span> Rent &amp; Housing
+                  <span class="px-2 py-0.5 rounded text-[10px] bg-secondary-container text-on-secondary-container">Essential</span>
+</span>
+<span class="font-label-numeric font-medium text-body-sm">KES 20,000 / KES 20,000 (100%)</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 100%"></div>
+</div>
+</div>
+<!-- 2. Groceries -->
+<div class="p-4 rounded-lg bg-surface border border-outline-variant/60">
+<div class="flex justify-between items-center mb-1.5">
+<span class="font-title-sm text-body-md font-medium text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">shopping_cart</span> Groceries &amp; Household Food
+                  <span class="px-2 py-0.5 rounded text-[10px] bg-secondary-container text-on-secondary-container">Essential</span>
+</span>
+<span class="font-label-numeric font-medium text-body-sm">KES 12,000 / KES 15,000 (80%)</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim" style="width: 80%"></div>
+</div>
+</div>
+<!-- 3. Transport -->
+<div class="p-4 rounded-lg bg-surface border border-outline-variant/60">
+<div class="flex justify-between items-center mb-1.5">
+<span class="font-title-sm text-body-md font-medium text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">directions_car</span> Transport &amp; Fuel
+                  <span class="px-2 py-0.5 rounded text-[10px] bg-secondary-container text-on-secondary-container">Essential</span>
+</span>
+<span class="font-label-numeric font-medium text-body-sm">KES 8,000 / KES 10,000 (80%)</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-tertiary-fixed-dim" style="width: 80%"></div>
+</div>
+</div>
+<!-- 4. Utilities -->
+<div class="p-4 rounded-lg bg-surface border border-outline-variant/60">
+<div class="flex justify-between items-center mb-1.5">
+<span class="font-title-sm text-body-md font-medium text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">bolt</span> Utilities, Water &amp; Fiber Internet
+                  <span class="px-2 py-0.5 rounded text-[10px] bg-secondary-container text-on-secondary-container">Essential</span>
+</span>
+<span class="font-label-numeric font-medium text-body-sm">KES 5,000 / KES 5,000 (100%)</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary" style="width: 100%"></div>
+</div>
+</div>
+<!-- 5. Dining -->
+<div class="p-4 rounded-lg bg-surface border border-outline-variant/60">
+<div class="flex justify-between items-center mb-1.5">
+<span class="font-title-sm text-body-md font-medium text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-secondary">restaurant</span> Dining Out &amp; Leisure
+                  <span class="px-2 py-0.5 rounded text-[10px] bg-surface-container text-secondary">Non-essential</span>
+</span>
+<span class="font-label-numeric font-medium text-body-sm">KES 5,000 / KES 6,000 (83%)</span>
+</div>
+<div class="w-full h-2 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-secondary" style="width: 83%"></div>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================== -->
+<!-- VIEW 4: MONTHLY ALLOCATION PLAN                          -->
+<!-- ======================================================== -->
+<section class="hidden space-y-6" id="view-monthly-allocation">
+<div>
+<h2 class="font-headline-xl text-headline-xl font-bold text-on-surface">Monthly Allocation</h2>
+<p class="font-body-md text-body-md text-secondary">Plan where your income goes every month before spending begins.</p>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<span class="font-title-sm text-body-md font-medium">90% Allocated (KES 90,000 of KES 100,000)</span>
+<span class="font-label-numeric text-primary font-bold">KES 10,000 Unallocated Surplus</span>
+</div>
+<div class="w-full h-3 bg-surface-container rounded-full overflow-hidden">
+<div class="h-full bg-primary rounded-full transition-all" style="width: 90%"></div>
+</div>
+</div>
+<div class="rounded-xl bg-surface-container-lowest border border-outline-variant overflow-hidden shadow-sm">
+<table class="w-full text-left border-collapse">
+<thead>
+<tr class="bg-surface-container-low text-secondary font-label-sm text-[11px] uppercase tracking-wider border-b border-outline-variant">
+<th class="py-3.5 px-4">Destination Target</th>
+<th class="py-3.5 px-4">Pillar</th>
+<th class="py-3.5 px-4 text-right">Planned (KES)</th>
+<th class="py-3.5 px-4 text-right">% of Inflow</th>
+<th class="py-3.5 px-4 text-center">Status</th>
+<th class="py-3.5 px-4 text-center">Action</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-outline-variant/60 font-body-sm">
+<tr class="hover:bg-surface">
+<td class="py-3.5 px-4 font-medium text-on-surface">Essential Living Expenses</td>
+<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-error-container text-on-error-container font-medium">Expense</span></td>
+<td class="py-3.5 px-4 font-label-numeric font-semibold text-right">KES 55,000</td>
+<td class="py-3.5 px-4 font-label-numeric text-right">55.0%</td>
+<td class="py-3.5 px-4 text-center"><span class="inline-flex w-2.5 h-2.5 rounded-full bg-primary"></span></td>
+<td class="py-3.5 px-4 text-center"><button class="text-secondary hover:text-primary font-title-sm text-xs">Edit</button></td>
+</tr>
+<tr class="hover:bg-surface">
+<td class="py-3.5 px-4 font-medium text-on-surface">Emergency Buffer (CIC MMF)</td>
+<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-tertiary-fixed text-on-tertiary-fixed font-medium">Saving</span></td>
+<td class="py-3.5 px-4 font-label-numeric font-semibold text-right">KES 15,000</td>
+<td class="py-3.5 px-4 font-label-numeric text-right">15.0%</td>
+<td class="py-3.5 px-4 text-center"><span class="inline-flex w-2.5 h-2.5 rounded-full bg-primary"></span></td>
+<td class="py-3.5 px-4 text-center"><button class="text-secondary hover:text-primary font-title-sm text-xs">Edit</button></td>
+</tr>
+<tr class="hover:bg-surface">
+<td class="py-3.5 px-4 font-medium text-on-surface">US Equities Index (VOO / AAPL)</td>
+<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-secondary-container text-on-secondary-container font-medium">Investment</span></td>
+<td class="py-3.5 px-4 font-label-numeric font-semibold text-right">KES 10,000</td>
+<td class="py-3.5 px-4 font-label-numeric text-right">10.0%</td>
+<td class="py-3.5 px-4 text-center"><span class="inline-flex w-2.5 h-2.5 rounded-full bg-primary"></span></td>
+<td class="py-3.5 px-4 text-center"><button class="text-secondary hover:text-primary font-title-sm text-xs">Edit</button></td>
+</tr>
+<tr class="hover:bg-surface">
+<td class="py-3.5 px-4 font-medium text-on-surface">Stima SACCO Capital Backing</td>
+<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-secondary-container text-on-secondary-container font-medium">SACCO</span></td>
+<td class="py-3.5 px-4 font-label-numeric font-semibold text-right">KES 5,000</td>
+<td class="py-3.5 px-4 font-label-numeric text-right">5.0%</td>
+<td class="py-3.5 px-4 text-center"><span class="inline-flex w-2.5 h-2.5 rounded-full bg-primary"></span></td>
+<td class="py-3.5 px-4 text-center"><button class="text-secondary hover:text-primary font-title-sm text-xs">Edit</button></td>
+</tr>
+<tr class="hover:bg-surface">
+<td class="py-3.5 px-4 font-medium text-on-surface">NSE High Dividend Stocks</td>
+<td class="py-3.5 px-4"><span class="px-2 py-0.5 rounded text-xs bg-secondary-container text-on-secondary-container font-medium">Investment</span></td>
+<td class="py-3.5 px-4 font-label-numeric font-semibold text-right">KES 5,000</td>
+<td class="py-3.5 px-4 font-label-numeric text-right">5.0%</td>
+<td class="py-3.5 px-4 text-center"><span class="inline-flex w-2.5 h-2.5 rounded-full bg-primary"></span></td>
+<td class="py-3.5 px-4 text-center"><button class="text-secondary hover:text-primary font-title-sm text-xs">Edit</button></td>
+</tr>
+</tbody>
+</table>
+</div>
+</section>
+<!-- ======================================================== -->
+<!-- VIEW 5: EMERGENCY FUND                                   -->
+<!-- ======================================================== -->
+<section class="hidden space-y-6" id="view-emergency-fund">
+<div>
+<h2 class="font-headline-xl text-headline-xl font-bold text-on-surface">Emergency Fund</h2>
+<p class="font-body-md text-body-md text-secondary">Build an unshakeable cash safety net for unexpected life events.</p>
+</div>
+<!-- Central Hero Card -->
+<div class="p-8 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm text-center max-w-2xl mx-auto">
+<span class="inline-block p-3 rounded-full bg-primary/10 text-primary mb-3">
+<span class="material-symbols-outlined text-3xl">savings</span>
+</span>
+<div class="font-headline-xl text-headline-xl font-bold text-on-surface">KES 90,000</div>
+<div class="font-body-md text-body-md text-secondary mt-1">Current Balance of KES 180,000 Target (50% funded)</div>
+<div class="w-full h-3.5 bg-surface-container rounded-full overflow-hidden my-6">
+<div class="h-full bg-primary rounded-full" style="width: 50%"></div>
+</div>
+<!-- Target Multiplier Selector Pills -->
+<div class="flex flex-wrap items-center justify-center gap-2 mb-4">
+<button class="px-3.5 py-1.5 rounded-lg border border-outline-variant bg-surface-container hover:bg-surface-container-high text-xs font-medium">3 Mos (KES 90k)</button>
+<button class="px-3.5 py-1.5 rounded-lg border border-primary bg-primary text-on-primary text-xs font-semibold shadow-xs">6 Mos (KES 180k) — Selected</button>
+<button class="px-3.5 py-1.5 rounded-lg border border-outline-variant bg-surface-container hover:bg-surface-container-high text-xs font-medium">9 Mos (KES 270k)</button>
+<button class="px-3.5 py-1.5 rounded-lg border border-outline-variant bg-surface-container hover:bg-surface-container-high text-xs font-medium">12 Mos (KES 360k)</button>
+</div>
+<p class="font-body-sm text-xs text-secondary italic">Calculated solely from contributions, interest/yield from MMFs not added for conservatism.</p>
+</div>
+<!-- Timeline Projection Table -->
+<div class="rounded-xl bg-surface-container-lowest border border-outline-variant p-6 shadow-sm">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface mb-4">Contribution Path (KES 15,000/mo)</h3>
+<div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+<div class="p-4 rounded-lg bg-surface border border-outline-variant/60">
+<span class="text-xs text-secondary font-label-sm">CURRENT (Aug 2025)</span>
+<div class="font-label-numeric font-bold text-lg mt-1">KES 90,000</div>
+<div class="text-[11px] text-primary mt-1 font-medium">3.0 Months Covered</div>
+</div>
+<div class="p-4 rounded-lg bg-surface border border-outline-variant/60">
+<span class="text-xs text-secondary font-label-sm">SEPTEMBER 2025</span>
+<div class="font-label-numeric font-bold text-lg mt-1">KES 105,000</div>
+<div class="text-[11px] text-secondary mt-1">3.5 Months Covered</div>
+</div>
+<div class="p-4 rounded-lg bg-surface border border-outline-variant/60">
+<span class="text-xs text-secondary font-label-sm">OCTOBER 2025</span>
+<div class="font-label-numeric font-bold text-lg mt-1">KES 120,000</div>
+<div class="text-[11px] text-secondary mt-1">4.0 Months Covered</div>
+</div>
+<div class="p-4 rounded-lg bg-surface border border-primary/40 bg-primary/5">
+<span class="text-xs text-primary font-label-sm font-semibold">GOAL: FEB 2026</span>
+<div class="font-label-numeric font-bold text-lg text-primary mt-1">KES 180,000</div>
+<div class="text-[11px] text-primary mt-1 font-semibold">6.0 Months (Target Met)</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================== -->
+<!-- VIEW 6: NET WORTH                                        -->
+<!-- ======================================================== -->
+<section class="hidden space-y-6" id="view-net-worth">
+<div>
+<h2 class="font-headline-xl text-headline-xl font-bold text-on-surface">Net Worth</h2>
+<p class="font-body-md text-body-md text-secondary">Everything you own minus everything you owe.</p>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm flex flex-col md:flex-row items-center justify-between gap-4">
+<div>
+<span class="text-xs uppercase font-label-sm text-secondary">Total Net Worth</span>
+<div class="font-label-currency-lg text-display-lg text-primary font-bold">KES 650,000</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="text-right">
+<span class="text-xs text-secondary font-label-sm uppercase">Total Assets</span>
+<div class="font-label-numeric font-bold text-lg text-on-surface">KES 800,000</div>
+</div>
+<div class="text-right">
+<span class="text-xs text-secondary font-label-sm uppercase">Total Liabilities</span>
+<div class="font-label-numeric font-bold text-lg text-error">KES 150,000</div>
+</div>
+</div>
+</div>
+<!-- Side-by-side Assets and Liabilities Columns -->
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<!-- Assets Column -->
+<div class="p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-primary">account_balance</span> Assets
+              </h3>
+<button class="text-xs text-primary font-medium hover:underline">+ Add Asset</button>
+</div>
+<div class="space-y-2 font-body-sm">
+<div class="flex justify-between p-3 rounded-lg bg-surface border border-outline-variant/60">
+<span>Investment Portfolio</span>
+<span class="font-label-numeric font-bold">KES 485,000</span>
+</div>
+<div class="flex justify-between p-3 rounded-lg bg-surface border border-outline-variant/60">
+<span>Business Equity Stake</span>
+<span class="font-label-numeric font-bold">KES 200,000</span>
+</div>
+<div class="flex justify-between p-3 rounded-lg bg-surface border border-outline-variant/60">
+<span>Liquid Cash &amp; M-Pesa</span>
+<span class="font-label-numeric font-bold">KES 50,000</span>
+</div>
+<div class="flex justify-between p-3 rounded-lg bg-surface border border-outline-variant/60">
+<span>Personal Belongings &amp; Electronics</span>
+<span class="font-label-numeric font-bold">KES 65,000</span>
+</div>
+</div>
+</div>
+<!-- Liabilities Column -->
+<div class="p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm space-y-4">
+<div class="flex items-center justify-between">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface flex items-center gap-2">
+<span class="material-symbols-outlined text-error">credit_card_off</span> Liabilities
+              </h3>
+<button class="text-xs text-error font-medium hover:underline">+ Add Liability</button>
+</div>
+<div class="space-y-2 font-body-sm">
+<div class="flex justify-between p-3 rounded-lg bg-surface border border-outline-variant/60">
+<span>Higher Education / Bank Loan</span>
+<span class="font-label-numeric font-bold text-error">KES 100,000</span>
+</div>
+<div class="flex justify-between p-3 rounded-lg bg-surface border border-outline-variant/60">
+<span>Mobile Credit &amp; Short-term Card</span>
+<span class="font-label-numeric font-bold text-error">KES 50,000</span>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================== -->
+<!-- VIEW 7: PROJECTIONS & COMPOUND CALCULATOR                -->
+<!-- ======================================================== -->
+<section class="hidden space-y-6" id="view-projection">
+<div>
+<h2 class="font-headline-xl text-headline-xl font-bold text-on-surface">Projection</h2>
+<p class="font-body-md text-body-md text-secondary">Compound &amp; recurring growth simulations based on your monthly surplus.</p>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+<div class="lg:col-span-6 p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm space-y-5">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Simulation Inputs</h3>
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<label class="font-medium text-secondary">Starting Portfolio Balance</label>
+<span class="font-label-numeric font-semibold" id="slider-start-val">KES 485,000</span>
+</div>
+<input class="w-full accent-primary" max="1000000" min="0" step="10000" type="range" value="485000"/>
+</div>
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<label class="font-medium text-secondary">Monthly Addition (KES)</label>
+<span class="font-label-numeric font-semibold" id="slider-monthly-val">KES 25,000</span>
+</div>
+<input class="w-full accent-primary" max="100000" min="5000" step="2500" type="range" value="25000"/>
+</div>
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<label class="font-medium text-secondary">Time Horizon (Years)</label>
+<span class="font-label-numeric font-semibold" id="slider-years-val">5 Years</span>
+</div>
+<input class="w-full accent-primary" max="25" min="1" step="1" type="range" value="5"/>
+</div>
+<div>
+<div class="flex justify-between text-body-sm mb-1">
+<label class="font-medium text-secondary">Expected Return (p.a.)</label>
+<span class="font-label-numeric font-semibold" id="slider-return-val">10.0% p.a.</span>
+</div>
+<input class="w-full accent-primary" max="18" min="5" step="0.5" type="range" value="10"/>
+</div>
+</div>
+<div class="lg:col-span-6 p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm flex flex-col justify-between">
+<div>
+<span class="text-xs uppercase font-label-sm text-secondary">Estimated Value in 5 Years</span>
+<div class="font-label-currency-lg text-display-lg text-primary font-bold mt-1">KES 2,716,420</div>
+<p class="font-body-sm text-secondary mt-1">Principal Invested: KES 1,985,000 • Estimated Compound Growth: KES 731,420</p>
+</div>
+<div class="p-4 rounded-lg bg-surface-container-low border border-outline-variant mt-6">
+<div class="flex items-center gap-2 text-xs font-semibold text-secondary mb-1">
+<span class="material-symbols-outlined text-sm">info</span> Conservative Model
+              </div>
+<p class="text-[12px] text-secondary font-body-sm leading-relaxed">
+                Mathematical projection for planning purposes, not guaranteed investment returns. Tax withholding on interest and capital gains excluded.
+              </p>
+</div>
+</div>
+</div>
+</section>
+<!-- ======================================================== -->
+<!-- VIEW 8: SETTINGS & LOCAL DATA PRIVACY                    -->
+<!-- ======================================================== -->
+<section class="hidden space-y-6" id="view-settings">
+<div>
+<h2 class="font-headline-xl text-headline-xl font-bold text-on-surface">Settings</h2>
+<p class="font-body-md text-body-md text-secondary">Preferences and offline local device data storage.</p>
+</div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm space-y-4">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Preferences</h3>
+<div>
+<label class="block font-body-sm text-secondary mb-1">Base Currency</label>
+<select class="w-full rounded-md border-outline-variant bg-surface-container-lowest font-body-md text-on-surface">
+<option selected="">KES — Kenyan Shilling</option>
+<option>USD — US Dollar</option>
+<option>EUR — Euro</option>
+<option>GBP — British Pound</option>
+<option>ZAR — South African Rand</option>
+</select>
+</div>
+<div>
+<label class="block font-body-sm text-secondary mb-1">Date Format</label>
+<select class="w-full rounded-md border-outline-variant bg-surface-container-lowest font-body-md text-on-surface">
+<option selected="">DD/MM/YYYY (e.g. 15/08/2025)</option>
+<option>YYYY-MM-DD</option>
+</select>
+</div>
+</div>
+<div class="p-6 rounded-xl bg-surface-container-lowest border border-outline-variant shadow-sm space-y-4">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">Local Device Storage</h3>
+<p class="font-body-sm text-secondary">Your data is never transmitted to an external server. Everything stays encrypted in local browser storage.</p>
+<div class="flex flex-wrap gap-2 pt-2">
+<button class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-title-sm text-body-sm inline-flex items-center gap-1.5" onclick="alert('Exported akiba-backup.json')">
+<span class="material-symbols-outlined text-sm">download</span> Export JSON Backup
+              </button>
+<button class="px-4 py-2 rounded-lg bg-surface-container hover:bg-surface-container-high text-on-surface font-title-sm text-body-sm inline-flex items-center gap-1.5" onclick="alert('Ready to import')">
+<span class="material-symbols-outlined text-sm">upload</span> Import Data
+              </button>
+</div>
+<div class="pt-2 border-t border-outline-variant">
+<button class="text-xs text-error font-semibold hover:underline" onclick="confirm('Reset all local data? This cannot be undone.')">Reset Local Data (Factory Reset)</button>
+</div>
+</div>
+</div>
+</section>
+</div>
+</main>
+<!-- Mobile Bottom Tab Bar (Responsive Shell Rule) -->
+<nav aria-label="Mobile Navigation" class="md:hidden fixed bottom-0 left-0 right-0 bg-surface-container-lowest shadow-lg border-t border-outline-variant z-30 flex items-center justify-around py-2 px-2">
+<button class="mobile-nav-btn flex flex-col items-center gap-0.5 text-primary text-xs font-title-sm" data-view="dashboard">
+<span class="material-symbols-outlined text-xl">dashboard</span>
+<span>Home</span>
+</button>
+<button class="mobile-nav-btn flex flex-col items-center gap-0.5 text-secondary hover:text-on-surface text-xs font-body-sm" data-view="portfolio">
+<span class="material-symbols-outlined text-xl">account_balance</span>
+<span>Portfolio</span>
+</button>
+<button class="mobile-nav-btn flex flex-col items-center gap-0.5 text-secondary hover:text-on-surface text-xs font-body-sm" data-view="budget">
+<span class="material-symbols-outlined text-xl">account_balance_wallet</span>
+<span>Budget</span>
+</button>
+<button class="mobile-nav-btn flex flex-col items-center gap-0.5 text-secondary hover:text-on-surface text-xs font-body-sm" data-view="monthly-allocation">
+<span class="material-symbols-outlined text-xl">pie_chart</span>
+<span>Plan</span>
+</button>
+<button class="mobile-nav-btn flex flex-col items-center gap-0.5 text-secondary hover:text-on-surface text-xs font-body-sm" data-view="settings">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span>More</span>
+</button>
+</nav>
+<!-- ============================================================ -->
+<!-- ADD TRANSACTION / HOLDING MODAL DIALOG                       -->
+<!-- ============================================================ -->
+<div class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-on-surface/40 backdrop-blur-xs" id="add-holding-modal">
+<div class="bg-surface-container-lowest border border-outline-variant rounded-xl max-w-lg w-full p-6 shadow-xl space-y-4">
+<div class="flex items-center justify-between border-b border-outline-variant pb-3">
+<h3 class="font-headline-md text-headline-md font-bold text-on-surface">+ Add Holding / Asset</h3>
+<button class="p-1 rounded text-secondary hover:bg-surface-container" id="close-modal-btn">
+<span class="material-symbols-outlined">close</span>
+</button>
+</div>
+<form class="space-y-4" id="holding-form" onsubmit="event.preventDefault(); saveHoldingModal();">
+<div>
+<label class="block font-body-sm text-secondary mb-1">Asset Name</label>
+<input class="w-full rounded-md border-outline-variant bg-surface-container-lowest font-body-md text-on-surface focus:ring-primary focus:border-primary" placeholder="e.g. Standard Chartered MMF or Tesla" required="" type="text"/>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div>
+<label class="block font-body-sm text-secondary mb-1">Asset Category</label>
+<select class="w-full rounded-md border-outline-variant bg-surface-container-lowest font-body-md text-on-surface">
+<option>Fixed Income / MMF</option>
+<option>US Equities</option>
+<option>NSE Equities</option>
+<option>SACCO Shares</option>
+<option>Cash &amp; Deposit</option>
+<option>Safety / Emergency</option>
+</select>
+</div>
+<div>
+<label class="block font-body-sm text-secondary mb-1">Currency</label>
+<select class="w-full rounded-md border-outline-variant bg-surface-container-lowest font-body-md text-on-surface" id="modal-currency">
+<option value="KES">KES</option>
+<option value="USD">USD</option>
+<option value="EUR">EUR</option>
+<option value="GBP">GBP</option>
+</select>
+</div>
+</div>
+<div>
+<label class="block font-body-sm text-secondary mb-1">Original Purchase / Principal Amount</label>
+<input class="w-full rounded-md border-outline-variant bg-surface-container-lowest font-label-numeric text-on-surface focus:ring-primary focus:border-primary" placeholder="50000" required="" type="number"/>
+</div>
+<div class="p-3 rounded-lg bg-surface-container-low border border-outline-variant text-body-sm text-secondary flex items-center justify-between">
+<span>Real-time FX preview:</span>
+<span class="font-label-numeric font-medium text-on-surface">Base Rate: KES 130 / USD</span>
+</div>
+<div class="flex items-center justify-end gap-3 pt-2">
+<button class="px-4 py-2 rounded-lg text-secondary hover:bg-surface-container font-title-sm text-body-md" onclick="document.getElementById('add-holding-modal').classList.add('hidden')" type="button">Cancel</button>
+<button class="px-5 py-2 rounded-lg bg-primary hover:bg-primary-container text-on-primary font-title-sm text-body-md font-medium" type="submit">Save to Ledger</button>
+</div>
+</form>
+</div>
+</div>
+<!-- Vanilla JavaScript for View Switching & Interactive State Demos -->
+<script>
+    // Tab switching logic for all 8 views
+    const views = [
+      'dashboard', 
+      'portfolio', 
+      'budget', 
+      'monthly-allocation', 
+      'emergency-fund', 
+      'net-worth', 
+      'projection', 
+      'settings'
+    ];
+
+    function switchView(targetView) {
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        if (el) {
+          if (v === targetView) {
+            el.classList.remove('hidden');
+          } else {
+            el.classList.add('hidden');
+          }
+        }
+      });
+
+      // Update Desktop Nav styles
+      document.querySelectorAll('#nav-list .nav-item').forEach(btn => {
+        const viewAttr = btn.getAttribute('data-view');
+        if (viewAttr === targetView) {
+          btn.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg bg-secondary-container text-on-secondary-container font-title-sm text-title-sm active:scale-98 transition-all";
+        } else {
+          btn.className = "nav-item w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-secondary hover:bg-surface-container hover:text-on-surface transition-colors font-body-md text-body-md active:scale-98";
+        }
+      });
+
+      // Update Mobile Nav styles
+      document.querySelectorAll('.mobile-nav-btn').forEach(btn => {
+        const viewAttr = btn.getAttribute('data-view');
+        if (viewAttr === targetView) {
+          btn.className = "mobile-nav-btn flex flex-col items-center gap-0.5 text-primary text-xs font-title-sm";
+        } else {
+          btn.className = "mobile-nav-btn flex flex-col items-center gap-0.5 text-secondary hover:text-on-surface text-xs font-body-sm";
+        }
+      });
+
+      // Window scroll to top
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Attach listeners to all navigation triggers
+    document.querySelectorAll('[data-view]').forEach(item => {
+      item.addEventListener('click', (e) => {
+        const view = item.getAttribute('data-view');
+        if (view) switchView(view);
+      });
+    });
+
+    // Top Sub-nav filter pills interaction
+    document.querySelectorAll('.filter-pill').forEach(pill => {
+      pill.addEventListener('click', () => {
+        document.querySelectorAll('.filter-pill').forEach(p => {
+          p.className = "filter-pill py-2.5 text-secondary hover:text-on-surface font-body-md pb-1 whitespace-nowrap transition-colors";
+        });
+        pill.className = "filter-pill py-2.5 text-primary border-b-2 border-primary font-title-sm pb-1 whitespace-nowrap active:scale-95";
+      });
+    });
+
+    // Modal controls
+    const modal = document.getElementById('add-holding-modal');
+    const openBtn = document.getElementById('open-add-modal-btn');
+    const closeBtn = document.getElementById('close-modal-btn');
+
+    openBtn.addEventListener('click', () => modal.classList.remove('hidden'));
+    closeBtn.addEventListener('click', () => modal.classList.add('hidden'));
+
+    function saveHoldingModal() {
+      modal.classList.add('hidden');
+      alert('New holding registered into local device ledger.');
+    }
+
+    // Demo State Toggles (Normal vs Over-allocated Warning)
+    const btnNormal = document.getElementById('toggle-normal-state');
+    const btnWarning = document.getElementById('toggle-warning-state');
+    const banner = document.getElementById('allocation-alert-banner');
+
+    btnNormal.addEventListener('click', () => {
+      banner.classList.add('hidden');
+      btnNormal.className = "px-2 py-1 rounded font-medium bg-surface-container-lowest text-primary shadow-xs";
+      btnWarning.className = "px-2 py-1 rounded font-medium text-secondary hover:text-on-surface";
+    });
+
+    btnWarning.addEventListener('click', () => {
+      banner.classList.remove('hidden');
+      btnWarning.className = "px-2 py-1 rounded font-medium bg-error-container text-on-error-container shadow-xs";
+      btnNormal.className = "px-2 py-1 rounded font-medium text-secondary hover:text-on-surface";
+    });
+  </script>
+</body></html>
