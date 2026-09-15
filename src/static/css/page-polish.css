@@ -1,0 +1,13 @@
+.page-heading { margin-bottom: 1.25rem; }
+.page-heading h1 { letter-spacing: -.025em; }
+#income-form, #expense-form, #allocation-form { align-items: end; }
+#income-list, #expense-list, #allocation-list { margin-top: 1rem; }
+#income-list > *, #expense-list > *, #allocation-list > * { border-radius: 10px; }
+#budget-message, #plan-message { margin-top: 1rem; }
+#surplus-card.negative, #plan-remaining-card.negative { border-color: rgba(185, 28, 28, .35); }
+#surplus-card:not(.negative) .metric-value, #plan-remaining-card:not(.negative) .metric-value { font-variant-numeric: tabular-nums; }
+#allocation-form .form-actions, #income-form .form-actions, #expense-form .form-actions { align-self: end; }
+@media (max-width: 760px) {
+  #income-form, #expense-form, #allocation-form { grid-template-columns: 1fr; }
+  #income-form .form-actions, #expense-form .form-actions, #allocation-form .form-actions { grid-column: 1; }
+}
