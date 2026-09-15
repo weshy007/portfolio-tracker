@@ -1,0 +1,36 @@
+[hidden] { display: none !important; }
+
+body.modal-open { overflow: hidden; }
+.asset-modal-backdrop { position: fixed; inset: 0; z-index: 1000; display: grid; place-items: center; padding: 1rem; background: rgba(15, 23, 42, .55); }
+.asset-modal { width: min(760px, 100%); max-height: min(90vh, 760px); overflow: auto; background: var(--surface, #fff); border-radius: 18px; padding: 1.25rem; box-shadow: 0 24px 80px rgba(0,0,0,.22); }
+.asset-modal-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 1rem; margin-bottom: 1rem; }
+.asset-type-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: .75rem; }
+.asset-type-grid button { display: flex; flex-direction: column; align-items: flex-start; gap: .2rem; min-height: 105px; padding: 1rem; text-align: left; border: 1px solid var(--border-color, #e5e7eb); border-radius: 12px; background: var(--surface, #fff); cursor: pointer; }
+.asset-type-grid button:hover { border-color: var(--primary-color); transform: translateY(-1px); }
+.asset-type-grid strong { font-size: .9rem; }
+.asset-type-grid small { color: var(--text-muted, #64748b); }
+.market-badge { display: inline-flex; align-items: center; margin-left: .35rem; padding: .12rem .4rem; border-radius: 999px; font-size: .65rem; font-weight: 700; background: var(--gray-100, #f1f5f9); }
+.market-disclaimer { margin: .75rem 0; font-size: .78rem; }
+.table-pagination { display: flex; justify-content: space-between; align-items: center; gap: .75rem; margin-top: .75rem; font-size: .8rem; color: var(--text-muted, #64748b); }
+.table-pagination > div { display: flex; gap: .4rem; }
+
+@media (max-width: 800px) {
+  .asset-type-grid { grid-template-columns: repeat(2, 1fr); }
+  .asset-modal { padding: 1rem; border-radius: 14px; }
+  .table-wrapper { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+  .table-wrapper table { min-width: 850px; }
+  .page-heading, .card-header.table-heading { flex-wrap: wrap; gap: .75rem; }
+  .action-bar { width: 100%; flex-wrap: wrap; }
+  .action-bar .btn { flex: 1 1 auto; }
+  .metric-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+
+@media (max-width: 520px) {
+  .asset-type-grid { grid-template-columns: 1fr 1fr; gap: .5rem; }
+  .asset-type-grid button { min-height: 92px; padding: .75rem; }
+  .metric-grid { grid-template-columns: 1fr; }
+  .table-pagination { align-items: flex-start; flex-direction: column; }
+  .table-pagination > div { width: 100%; }
+  .table-pagination .btn { flex: 1; }
+  .topbar-meta { display: none; }
+}

@@ -6,10 +6,13 @@
     <meta name="description" content="A local-first personal wealth and financial allocation tracker">
     <title>{% block title %}{{ app_name }}{% endblock %}</title>
 
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='/favicon.svg') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', path='/css/app.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/enhancements.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/page-polish.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
 <body data-theme="light">
@@ -68,5 +71,7 @@
     <!-- Scripts -->
     <script type="module" src="{{ url_for('static', path='/js/app.js') }}"></script>
     {% block extra_js %}{% endblock %}
+    <script type="module" src="{{ url_for('static', path='/js/portfolio-enhancements.js') }}"></script>
+    <script type="module" src="{{ url_for('static', path='/js/portfolio-fixes.js') }}"></script>
 </body>
 </html>
