@@ -61,7 +61,7 @@ async def run_daily_update() -> dict:
     If a historical day's scrape is missing, the latest available scraped yield is used.
     """
     today = date.today()
-    yesterday = today
+    valuation_date = today
     scraper = PesaCalcYieldScraper(settings.pesacalc_mmf_url)
     yields = await scraper.fetch()
 
@@ -123,7 +123,7 @@ async def run_daily_update() -> dict:
 
     summary = {
         "date": today.isoformat(),
-        "valuation_date": yesterday.isoformat(),
+        "valuation_date": valuation_date.isoformat(),
         "yields_saved": yields_saved,
         "accounts_accrued": accounts_accrued,
         "total_interest_added": float(kes(total_interest_added)),
