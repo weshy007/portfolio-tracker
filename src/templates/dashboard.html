@@ -1,36 +1,75 @@
 {% extends "base.html" %}
 {% block title %}Dashboard - {{ super() }}{% endblock %}
 {% block content %}
-<section class="page-heading">
+<section class="page-heading dashboard-heading">
   <div>
     <p class="eyebrow">Financial dashboard</p>
-    <h1>Portfolio at a glance</h1>
-    <p>One reporting currency, native currencies preserved. Add and edit investments from Portfolio.</p>
+    <h1>Your money at a glance</h1>
+    <p>Portfolio inputs live in Portfolio. This page turns them into a clear view of value, allocation and financial runway.</p>
   </div>
-  <a class="btn btn-primary" href="/portfolio">Manage portfolio</a>
-</section>
-
-<section class="metric-grid dashboard-metrics">
-  <article class="metric-card metric-card-primary"><span class="metric-label">Portfolio value</span><strong id="portfolio-total" class="metric-value">—</strong><span id="portfolio-note" class="metric-subtext">All tracked investments</span></article>
-  <article class="metric-card"><span class="metric-label">Market cost basis</span><strong id="cost-total" class="metric-value">—</strong><span id="cost-note" class="metric-subtext">Quoted market positions only</span></article>
-  <article class="metric-card"><span class="metric-label">Unrealized P/L</span><strong id="pl-total" class="metric-value">—</strong><span id="pl-note" class="metric-subtext">Market positions</span></article>
-  <article class="metric-card"><span class="metric-label">MMF interest</span><strong id="interest-total" class="metric-value">—</strong><span id="interest-note" class="metric-subtext">Accrued interest</span></article>
-  <article class="metric-card"><span class="metric-label">Monthly surplus</span><strong id="surplus-total" class="metric-value">—</strong><span id="surplus-note" class="metric-subtext">Income less expenses</span></article>
-  <article class="metric-card"><span class="metric-label">Net worth</span><strong id="networth-total" class="metric-value">—</strong><span id="networth-note" class="metric-subtext">Investments + assets − liabilities</span></article>
-</section>
-
-<section class="dashboard-status card">
-  <div>
-    <p class="eyebrow">System status</p>
-    <h2 class="card-title">Data is local first</h2>
-    <p class="text-muted">Your ledger stays in this browser. Market quote and FX requests are only made when the app needs current values.</p>
-  </div>
-  <div class="status-actions">
-    <a class="btn btn-secondary" href="/budget">Review budget</a>
-    <a class="btn btn-secondary" href="/settings">Settings</a>
+  <div class="dashboard-actions">
+    <a class="btn btn-primary" href="/portfolio">Manage portfolio</a>
     <span id="dashboard-updated" class="sync-label">Updating…</span>
   </div>
 </section>
-{% endblock %}
 
-{% block extra_js %}<script type="module" src="{{ url_for('static', path:'/js/dashboard.js') }}"></script>{% endblock %}
+<section class="metric-grid dashboard-metrics">
+  <article class="metric-card metric-card-primary"><span class="metric-label">Portfolio value</span><strong id="portfolio-total" class="metric-value">—</strong><span id="portfolio-note" class="metric-subtext">Tracked investments</span></article>
+  <article class="metric-card"><span class="metric-label">Market P/L</span><strong id="pl-total" class="metric-value">—</strong><span id="pl-note" class="metric-subtext">Quoted positions</span></article>
+  <article class="metric-card"><span class="metric-label">MMF interest</span><strong id="interest-total" class="metric-value">—</strong><span id="interest-note" class="metric-subtext">Accrued to date</span></article>
+  <article class="metric-card"><span class="metric-label">Monthly surplus</span><strong id="surplus-total" class="metric-value">—</strong><span id="surplus-note" class="metric-subtext">Income less expenses</span></article>
+  <article class="metric-card"><span class="metric-label">Net worth</span><strong id="networth-total" class="metric-value">—</strong><span id="networth-note" class="metric-subtext">Investments + assets − liabilities</span></article>
+  <article class="metric-card"><span class="metric-label">Emergency fund</span><strong id="emergency-value" class="metric-value">—</strong><span id="emergency-note" class="metric-subtext">3 month target</span></article>
+</section>
+
+<section class="dashboard-chart-grid">
+  <article class="card chart-card">
+    <div class="card-header"><div><p class="eyebrow">Allocation</p><h2 class="card-title">Where the portfolio sits</h2></div><span id="allocation-total" class="chart-total">—</span></div>
+    <div class="donut-layout">
+      <div id="allocation-donut" class="donut-chart donut-chart-large" role="img" aria-label="Portfolio allocation"></div>
+      <div id="allocation-legend" class="chart-legend"></div>
+    </div>
+  </article>
+  <article class="card chart-card">
+    <div class="card-header"><div><p class="eyebrow">Budget</p><h2 class="card-title">Monthly cash flow</h2></div></div>
+    <div id="cashflow-chart" class="bar-chart" aria-label="Monthly income and expenses chart"></div>
+    <div class="chart-summary"><span><i class="legend-dot income"></i>Income</span><span><i class="legend-dot expense"></i>Expenses</span><strong id="cashflow-surplus">—</strong></div>
+  </article>
+</section>
+
+<section class="card emergency-card">
+  <div class="card-header">
+    <div><p class="eyebrow">Safety net</p><h2 class="card-title">Emergency fund runway</h2><p class="text-muted">Targets are based on your essential monthly expenses from Budget.</p></div>
+    <a class="btn btn-sm btn-secondary" href="/budget">Edit budget</a>
+  </div>
+  <div class="emergency-grid">
+    <div class="runway-card"><span>3 months</span><strong id="emergency-3m">—</strong><div class="progress"><span id="emergency-3m-bar"></span></div><small id="emergency-3m-pct">—</small></div>
+    <div class="runway-card"><span>6 months</span><strong id="emergency-6m">—</strong><div class="progress"><span id="emergency-6m-bar"></span></div><small id="emergency-6m-pct">—</small></div>
+    <div class="runway-copy"><span class="metric-label">Essential monthly spend</span><strong id="essential-monthly">—</strong><small id="emergency-target-note">Add essential expenses in Budget.</small></div>
+  </div>
+</section>
+
+<section class="dashboard-assets">
+  <section class="card asset-section">
+    <div class="card-header"><div><p class="eyebrow">Equities</p><h2 class="card-title">Stocks</h2></div><span id="stocks-count" class="section-count">0</span></div>
+    <div id="stocks-list" class="asset-list"></div>
+    <div id="stocks-pagination" class="pagination"></div>
+  </section>
+  <section class="card asset-section">
+    <div class="card-header"><div><p class="eyebrow">Fixed income</p><h2 class="card-title">Money Market Funds</h2></div><span id="mmfs-count" class="section-count">0</span></div>
+    <div id="mmfs-list" class="asset-list"></div>
+    <div id="mmfs-pagination" class="pagination"></div>
+  </section>
+  <section class="card asset-section">
+    <div class="card-header"><div><p class="eyebrow">Other investments</p><h2 class="card-title">Assets & savings</h2></div><span id="other-count" class="section-count">0</span></div>
+    <div id="other-list" class="asset-list"></div>
+    <div id="other-pagination" class="pagination"></div>
+  </section>
+</section>
+
+<section class="dashboard-status card">
+  <div><p class="eyebrow">Data</p><h2 class="card-title">Local first</h2><p class="text-muted">Your ledger stays on this device. Market and FX requests happen only when current values are needed.</p></div>
+  <div class="status-actions"><a class="btn btn-secondary" href="/allocation">Monthly allocation</a><a class="btn btn-secondary" href="/settings">Settings</a></div>
+</section>
+{% endblock %}
+{% block extra_js %}<script type="module" src="{{ url_for('static', path='/js/dashboard.js') }}"></script>{% endblock %}

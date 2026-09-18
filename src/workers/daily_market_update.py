@@ -31,27 +31,37 @@ def find_matching_yield(fund_name: str, yield_map: dict[str, Decimal]) -> Option
 
 
 def _yield_for_date(db, fund_name: str, valuation_date: date) -> Optional[Decimal]:
-    """Return the latest worker-fetched yield available on or before a valuation date."""
-    records = db.scalars(
-        select(DailyMMFYield)
-        .where(DailyMMFYield.yield_date <= valuation_date)
-        .order_by(DailyMMFYield.yield_date.desc())
-    ).all()
-    yield_map = {}
+    """Return the latest known scraped annual yield for one fund.
+
+    Prefer the latest yield available on or before the valuation date. If the
+    fund was first scraped after that date, use its latest available yield
+    instead of inventing a historical rate or skipping the investment day.
+    """
+    records = db.scalars(select(DailyMMFYield).order_by(DailyMMFYield.yield_date.desc())).all()
+    if not records:
+        return None
+
+    latest_all: dict[str, Decimal] = {}
+    latest_before: dict[str, Decimal] = {}
     for record in records:
         key = record.fund_name.casefold().strip()
-        if key not in yield_map:
-            yield_map[key] = Decimal(str(record.yield_decimal))
-    return find_matching_yield(fund_name, yield_map)
+        value = Decimal(str(record.yield_decimal))
+        if key not in latest_all:
+            latest_all[key] = value
+        if record.yield_date <= valuation_date and key not in latest_before:
+            latest_before[key] = value
+
+    return find_matching_yield(fund_name, latest_before) or find_matching_yield(fund_name, latest_all)
 
 
 async def run_daily_update() -> dict:
-    """Fetch today's rates, then accrue each MMF from investment day through EOD yesterday.
+    """Fetch today's rates, then compound each MMF from its investment day through today.
 
-    Today's rate is stored for the next valuation day. Today's interest is not accrued.
+    The daily rate is annual_yield / 365 and is applied to the current balance.
+    If a historical day's scrape is missing, the latest available scraped yield is used.
     """
     today = date.today()
-    yesterday = today - timedelta(days=1)
+    yesterday = today
     scraper = PesaCalcYieldScraper(settings.pesacalc_mmf_url)
     yields = await scraper.fetch()
 
@@ -80,8 +90,7 @@ async def run_daily_update() -> dict:
             first_unaccrued = account.last_accrued_on + timedelta(days=1) if account.last_accrued_on else investment_day
             accrual_day = max(first_unaccrued, investment_day)
 
-            # Only completed valuation days are accrued: investment day through EOD yesterday.
-            while accrual_day <= yesterday:
+            # Compound every investment day through the current valuation day.
                 annual_yield = _yield_for_date(db, account.fund_name, accrual_day)
                 if annual_yield is None:
                     # Do not advance past a day for which no worker-fetched rate exists.

@@ -421,7 +421,11 @@ def list_institutions(db: Session = Depends(get_db)):
 
     # Load latest yields from db
     yield_records = db.scalars(select(DailyMMFYield).order_by(desc(DailyMMFYield.yield_date))).all()
-    yield_map = {r.fund_name.casefold().strip(): Decimal(str(r.yield_decimal)) for r in yield_records}
+    yield_map = {}
+    for record in yield_records:
+        key = record.fund_name.casefold().strip()
+        if key not in yield_map:
+            yield_map[key] = Decimal(str(record.yield_decimal))
 
     results = []
     for item in KENYA_MMF_INSTITUTIONS:
@@ -444,7 +448,11 @@ def match_institution(query: str = Query(..., min_length=1), db: Session = Depen
     from src.services.market_tracking import match_institution_yield
 
     yield_records = db.scalars(select(DailyMMFYield).order_by(desc(DailyMMFYield.yield_date))).all()
-    yield_map = {r.fund_name.casefold().strip(): Decimal(str(r.yield_decimal)) for r in yield_records}
+    yield_map = {}
+    for record in yield_records:
+        key = record.fund_name.casefold().strip()
+        if key not in yield_map:
+            yield_map[key] = Decimal(str(record.yield_decimal))
 
     matched = match_institution_yield(query, yield_map)
     return {

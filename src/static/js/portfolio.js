@@ -33,21 +33,14 @@ function fillCurrencies() {
   select.value=Storage.getBaseCurrency();
 }
 
-function fillNseDirectory() {
-  const select=$('nse-ticker');
+function fillNseTickers() {
+  const select = $('nse-ticker');
   select.replaceChildren(new Option('Choose NSE security',''));
-  NSE_SECURITIES.slice().sort((a,b)=>a.ticker.localeCompare(b.ticker)).forEach(stock=>{
-    const option=new Option(stock.ticker,stock.ticker);
-    option.title=stock.name;
+  NSE_SECURITIES.slice().sort((x,y)=>x.ticker.localeCompare(y.ticker)).forEach(stock=>{
+    const option = new Option(`${stock.ticker} — ${stock.name}`, stock.ticker);
+    option.title = stock.name;
     select.add(option);
   });
-  $('nse-directory').replaceChildren(...NSE_SECURITIES.slice().sort((a,b)=>a.ticker.localeCompare(b.ticker)).map(stock=>{
-    const item=document.createElement('span');
-    item.className='ticker-chip';
-    item.textContent=stock.ticker;
-    item.title=stock.name;
-    return item;
-  }));
 }
 
 async function fillInstitutions() {
@@ -63,9 +56,6 @@ async function fillInstitutions() {
 
 function setAssetType(type) {
   ['nse','us','mmf','generic'].forEach(name=>$(name+'-fields').hidden=name!==type);
-  const labels={nse:'NSE security',us:'US ticker',mmf:'Fund',generic:'Name / ticker'};
-  $('holding-name').placeholder=labels[type];
-  $('holding-name').value='';
   if(type==='nse') $('generic-currency').value='KES';
 }
 
@@ -101,15 +91,12 @@ function renderHoldingForm() {
     const ticker=$('nse-ticker').value;
     const stock=NSE_STOCKS_BY_TICKER[ticker];
     if(stock) {
-      $('holding-name').value=stock.ticker;
       $('nse-company').textContent=stock.name+' · '+stock.sector;
-      $('holding-name').title=stock.name;
     }
   }
   if(type==='mmf') {
     const option=$('mmf-fund').selectedOptions[0];
     if(option?.value) {
-      $('holding-name').value=option.value;
       $('mmf-yield').value=option.dataset.yield ? option.dataset.yield+'% p.a.' : '—';
     }
   }
@@ -287,6 +274,7 @@ $('refresh-stocks').addEventListener('click',async()=>{
 });
 $('scrape-yields').addEventListener('click',async()=>{try{await API.scrapeMMFYields();await render();window.showToast?.('Daily yields updated.');}catch(e){window.showToast?.(e.message,'error');}});
 $('accrue-mmf').addEventListener('click',async()=>{try{await API.accrueMMF();await render();window.showToast?.('Completed MMF days accrued.');}catch(e){window.showToast?.(e.message,'error');}});
-$('asset-type').value='nse';setAssetType('nse');fillNseDirectory();
+$('asset-type').value='nse';setAssetType('nse');
+fillNseTickers();
 fillInstitutions().catch(()=>{});
 render().catch(error=>emptyState($('holdings-empty'),'Portfolio unavailable',error.message));
