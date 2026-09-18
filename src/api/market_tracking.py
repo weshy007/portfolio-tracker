@@ -478,8 +478,9 @@ def get_unified_summary(db: Session = Depends(get_db)):
         bucket["cost"] += shares * buy_price
         bucket["value"] += shares * curr_price
 
-    total_stock_value = sum((bucket["value"] for bucket in totals_by_currency.values()), Decimal("0.00"))
-    total_stock_cost = sum((bucket["cost"] for bucket in totals_by_currency.values()), Decimal("0.00"))
+    kes_bucket = totals_by_currency.get("KES", {"value": Decimal("0.00"), "cost": Decimal("0.00")})
+    total_stock_value = kes_bucket["value"]
+    total_stock_cost = kes_bucket["cost"]
     stock_profit_loss = total_stock_value - total_stock_cost
     stock_profit_loss_pct = (
         ((stock_profit_loss / total_stock_cost) * Decimal("100")).quantize(Decimal("0.01"))
