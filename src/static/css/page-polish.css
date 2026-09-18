@@ -1,13 +1,33 @@
-.page-heading { margin-bottom: 1.25rem; }
-.page-heading h1 { letter-spacing: -.025em; }
-#income-form, #expense-form, #allocation-form { align-items: end; }
-#income-list, #expense-list, #allocation-list { margin-top: 1rem; }
-#income-list > *, #expense-list > *, #allocation-list > * { border-radius: 10px; }
-#budget-message, #plan-message { margin-top: 1rem; }
-#surplus-card.negative, #plan-remaining-card.negative { border-color: rgba(185, 28, 28, .35); }
-#surplus-card:not(.negative) .metric-value, #plan-remaining-card:not(.negative) .metric-value { font-variant-numeric: tabular-nums; }
-#allocation-form .form-actions, #income-form .form-actions, #expense-form .form-actions { align-self: end; }
-@media (max-width: 760px) {
-  #income-form, #expense-form, #allocation-form { grid-template-columns: 1fr; }
-  #income-form .form-actions, #expense-form .form-actions, #allocation-form .form-actions { grid-column: 1; }
+/* Akiba Finance v2 visual layer. Fonts stay in base.html. */
+:root {
+  --finance-ink:#102a43;--finance-muted:#62748a;--finance-line:#dbe4ee;
+  --finance-surface:#fff;--finance-soft:#f4f8fb;--finance-accent:#0f766e;
+  --finance-accent-soft:#e6f5f2;--finance-positive:#15803d;--finance-negative:#be123c;
+  --finance-shadow:0 10px 30px rgba(15,42,67,.07);
 }
+body{background:#f5f8fb;color:var(--finance-ink)}.container{max-width:1480px}
+.sidebar{background:#fff;border-right:1px solid var(--finance-line)}.brand{color:var(--finance-ink)}
+.brand-mark{background:var(--finance-accent-soft);color:var(--finance-accent)}.sidebar-action{border-radius:10px;box-shadow:none}
+.nav-item.active{background:#eaf6f4;color:var(--finance-accent)}
+.topbar{background:rgba(255,255,255,.94);border-bottom:1px solid var(--finance-line);backdrop-filter:blur(12px)}
+.currency-pill{background:var(--finance-soft);border:1px solid var(--finance-line)}
+.card,.metric-card{background:var(--finance-surface);border:1px solid var(--finance-line);box-shadow:var(--finance-shadow);border-radius:14px}
+.metric-card{min-height:132px}.metric-card-primary{border-color:#9ddbd3;background:linear-gradient(145deg,#f8fffe,#eefaf8)}
+.metric-value{letter-spacing:-.025em}.page-heading{margin-bottom:1.25rem}.page-heading h1{letter-spacing:-.035em}
+.page-heading-compact{align-items:flex-end}.base-currency-card{padding:.65rem .9rem;border:1px solid var(--finance-line);border-radius:10px;background:#fff;min-width:130px}
+.base-currency-card span{display:block;color:var(--finance-muted);font-size:.72rem}.base-currency-card strong{display:block;margin-top:.15rem;font-size:1.05rem}
+.portfolio-entry{margin-bottom:1.25rem}.market-note,.field-hint{color:var(--finance-muted);font-size:.75rem}
+.input-with-action{display:flex;gap:.5rem}.input-with-action input{flex:1;min-width:0}.asset-fields{padding:.15rem 0}
+.portfolio-grid{display:grid;grid-template-columns:minmax(0,1.55fr) minmax(300px,.75fr);gap:1.25rem;margin-bottom:1.25rem}
+.allocation-card{min-height:300px}.allocation-legend{display:flex;flex-direction:column;gap:.55rem;width:100%}
+.allocation-row{display:flex;justify-content:space-between;gap:1rem;padding:.5rem 0;border-bottom:1px solid #edf2f7;font-size:.8rem}
+.dashboard-metrics{margin-bottom:1.25rem}.dashboard-status{display:flex;justify-content:space-between;align-items:center;gap:1rem}
+.status-actions{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;justify-content:flex-end}.market-section{margin-bottom:1.25rem}
+.market-section .table-heading{align-items:flex-start}.table-wrapper{border:1px solid #e4ebf2;border-radius:10px;overflow:auto}
+table{min-width:760px}th{background:#f7fafc;color:#4b6075}tr:hover td{background:#fbfdff}
+.text-positive{color:var(--finance-positive)!important}.text-negative{color:var(--finance-negative)!important}
+.ticker-directory{display:flex;flex-wrap:wrap;gap:.45rem}.ticker-chip{display:inline-flex;align-items:center;padding:.4rem .55rem;border:1px solid var(--finance-line);border-radius:7px;background:#fff;font-family:'JetBrains Mono',monospace;font-size:.72rem;cursor:help}
+.ticker-chip:hover{border-color:#9ddbd3;background:var(--finance-accent-soft)}.notice{border-color:#d8e7e5;background:#f3fbfa}
+.btn-primary{box-shadow:0 5px 14px rgba(15,118,110,.14)}
+@media(max-width:980px){.portfolio-grid{grid-template-columns:1fr}.dashboard-status{align-items:flex-start;flex-direction:column}.status-actions{justify-content:flex-start}}
+@media(max-width:640px){.page-heading-compact{align-items:flex-start;flex-direction:column}.base-currency-card{width:100%}.input-with-action{flex-direction:column}.metric-card{min-height:112px}}
