@@ -42,6 +42,7 @@ class StockCreate(BaseModel):
 class MMFCreate(BaseModel):
     fund_name: str = Field(min_length=2, max_length=255)
     current_principal_balance: Decimal = Field(gt=0)
+    investment_date: Optional[date] = None
 
 
 # ==========================================
@@ -89,11 +90,15 @@ async def get_stock_price(
 
 @router.get("/stocks/nse-tickers")
 async def list_nse_tickers(exchange: str = Query("NSE", description="Exchange code")):
-    """Get list of prepopulated stocks listed on the Nairobi Securities Exchange (NSE) based on Mansa documentation."""
-    from src.services.market_tracking import MansaClient
-    client = MansaClient(settings.mansa_api_key, settings.mansa_api_url)
-    stocks = await client.list_exchange_stocks(exchange)
-    return stocks
+    """Return the bundled NSE directory; no market-data request is needed for names."""
+    from fastapi.responses import JSONResponse
+    from src.services.market_tracking import NSE_STOCKS_DIRECTORY
+    if exchange.strip().upper() != "NSE":
+        return []
+    return JSONResponse(
+        content=NSE_STOCKS_DIRECTORY,
+        headers={"Cache-Control": "public, max-age=86400"},
+    )
 
 
 @router.get("/stocks")
@@ -112,6 +117,7 @@ def list_stocks(db: Session = Depends(get_db)):
             "id": pos.id,
             "ticker": pos.ticker,
             "exchange": pos.exchange,
+            "currency": "USD" if pos.exchange == "US" else "KES",
             "shares_owned": float(summary["shares_owned"]),
             "average_buy_price": float(summary["average_buy_price"]),
             "current_price": float(summary["current_price"]),
@@ -263,9 +269,12 @@ def list_mmfs(db: Session = Depends(get_db)):
     yield_records = db.scalars(
         select(DailyMMFYield).order_by(desc(DailyMMFYield.yield_date))
     ).all()
-    yield_map = {r.fund_name.casefold().strip(): Decimal(str(r.yield_decimal)) for r in yield_records}
+    yield_map = {}
+    for record in yield_records:
+        key = record.fund_name.casefold().strip()
+        if key not in yield_map:
+            yield_map[key] = Decimal(str(record.yield_decimal))
 
-    # Add benchmark fallback yields if db is empty
     if not yield_map:
         yield_map = {name.casefold().strip(): rate for name, rate in DEFAULT_KENYA_MMF_BENCHMARKS}
 
@@ -286,6 +295,8 @@ def list_mmfs(db: Session = Depends(get_db)):
             "id": acc.id,
             "fund_name": acc.fund_name,
             "institution": matched["institution"],
+            "currency": "KES",
+            "investment_date": acc.investment_date.isoformat() if acc.investment_date else None,
             "short_name": matched["short_name"],
             "principal_balance": float(kes(principal)),
             "current_balance": float(kes(curr_bal)),
@@ -308,6 +319,7 @@ def create_mmf(payload: MMFCreate, db: Session = Depends(get_db)):
         principal_balance=payload.current_principal_balance,
         current_balance=payload.current_principal_balance,
         total_interest_accrued=Decimal("0.00"),
+        investment_date=payload.investment_date or date.today(),
     )
     db.add(account)
     db.commit()
@@ -317,6 +329,7 @@ def create_mmf(payload: MMFCreate, db: Session = Depends(get_db)):
         "fund_name": account.fund_name,
         "principal_balance": float(account.principal_balance),
         "current_balance": float(account.current_balance),
+        "investment_date": account.investment_date.isoformat() if account.investment_date else None,
     }
 
 
@@ -451,20 +464,22 @@ def match_institution(query: str = Query(..., min_length=1), db: Session = Depen
 
 @router.get("/summary")
 def get_unified_summary(db: Session = Depends(get_db)):
-    """Get unified financial summary: Total Portfolio Value (KES), Stock P/L, and Total MMF Interest Accrued."""
+    """Return native-currency summary data without mixing KES and USD."""
     stocks = db.scalars(select(StockPosition)).all()
     mmfs = db.scalars(select(MMFAccount)).all()
 
-    total_stock_value = Decimal("0.00")
-    total_stock_cost = Decimal("0.00")
-
+    totals_by_currency: dict[str, dict[str, Decimal]] = {}
     for s in stocks:
+        currency = "USD" if s.exchange == "US" else "KES"
         shares = Decimal(str(s.shares_owned))
         buy_price = Decimal(str(s.average_buy_price))
         curr_price = Decimal(str(s.current_price if s.current_price is not None else buy_price))
-        total_stock_cost += shares * buy_price
-        total_stock_value += shares * curr_price
+        bucket = totals_by_currency.setdefault(currency, {"value": Decimal("0.00"), "cost": Decimal("0.00")})
+        bucket["cost"] += shares * buy_price
+        bucket["value"] += shares * curr_price
 
+    total_stock_value = sum((bucket["value"] for bucket in totals_by_currency.values()), Decimal("0.00"))
+    total_stock_cost = sum((bucket["cost"] for bucket in totals_by_currency.values()), Decimal("0.00"))
     stock_profit_loss = total_stock_value - total_stock_cost
     stock_profit_loss_pct = (
         ((stock_profit_loss / total_stock_cost) * Decimal("100")).quantize(Decimal("0.01"))
@@ -481,11 +496,16 @@ def get_unified_summary(db: Session = Depends(get_db)):
         total_mmf_value += Decimal(str(m.current_balance))
         total_mmf_interest_accrued += Decimal(str(m.total_interest_accrued or 0))
 
-    total_portfolio_value = total_stock_value + total_mmf_value
-
     return {
         "currency": "KES",
-        "total_portfolio_value": float(kes(total_portfolio_value)),
+        "currency_totals": {
+            currency: {
+                "current_value": float(kes(bucket["value"])),
+                "cost_basis": float(kes(bucket["cost"])),
+            }
+            for currency, bucket in totals_by_currency.items()
+        },
+        "total_portfolio_value": float(kes(total_stock_value + total_mmf_value)),
         "total_stock_value": float(kes(total_stock_value)),
         "total_stock_cost": float(kes(total_stock_cost)),
         "stock_profit_loss": float(kes(stock_profit_loss)),

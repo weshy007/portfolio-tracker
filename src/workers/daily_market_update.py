@@ -27,9 +27,6 @@ def find_matching_yield(fund_name: str, yield_map: dict[str, Decimal]) -> Option
         if clean_target and (clean_target in clean_name or clean_name in clean_target):
             return rate
 
-    if yield_map:
-        rates = list(yield_map.values())
-        return sum(rates) / Decimal(len(rates))
     return None
 
 
@@ -79,7 +76,7 @@ async def run_daily_update() -> dict:
         db.flush()
 
         for account in db.scalars(select(MMFAccount)).all():
-            investment_day = account.created_at.date() if account.created_at else today
+            investment_day = account.investment_date or (account.created_at.date() if account.created_at else today)
             first_unaccrued = account.last_accrued_on + timedelta(days=1) if account.last_accrued_on else investment_day
             accrual_day = max(first_unaccrued, investment_day)
 
