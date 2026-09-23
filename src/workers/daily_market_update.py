@@ -30,26 +30,41 @@ def find_matching_yield(fund_name: str, yield_map: dict[str, Decimal]) -> Option
     return None
 
 
-def _yield_for_date(db, fund_name: str, valuation_date: date) -> Optional[Decimal]:
-    """Return the latest worker-fetched yield available on or before a valuation date."""
+def _yield_for_date(db, fund_name: str, valuation_date: date) -> Decimal:
+    """Return the latest available scraped yield on or before valuation_date,
+    falling back to the last available scraped yield across all dates, or institution benchmark.
+    """
+    # 1. Scraped yield on or before valuation_date
     records = db.scalars(
         select(DailyMMFYield)
         .where(DailyMMFYield.yield_date <= valuation_date)
         .order_by(DailyMMFYield.yield_date.desc())
     ).all()
-    yield_map = {}
-    for record in records:
-        key = record.fund_name.casefold().strip()
-        if key not in yield_map:
-            yield_map[key] = Decimal(str(record.yield_decimal))
-    return find_matching_yield(fund_name, yield_map)
+    if records:
+        yield_map = {r.fund_name.casefold().strip(): Decimal(str(r.yield_decimal)) for r in records}
+        matched = find_matching_yield(fund_name, yield_map)
+        if matched is not None:
+            return matched
+
+    # 2. Fallback: Last available scraped yield across all dates
+    all_records = db.scalars(
+        select(DailyMMFYield)
+        .order_by(DailyMMFYield.yield_date.desc())
+    ).all()
+    if all_records:
+        yield_map = {r.fund_name.casefold().strip(): Decimal(str(r.yield_decimal)) for r in all_records}
+        matched = find_matching_yield(fund_name, yield_map)
+        if matched is not None:
+            return matched
+
+    # 3. Final fallback: Match institution default benchmark rate
+    from src.services.market_tracking import match_institution_yield
+    matched_info = match_institution_yield(fund_name)
+    return matched_info["yield_decimal"]
 
 
 async def run_daily_update() -> dict:
-    """Fetch today's rates, then accrue each MMF from investment day through EOD yesterday.
-
-    Today's rate is stored for the next valuation day. Today's interest is not accrued.
-    """
+    """Fetch today's rates, then accrue each MMF from investment day through EOD yesterday using daily compounding."""
     today = date.today()
     yesterday = today - timedelta(days=1)
     scraper = PesaCalcYieldScraper(settings.pesacalc_mmf_url)
@@ -83,9 +98,6 @@ async def run_daily_update() -> dict:
             # Only completed valuation days are accrued: investment day through EOD yesterday.
             while accrual_day <= yesterday:
                 annual_yield = _yield_for_date(db, account.fund_name, accrual_day)
-                if annual_yield is None:
-                    # Do not advance past a day for which no worker-fetched rate exists.
-                    break
 
                 current_balance = Decimal(str(account.current_balance))
                 interest = accrue_daily(current_balance, annual_yield)
@@ -99,18 +111,37 @@ async def run_daily_update() -> dict:
         db.commit()
 
         stocks_refreshed = 0
-        if settings.mansa_api_key:
-            client = MansaClient(settings.mansa_api_key, settings.mansa_api_url)
-            from src.models.base import utc_now
-            for stock in db.scalars(select(StockPosition)).all():
-                try:
-                    price = await client.close_price(stock.exchange or "NSE", stock.ticker)
-                    stock.current_price = price
+        from src.models.base import utc_now
+        for stock in db.scalars(select(StockPosition)).all():
+            try:
+                if stock.exchange == "US":
+                    from src.api.yahoo_market import get_quote
+                    price_val = await get_quote(stock.ticker)
+                    stock.current_price = Decimal(str(price_val))
                     stock.price_updated_at = utc_now()
                     stocks_refreshed += 1
-                except Exception as error:
-                    logger.warning("Could not refresh stock %s: %s", stock.ticker, error)
-            db.commit()
+                else:
+                    price = None
+                    if settings.mansa_api_key:
+                        try:
+                            client = MansaClient(settings.mansa_api_key, settings.mansa_api_url)
+                            price = await client.close_price(stock.exchange or "NSE", stock.ticker)
+                        except Exception as error:
+                            logger.warning("Mansa API failed for %s: %s", stock.ticker, error)
+                    if price is None:
+                        try:
+                            from src.api.yahoo_market import get_quote
+                            p_val = await get_quote(f"{stock.ticker}.NR")
+                            price = Decimal(str(p_val))
+                        except Exception:
+                            pass
+                    if price is not None:
+                        stock.current_price = price
+                        stock.price_updated_at = utc_now()
+                        stocks_refreshed += 1
+            except Exception as error:
+                logger.warning("Could not refresh stock %s: %s", stock.ticker, error)
+        db.commit()
 
     summary = {
         "date": today.isoformat(),

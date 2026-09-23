@@ -21,6 +21,7 @@ class USStockCreate(BaseModel):
     ticker: str = Field(min_length=1, max_length=32)
     shares_owned: Decimal = Field(gt=0)
     average_buy_price: Decimal = Field(gt=0)
+    current_price: Optional[Decimal] = Field(default=None, gt=0)
 
 
 def _quote_sync(ticker: str) -> float:
@@ -86,17 +87,20 @@ async def quote(ticker: str = Query(..., min_length=1, max_length=32)):
 @router.post("/stocks")
 async def create_us_stock(payload: USStockCreate, db: Session = Depends(get_db)):
     symbol = payload.ticker.strip().upper()
-    try:
-        current_price = await get_quote(symbol)
-    except Exception as exc:
-        raise HTTPException(status_code=404, detail=str(exc)) from exc
+    current_price = payload.current_price
+    if current_price is None:
+        try:
+            price = await get_quote(symbol)
+            current_price = Decimal(str(price))
+        except Exception as exc:
+            current_price = payload.average_buy_price
 
     position = StockPosition(
         ticker=symbol,
         exchange="US",
         shares_owned=payload.shares_owned,
         average_buy_price=payload.average_buy_price,
-        current_price=Decimal(str(current_price)),
+        current_price=current_price,
         price_updated_at=utc_now(),
     )
     db.add(position)

@@ -1,190 +1,300 @@
 {% extends "base.html" %}
 {% block title %}Portfolio - {{ super() }}{% endblock %}
 {% block content %}
-<section class="page-heading page-heading-compact">
+<section class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
   <div>
-    <p class="eyebrow">Portfolio</p>
-    <h1>Manage your holdings</h1>
-    <p>Add and maintain investments here. Dashboard is for the numbers; this is your source of portfolio inputs.</p>
+    <p class="text-xs font-bold tracking-wider text-teal-600 dark:text-teal-400 uppercase">Investments Ledger</p>
+    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Manage Your Holdings</h1>
+    <p class="text-sm text-gray-600 dark:text-gray-400">Add, track and update your stocks, MMFs, bonds, and assets.</p>
   </div>
-  <div class="base-currency-card">
-    <span>Reporting currency</span>
-    <strong data-base-currency>KES</strong>
+  <div class="bg-slate-100 dark:bg-slate-800 px-4 py-2 rounded-xl border border-gray-200 dark:border-gray-700 text-center">
+    <span class="text-xs text-gray-500 block font-semibold">Reporting Currency</span>
+    <strong data-base-currency class="text-lg font-bold font-mono text-teal-600 dark:text-teal-400">KES</strong>
   </div>
 </section>
 
-<section class="portfolio-entry card">
-  <div class="card-header">
+<!-- Add New Holding Form Card -->
+<section class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm mb-6">
+  <div class="flex items-center justify-between border-b border-gray-100 dark:border-gray-700 pb-3 mb-5">
     <div>
-      <p class="eyebrow">New position</p>
-      <h2 class="card-title">Add an investment</h2>
+      <span class="text-xs font-bold text-teal-600 uppercase">NEW POSITION</span>
+      <h2 class="text-xl font-bold text-gray-900 dark:text-white">Add an Investment</h2>
     </div>
-    <span class="market-note">Market prices are fetched only when requested.</span>
+    <span class="text-xs text-gray-400">Quotes updated on demand</span>
   </div>
-  <form id="holding-form" class="grid grid-2">
-    <div class="form-group">
-      <label for="asset-type">Asset type</label>
-      <select id="asset-type" name="asset_type">
-        <option value="nse">NSE stock</option>
-        <option value="us">US stock</option>
-        <option value="mmf">Money Market Fund</option>
-        <option value="reit">REIT / other security</option>
-        <option value="bond">Government bond</option>
-        <option value="t-bill">Treasury bill</option>
-        <option value="cash">Cash / other</option>
-      </select>
-    </div>
-    <div class="form-group">
-      <label for="holding-name">Name / ticker</label>
-      <input id="holding-name" name="name" required maxlength="255" placeholder="Select a stock or enter an asset">
-    </div>
 
-    <div id="nse-fields" class="asset-fields grid grid-2 grid-span-2">
-      <div class="form-group grid-span-2">
-        <label for="nse-ticker">NSE security</label>
-        <select id="nse-ticker"></select>
-        <small id="nse-company" class="field-hint"></small>
-      </div>
-      <div class="form-group">
-        <label for="stock-units">Shares owned</label>
-        <input id="stock-units" name="units" type="number" min="0.000001" step="any">
-      </div>
-      <div class="form-group">
-        <label for="stock-buy">Average buy price (KES)</label>
-        <input id="stock-buy" name="buy_price" type="number" min="0.0001" step="any">
-      </div>
-      <div class="form-group">
-        <label for="stock-current">Current price (KES)</label>
-        <div class="input-with-action"><input id="stock-current" name="current_price" type="number" min="0.0001" step="any"><button id="fetch-nse-price" class="btn btn-sm btn-secondary" type="button">Fetch price</button></div>
-        <small id="nse-price-status" class="field-hint"></small>
-      </div>
-      <div class="form-group">
-        <label>Native currency</label>
-        <input value="KES" disabled>
+  <form id="holding-form" class="space-y-5">
+    <!-- Visual Asset Type Selector (Cards) -->
+    <div>
+      <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-2">Select Asset Type</label>
+      <input type="hidden" id="asset-type" name="asset_type" value="nse">
+      <div id="asset-type-cards" class="grid grid-cols-2 sm:grid-cols-4 gap-3">
+        <button type="button" data-type="nse" class="asset-card-btn active p-3 rounded-xl border-2 border-teal-600 bg-teal-50 dark:bg-teal-900/20 text-teal-900 dark:text-teal-200 text-left transition">
+          <div class="text-lg">🇰🇪</div>
+          <div class="font-bold text-sm mt-1">NSE Stock</div>
+          <div class="text-[11px] text-gray-500">Mansa API (KES)</div>
+        </button>
+        <button type="button" data-type="us" class="asset-card-btn p-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-teal-500 text-gray-800 dark:text-gray-200 text-left transition">
+          <div class="text-lg">🇺🇸</div>
+          <div class="font-bold text-sm mt-1">US Stock</div>
+          <div class="text-[11px] text-gray-500">yfinance (USD)</div>
+        </button>
+        <button type="button" data-type="mmf" class="asset-card-btn p-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-teal-500 text-gray-800 dark:text-gray-200 text-left transition">
+          <div class="text-lg">💰</div>
+          <div class="font-bold text-sm mt-1">Money Market</div>
+          <div class="text-[11px] text-gray-500">PesaCalc yields</div>
+        </button>
+        <button type="button" data-type="generic" class="asset-card-btn p-3 rounded-xl border-2 border-gray-200 dark:border-gray-700 hover:border-teal-500 text-gray-800 dark:text-gray-200 text-left transition">
+          <div class="text-lg">📊</div>
+          <div class="font-bold text-sm mt-1">Other Asset</div>
+          <div class="text-[11px] text-gray-500">Bonds, Land, SACCO</div>
+        </button>
       </div>
     </div>
 
-    <div id="us-fields" class="asset-fields grid grid-2 grid-span-2" hidden>
-      <div class="form-group">
-        <label for="us-ticker">US ticker</label>
-        <input id="us-ticker" maxlength="20" placeholder="VST, AAPL, NVDA">
-      </div>
-      <div class="form-group">
-        <label for="us-invested">Amount invested (USD)</label>
-        <input id="us-invested" type="number" min="0.01" step="0.01">
-      </div>
-      <div class="form-group">
-        <label for="us-buy">Buy price (USD / share)</label>
-        <input id="us-buy" type="number" min="0.000001" step="any">
-      </div>
-      <div class="form-group">
-        <label for="us-current">Current price (USD / share)</label>
-        <div class="input-with-action"><input id="us-current" type="number" min="0.000001" step="any"><button id="fetch-us-price" class="btn btn-sm btn-secondary" type="button">Fetch price</button></div>
-        <small id="us-price-status" class="field-hint"></small>
-      </div>
-      <div id="us-shares-preview" class="calc-preview grid-span-2" hidden></div>
+    <div>
+      <label for="holding-name" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Name / Ticker</label>
+      <input id="holding-name" name="name" required maxlength="255" placeholder="Select a security below" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700">
     </div>
 
-    <div id="mmf-fields" class="asset-fields grid grid-2 grid-span-2" hidden>
-      <div class="form-group">
-        <label for="mmf-fund">Fund</label>
-        <select id="mmf-fund"></select>
-      </div>
-      <div class="form-group">
-        <label for="mmf-amount">Starting investment (KES)</label>
-        <input id="mmf-amount" type="number" min="0.01" step="0.01">
-      </div>
-      <div class="form-group">
-        <label for="mmf-date">Investment start date</label>
-        <input id="mmf-date" type="date">
-      </div>
-      <div class="form-group">
-        <label for="mmf-yield">Latest scraped annual yield</label>
-        <input id="mmf-yield" disabled placeholder="Loaded from daily data">
-      </div>
-      <p class="notice grid-span-2">Interest is accrued day by day using the yield stored for each completed valuation day. Missing historical scraped days are never invented.</p>
-    </div>
-
-    <div id="generic-fields" class="asset-fields grid grid-2 grid-span-2" hidden>
-      <div class="form-group">
-        <label for="generic-value">Current value</label>
-        <input id="generic-value" type="number" min="0" step="0.01">
-      </div>
-      <div class="form-group">
-        <label for="generic-currency">Native currency</label>
-        <select id="generic-currency"></select>
+    <!-- NSE Fields -->
+    <div id="nse-fields" class="asset-fields space-y-4 pt-2">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="nse-ticker" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">NSE Listed Security</label>
+          <select id="nse-ticker" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 font-mono"></select>
+          <small id="nse-company" class="text-xs text-teal-600 mt-1 block"></small>
+        </div>
+        <div>
+          <label for="stock-units" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Shares Owned</label>
+          <input id="stock-units" name="units" type="number" min="0.000001" step="any" placeholder="100" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700">
+        </div>
+        <div>
+          <label for="stock-buy" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Average Buy Price (<span data-base-currency>KES</span>)</label>
+          <input id="stock-buy" name="buy_price" type="number" min="0.0001" step="any" placeholder="15.50" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700">
+        </div>
+        <div>
+          <label for="stock-current" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Current Price (<span data-base-currency>KES</span>)</label>
+          <div class="flex gap-2">
+            <input id="stock-current" name="current_price" type="number" min="0.0001" step="any" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700">
+            <button id="fetch-nse-price" type="button" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap">Fetch Price</button>
+          </div>
+          <small id="nse-price-status" class="text-xs text-gray-500 mt-1 block"></small>
+        </div>
       </div>
     </div>
 
-    <div class="form-group">
-      <label for="holding-notes">Notes <span class="text-muted">(optional)</span></label>
-      <input id="holding-notes" name="notes" maxlength="500" placeholder="Broker, account, thesis, etc.">
+    <!-- US Stock Fields -->
+    <div id="us-fields" class="asset-fields space-y-4 pt-2 hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="us-ticker" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">US Ticker Code</label>
+          <input id="us-ticker" maxlength="20" placeholder="AAPL, TSLA, NVDA" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 uppercase font-mono">
+        </div>
+        <div>
+          <label for="us-buy" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Buy Price (USD / share)</label>
+          <input id="us-buy" type="number" min="0.000001" step="any" placeholder="190.00" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 font-mono">
+        </div>
+        <div>
+          <label for="us-invested" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Amount Invested (USD)</label>
+          <input id="us-invested" type="number" min="0.000001" step="any" placeholder="2.00" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 font-mono">
+        </div>
+        <div>
+          <label for="us-shares" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Shares / Units Owned <span class="text-teal-600 font-normal">(Fractional allowed)</span></label>
+          <input id="us-shares" type="number" min="0.000001" step="any" placeholder="0.010526" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 font-mono">
+        </div>
+        <div class="md:col-span-2">
+          <label for="us-current" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Current Market Price (USD / share)</label>
+          <div class="flex gap-2">
+            <input id="us-current" type="number" min="0.000001" step="any" placeholder="Auto-fetched or enter current price" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 font-mono">
+            <button id="fetch-us-price" type="button" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 px-3 py-2 rounded-lg text-xs font-semibold whitespace-nowrap">Fetch Price</button>
+          </div>
+          <small id="us-price-status" class="text-xs text-gray-500 mt-1 block"></small>
+        </div>
+      </div>
+      <div id="us-shares-preview" class="p-3 bg-teal-50 dark:bg-teal-900/20 text-teal-800 dark:text-teal-200 text-xs rounded-lg hidden font-mono"></div>
     </div>
-    <div class="form-group form-actions">
-      <button id="save-holding" class="btn btn-primary" type="submit">Add to portfolio</button>
+
+    <!-- MMF Fields -->
+    <div id="mmf-fields" class="asset-fields space-y-4 pt-2 hidden">
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div>
+          <label for="mmf-fund" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Select MMF Institution</label>
+          <select id="mmf-fund" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700"></select>
+        </div>
+        <div>
+          <label for="mmf-amount" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Initial Deposit (<span data-base-currency>KES</span>)</label>
+          <input id="mmf-amount" type="number" min="0.01" step="0.01" placeholder="50000" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 font-mono">
+        </div>
+        <div>
+          <label for="mmf-date" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Investment Start Date</label>
+          <input id="mmf-date" type="date" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700">
+        </div>
+        <div>
+          <label for="mmf-yield" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Daily Scraped Annual Yield</label>
+          <input id="mmf-yield" disabled placeholder="Loaded from PesaCalc data" class="w-full px-3 py-2 text-sm border rounded-lg bg-gray-50 dark:bg-slate-900 dark:border-gray-700 text-gray-500 font-mono">
+        </div>
+      </div>
+    </div>
+
+    <!-- Generic Asset Fields -->
+    <div id="generic-fields" class="asset-fields space-y-4 pt-2 hidden">
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+        <div>
+          <label for="generic-category" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Asset Category</label>
+          <select id="generic-category" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700"></select>
+        </div>
+        <div>
+          <label for="generic-value" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Current Estimated Value</label>
+          <input id="generic-value" type="number" min="0" step="0.01" placeholder="100000" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 font-mono">
+        </div>
+        <div>
+          <label for="generic-currency" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Native Currency</label>
+          <select id="generic-currency" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 font-mono"></select>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <label for="holding-notes" class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Notes <span class="text-gray-400 font-normal">(optional)</span></label>
+      <input id="holding-notes" name="notes" maxlength="500" placeholder="Broker, account number, notes..." class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700">
+    </div>
+
+    <div class="flex justify-end pt-2">
+      <button id="save-holding" type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-6 rounded-lg text-sm transition">
+        Save Position to Portfolio
+      </button>
     </div>
   </form>
 </section>
 
-<section class="portfolio-grid">
-  <section class="card">
-    <div class="card-header">
-      <div><p class="eyebrow">Holdings</p><h2 class="card-title">Portfolio ledger</h2></div>
-      <select id="category-filter" aria-label="Filter holdings"><option value="">All categories</option></select>
+<!-- Portfolio Ledger & Allocation Grid -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
+  <!-- Portfolio Ledger Table -->
+  <section class="lg:col-span-2 bg-white dark:bg-slate-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-gray-100 dark:border-gray-700 pb-3">
+      <div>
+        <span class="text-xs font-bold text-teal-600 uppercase">HOLDINGS</span>
+        <h2 class="text-lg font-bold text-gray-900 dark:text-white">Portfolio Ledger</h2>
+      </div>
+      <select id="category-filter" class="px-3 py-1.5 text-xs border rounded-lg dark:bg-slate-900 dark:border-gray-700"></select>
     </div>
-    <div id="holdings-empty" class="empty-state"></div>
-    <div id="holdings-wrap" class="table-wrapper" hidden>
-      <table>
-        <thead><tr><th>Asset</th><th>Category</th><th class="numeric">Units</th><th class="numeric">Current value</th><th class="numeric">P/L</th><th>Native</th><th></th></tr></thead>
-        <tbody id="holdings-body"></tbody>
+    <div id="holdings-empty" class="text-center py-8 text-gray-400"></div>
+    <div id="holdings-wrap" class="overflow-x-auto" hidden>
+      <table class="w-full text-xs text-left">
+        <thead class="bg-slate-50 dark:bg-slate-900/50 text-gray-500 uppercase font-semibold">
+          <tr>
+            <th class="py-2.5 px-3">Asset</th>
+            <th class="py-2.5 px-3">Category</th>
+            <th class="py-2.5 px-3 text-right">Units</th>
+            <th class="py-2.5 px-3 text-right">Current Value</th>
+            <th class="py-2.5 px-3 text-right">P/L</th>
+            <th class="py-2.5 px-3">Currency</th>
+            <th class="py-2.5 px-3 text-right">Action</th>
+          </tr>
+        </thead>
+        <tbody id="holdings-body" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody>
       </table>
     </div>
   </section>
 
-  <section class="card allocation-card">
-    <div class="card-header"><div><p class="eyebrow">Exposure</p><h2 class="card-title">Allocation</h2></div></div>
-    <div id="allocation-empty" class="empty-state"></div>
+  <!-- Allocation Card -->
+  <section class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+    <div class="mb-4 border-b border-gray-100 dark:border-gray-700 pb-3">
+      <span class="text-xs font-bold text-teal-600 uppercase">EXPOSURE</span>
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white">Allocation</h2>
+    </div>
+    <div id="allocation-empty" class="text-center py-8 text-gray-400"></div>
     <div id="allocation-content" hidden>
-      <div class="allocation-visual">
+      <div class="flex flex-col items-center gap-4">
         <div id="allocation-chart" class="donut-chart"><span id="allocation-total"></span></div>
-        <div id="allocation-legend" class="allocation-legend"></div>
+        <div id="allocation-legend" class="w-full space-y-2 text-xs"></div>
       </div>
     </div>
   </section>
+</div>
+
+<!-- Stock Market Positions (Paginated) -->
+<section class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm mb-6">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-gray-100 dark:border-gray-700 pb-3">
+    <div>
+      <span class="text-xs font-bold text-teal-600 uppercase">EQUITIES MARKET</span>
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white">Stocks & Equities</h2>
+    </div>
+    <div class="flex items-center gap-3">
+      <button id="refresh-stocks" type="button" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold">
+        Refresh Quotes
+      </button>
+    </div>
+  </div>
+  <div id="stocks-empty" class="text-center py-6 text-gray-400"></div>
+  <div id="stocks-wrap" class="overflow-x-auto" hidden>
+    <table class="w-full text-xs text-left">
+      <thead class="bg-slate-50 dark:bg-slate-900/50 text-gray-500 uppercase font-semibold">
+        <tr>
+          <th class="py-2.5 px-3">Ticker</th>
+          <th class="py-2.5 px-3">Exchange</th>
+          <th class="py-2.5 px-3 text-right">Shares</th>
+          <th class="py-2.5 px-3 text-right">Avg Buy</th>
+          <th class="py-2.5 px-3 text-right">Current</th>
+          <th class="py-2.5 px-3 text-right">Value</th>
+          <th class="py-2.5 px-3 text-right">P/L</th>
+          <th class="py-2.5 px-3">Updated</th>
+          <th class="py-2.5 px-3 text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody id="stocks-body" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody>
+    </table>
+    <div id="stocks-pagination" class="flex justify-between items-center pt-3 text-xs text-gray-500"></div>
+  </div>
 </section>
 
-<section class="card market-section">
-  <div class="card-header table-heading">
-    <div><p class="eyebrow">Market positions</p><h2 class="card-title">Equities</h2><p class="text-muted">Native market currency is shown beside each position. Reporting totals are converted on the dashboard.</p></div>
-    <button id="refresh-stocks" class="btn btn-sm btn-secondary" type="button">Refresh quotes</button>
+<!-- MMF Accounts -->
+<section class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm mb-6">
+  <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 mb-4 border-b border-gray-100 dark:border-gray-700 pb-3">
+    <div>
+      <span class="text-xs font-bold text-teal-600 uppercase">FIXED INCOME</span>
+      <h2 class="text-lg font-bold text-gray-900 dark:text-white">Money Market Funds</h2>
+    </div>
+    <div class="flex items-center gap-2">
+      <button id="scrape-yields" type="button" class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-700 px-3 py-1.5 rounded-lg text-xs font-semibold">
+        Scrape Yields
+      </button>
+      <button id="accrue-mmf" type="button" class="bg-teal-600 hover:bg-teal-700 text-white px-3 py-1.5 rounded-lg text-xs font-semibold">
+        Accrue Interest
+      </button>
+    </div>
   </div>
-  <div id="stocks-empty" class="empty-state"></div>
-  <div id="stocks-wrap" class="table-wrapper" hidden>
-    <table>
-      <thead><tr><th>Ticker</th><th>Exchange</th><th class="numeric">Shares</th><th class="numeric">Avg buy</th><th class="numeric">Current</th><th class="numeric">Value</th><th class="numeric">P/L</th><th>Updated</th><th></th></tr></thead>
-      <tbody id="stocks-body"></tbody>
+  <div id="mmf-empty" class="text-center py-6 text-gray-400"></div>
+  <div id="mmf-wrap" class="overflow-x-auto" hidden>
+    <table class="w-full text-xs text-left">
+      <thead class="bg-slate-50 dark:bg-slate-900/50 text-gray-500 uppercase font-semibold">
+        <tr>
+          <th class="py-2.5 px-3">Fund</th>
+          <th class="py-2.5 px-3">Start Date</th>
+          <th class="py-2.5 px-3 text-right">Principal</th>
+          <th class="py-2.5 px-3 text-right">Current</th>
+          <th class="py-2.5 px-3 text-right">Interest</th>
+          <th class="py-2.5 px-3 text-right">Latest Yield</th>
+          <th class="py-2.5 px-3 text-right">Today's Est.</th>
+          <th class="py-2.5 px-3">Last Accrued</th>
+          <th class="py-2.5 px-3 text-right">Action</th>
+        </tr>
+      </thead>
+      <tbody id="mmf-body" class="divide-y divide-gray-100 dark:divide-gray-700"></tbody>
     </table>
   </div>
 </section>
 
-<section class="card market-section">
-  <div class="card-header table-heading">
-    <div><p class="eyebrow">Fixed income</p><h2 class="card-title">Money Market Funds</h2><p class="text-muted">Each day's interest uses that day's scraped effective annual yield and compounds from the recorded investment date.</p></div>
-    <div class="action-bar"><button id="scrape-yields" class="btn btn-sm btn-secondary" type="button">Update daily yields</button><button id="accrue-mmf" class="btn btn-sm btn-primary" type="button">Accrue completed days</button></div>
+<!-- Directory -->
+<!-- <section class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-gray-200 dark:border-gray-700 shadow-sm">
+  <div class="mb-4">
+    <span class="text-xs font-bold text-teal-600 uppercase">NSE DIRECTORY</span>
+    <h2 class="text-lg font-bold text-gray-900 dark:text-white">NSE Listed Companies</h2>
   </div>
-  <div id="mmf-empty" class="empty-state"></div>
-  <div id="mmf-wrap" class="table-wrapper" hidden>
-    <table>
-      <thead><tr><th>Fund</th><th>Investment date</th><th class="numeric">Principal</th><th class="numeric">Current</th><th class="numeric">Interest</th><th class="numeric">Latest yield</th><th class="numeric">Today's estimate</th><th>Last accrued</th><th></th></tr></thead>
-      <tbody id="mmf-body"></tbody>
-    </table>
-  </div>
-</section>
-
-<section class="card">
-  <div class="card-header"><div><p class="eyebrow">Market reference</p><h2 class="card-title">NSE listed securities</h2><p class="text-muted">The directory is bundled with the app. Hover a ticker anywhere in the portfolio to see the company name.</p></div></div>
-  <div id="nse-directory" class="ticker-directory"></div>
-</section>
+  <div id="nse-directory" class="flex flex-wrap gap-1.5"></div>
+</section> -->
 {% endblock %}
 
-{% block extra_js %}<script type="module" src="{{ url_for('static', path:'/js/portfolio.js') }}"></script>{% endblock %}
+{% block extra_js %}<script type="module" src="{{ url_for('static', path='/js/portfolio.js') }}"></script>{% endblock %}
+

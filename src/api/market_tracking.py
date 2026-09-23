@@ -222,21 +222,42 @@ async def refresh_stock(position_id: str, db: Session = Depends(get_db)):
 
 @router.post("/stocks/refresh-all")
 async def refresh_all_stocks(db: Session = Depends(get_db)):
-    """Refresh all stock positions with closing prices from Mansa API."""
-    if not settings.mansa_api_key:
-        raise HTTPException(status_code=400, detail="MANSA_API_KEY is not configured")
-
-    client = MansaClient(settings.mansa_api_key, settings.mansa_api_url)
+    """Refresh all stock positions with closing prices from Mansa API (NSE) or yfinance (US)."""
+    client = MansaClient(settings.mansa_api_key, settings.mansa_api_url) if settings.mansa_api_key else None
     positions = db.scalars(select(StockPosition)).all()
     refreshed = 0
     errors = []
 
     for pos in positions:
         try:
-            price = await client.close_price(pos.exchange or "NSE", pos.ticker)
-            pos.current_price = price
-            pos.price_updated_at = utc_now()
-            refreshed += 1
+            if pos.exchange == "US":
+                from src.api.yahoo_market import get_quote
+                p_val = await get_quote(pos.ticker)
+                pos.current_price = Decimal(str(p_val))
+                pos.price_updated_at = utc_now()
+                refreshed += 1
+            else:
+                price = None
+                if client:
+                    try:
+                        price = await client.close_price(pos.exchange or "NSE", pos.ticker)
+                    except Exception as e:
+                        logger.warning(f"Mansa API failed for NSE stock {pos.ticker}: {e}")
+                
+                if price is None:
+                    try:
+                        from src.api.yahoo_market import get_quote
+                        p_val = await get_quote(f"{pos.ticker}.NR")
+                        price = Decimal(str(p_val))
+                    except Exception:
+                        pass
+
+                if price is not None:
+                    pos.current_price = price
+                    pos.price_updated_at = utc_now()
+                    refreshed += 1
+                else:
+                    errors.append({"ticker": pos.ticker, "error": "Quote lookup timed out"})
         except Exception as e:
             errors.append({"ticker": pos.ticker, "error": str(e)})
 

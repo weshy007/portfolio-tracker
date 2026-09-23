@@ -76,7 +76,7 @@ class MansaClient:
         }
 
         last_error = None
-        async with httpx.AsyncClient(timeout=10.0, follow_redirects=True) as client:
+        async with httpx.AsyncClient(timeout=3.5, follow_redirects=True) as client:
             for url in endpoints:
                 try:
                     response = await client.get(url, headers=headers)
@@ -354,7 +354,7 @@ class PesaCalcYieldScraper:
 
         for target_url in unique_urls:
             try:
-                async with httpx.AsyncClient(timeout=12.0, follow_redirects=True) as client:
+                async with httpx.AsyncClient(timeout=3.5, follow_redirects=True) as client:
                     response = await client.get(target_url, headers=headers)
                     if response.status_code == 200:
                         yields = self._parse_html(response.text)
