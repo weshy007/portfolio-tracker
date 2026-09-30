@@ -91,3 +91,20 @@ body, button, input, select, textarea {
     background: #475569;
 }
 
+/* HTML5 Dialog Modal Viewport Centering */
+dialog[open] {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) !important;
+    margin: 0 !important;
+    max-height: 90vh !important;
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.8) !important;
+}
+
+dialog::backdrop {
+    background-color: rgba(2, 6, 23, 0.85) !important;
+    backdrop-filter: blur(4px) !important;
+}
+
+

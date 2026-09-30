@@ -24,7 +24,7 @@ body{background:#f5f8fb;color:var(--finance-ink)}.container{max-width:1480px}
 .dashboard-metrics{margin-bottom:1.25rem}.dashboard-status{display:flex;justify-content:space-between;align-items:center;gap:1rem}
 .status-actions{display:flex;align-items:center;gap:.65rem;flex-wrap:wrap;justify-content:flex-end}.market-section{margin-bottom:1.25rem}
 .market-section .table-heading{align-items:flex-start}.table-wrapper{border:1px solid #e4ebf2;border-radius:10px;overflow:auto}
-table{min-width:760px}th{background:#f7fafc;color:#4b6075}tr:hover td{background:#fbfdff}
+table{min-width:760px}th{background:#f7fafc;color:#4b6075}tr:hover td{background:#0f766e}
 .text-positive{color:var(--finance-positive)!important}.text-negative{color:var(--finance-negative)!important}
 .ticker-directory{display:flex;flex-wrap:wrap;gap:.45rem}.ticker-chip{display:inline-flex;align-items:center;padding:.4rem .55rem;border:1px solid var(--finance-line);border-radius:7px;background:#fff;font-family:'JetBrains Mono',monospace;font-size:.72rem;cursor:help}
 .ticker-chip:hover{border-color:#9ddbd3;background:var(--finance-accent-soft)}.notice{border-color:#d8e7e5;background:#f3fbfa}
