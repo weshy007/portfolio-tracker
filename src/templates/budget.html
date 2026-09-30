@@ -354,11 +354,16 @@ function calculateFI() {
         setText('fi-reach-sub', `At ${formatMoney(monthlyContribution, baseCurr)}/mo contribution & ${returnRate}% return`);
     }
 
-    setText('fi-explanation-text', `
-        1. <strong>Annual Spending Today:</strong> ${formatMoney(annualToday, baseCurr)} (${formatMoney(exp, baseCurr)}/mo × 12).<br>
-        2. <strong>Future Adjusted Need (${years} yrs @ ${inflation}% inflation):</strong> ${formatMoney(futureAnnualExpense, baseCurr)}/yr (${formatMoney(futureMonthlyExpense, baseCurr)}/mo).<br>
-        3. <strong>Target FI Capital (@ ${swr}% SWR):</strong> ${formatMoney(targetFINumber, baseCurr)} (25× annual future expenses).
-    `);
+    const expExplanationEl = document.getElementById('fi-explanation-text');
+    if (expExplanationEl) {
+        expExplanationEl.innerHTML = `
+            <div class="space-y-1 text-xs text-teal-100 font-mono">
+                <p>1. <strong>Annual Spending Today:</strong> ${formatMoney(annualToday, baseCurr)} (${formatMoney(exp, baseCurr)}/mo × 12)</p>
+                <p>2. <strong>Future Adjusted Need (${years} yrs @ ${inflation}% inflation):</strong> ${formatMoney(futureAnnualExpense, baseCurr)}/yr (${formatMoney(futureMonthlyExpense, baseCurr)}/mo)</p>
+                <p>3. <strong>Target FI Capital (@ ${swr}% SWR):</strong> ${formatMoney(targetFINumber, baseCurr)} (${(100 / swr).toFixed(0)}× annual future expenses)</p>
+            </div>
+        `;
+    }
 }
 
 // Input listeners for FI Calculator

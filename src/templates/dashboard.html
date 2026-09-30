@@ -1,25 +1,18 @@
 {% extends "base.html" %}
 {% block title %}Dashboard - {{ super() }}{% endblock %}
+
 {% block content %}
-<section class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+<section class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
   <div>
-    <p class="text-xs font-bold tracking-wider text-teal-600 dark:text-teal-400 uppercase">Financial Intelligence</p>
-    <h1 class="text-2xl md:text-3xl font-bold text-gray-900 dark:text-white">Portfolio Overview</h1>
-    <p class="text-sm text-gray-600 dark:text-gray-400">Real-time wealth tracking, market position values, and financial health metrics.</p>
-  </div>
-  <div class="flex items-center gap-3">
-    <button id="open-add-modal" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold py-2 px-4 rounded-lg text-sm transition flex items-center gap-1.5 shadow-sm">
-      <span>+</span> Add Holding
-    </button>
-    <a class="bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-gray-800 dark:text-gray-200 font-semibold py-2 px-4 rounded-lg text-sm transition" href="/portfolio">
-      Full Portfolio
-    </a>
+    <p class="text-xs font-bold tracking-wider text-teal-400 uppercase font-mono">Financial Intelligence</p>
+    <h1 class="text-2xl md:text-3xl font-bold text-white font-display">Portfolio Overview</h1>
+    <p class="text-xs sm:text-sm text-slate-400">Real-time wealth tracking, market position values, and financial health metrics.</p>
   </div>
 </section>
 
 <!-- Headline Metrics Grid -->
-<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8">
-  <article class="bg-gradient-to-br from-teal-900 via-slate-900 to-teal-950 text-white p-6 rounded-2xl border border-teal-800/50 shadow-md flex flex-col justify-between">
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8 font-mono">
+  <article class="bg-gradient-to-br from-teal-950 via-slate-900 to-slate-900 text-white p-6 rounded-2xl border border-teal-800/60 shadow-lg flex flex-col justify-between">
     <div class="flex justify-between items-center mb-2">
       <div class="flex items-center gap-2 text-teal-300 text-xs font-bold uppercase tracking-wider">
         <span class="material-symbols-outlined text-lg">account_balance</span>
@@ -27,141 +20,139 @@
       </div>
       <span class="text-[10px] font-bold bg-teal-500/20 px-2 py-0.5 rounded-full text-teal-200 border border-teal-500/30">Primary</span>
     </div>
-    <strong id="portfolio-total" class="text-3xl md:text-4xl font-extrabold font-mono block my-2">—</strong>
+    <strong id="portfolio-total" class="text-3xl md:text-4xl font-extrabold block my-2 text-white">—</strong>
     <span id="portfolio-note" class="text-xs text-teal-200/80">All tracked investments</span>
   </article>
 
-  <article class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex flex-col justify-between">
-    <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
-      <span class="material-symbols-outlined text-lg text-teal-600">receipt_long</span>
+  <article class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm flex flex-col justify-between text-white">
+    <div class="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
+      <span class="material-symbols-outlined text-lg text-teal-400">receipt_long</span>
       <span>MARKET COST BASIS</span>
     </div>
-    <strong id="cost-total" class="text-2xl md:text-3xl font-bold font-mono text-slate-900 dark:text-white block my-1">—</strong>
-    <span id="cost-note" class="text-xs text-slate-500">Quoted market positions only</span>
+    <strong id="cost-total" class="text-2xl md:text-3xl font-bold text-white block my-1">—</strong>
+    <span id="cost-note" class="text-xs text-slate-400">Quoted market positions only</span>
   </article>
 
-  <article class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex flex-col justify-between">
-    <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
-      <span class="material-symbols-outlined text-lg text-teal-600">trending_up</span>
+  <article class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm flex flex-col justify-between text-white">
+    <div class="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
+      <span class="material-symbols-outlined text-lg text-teal-400">trending_up</span>
       <span>UNREALIZED P/L</span>
     </div>
-    <strong id="pl-total" class="text-2xl md:text-3xl font-bold font-mono text-slate-900 dark:text-white block my-1">—</strong>
-    <span id="pl-note" class="text-xs text-slate-500">Market positions</span>
+    <strong id="pl-total" class="text-2xl md:text-3xl font-bold text-white block my-1">—</strong>
+    <span id="pl-note" class="text-xs text-slate-400">Market positions</span>
   </article>
 
-  <article class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex flex-col justify-between">
-    <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
-      <span class="material-symbols-outlined text-lg text-emerald-600">savings</span>
+  <article class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm flex flex-col justify-between text-white">
+    <div class="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
+      <span class="material-symbols-outlined text-lg text-emerald-400">savings</span>
       <span>MMF INTEREST ACCRUED</span>
     </div>
-    <strong id="interest-total" class="text-2xl md:text-3xl font-bold font-mono text-emerald-600 dark:text-emerald-400 block my-1">—</strong>
-    <span id="interest-note" class="text-xs text-slate-500">Accrued interest</span>
+    <strong id="interest-total" class="text-2xl md:text-3xl font-bold text-emerald-400 block my-1">—</strong>
+    <span id="interest-note" class="text-xs text-slate-400">Accrued interest</span>
   </article>
 
-  <article class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex flex-col justify-between">
-    <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
-      <span class="material-symbols-outlined text-lg text-teal-600">account_balance_wallet</span>
+  <article class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm flex flex-col justify-between text-white">
+    <div class="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
+      <span class="material-symbols-outlined text-lg text-teal-400">account_balance_wallet</span>
       <span>MONTHLY SURPLUS</span>
     </div>
-    <strong id="surplus-total" class="text-2xl md:text-3xl font-bold font-mono text-slate-900 dark:text-white block my-1">—</strong>
-    <span id="surplus-note" class="text-xs text-slate-500">Income less expenses</span>
+    <strong id="surplus-total" class="text-2xl md:text-3xl font-bold text-white block my-1">—</strong>
+    <span id="surplus-note" class="text-xs text-slate-400">Income less expenses</span>
   </article>
 
-  <article class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex flex-col justify-between">
-    <div class="flex items-center gap-2 text-slate-500 dark:text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
-      <span class="material-symbols-outlined text-lg text-indigo-600">show_chart</span>
+  <article class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm flex flex-col justify-between text-white">
+    <div class="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
+      <span class="material-symbols-outlined text-lg text-indigo-400">show_chart</span>
       <span>NET WORTH</span>
     </div>
-    <strong id="networth-total" class="text-2xl md:text-3xl font-bold font-mono text-indigo-600 dark:text-indigo-400 block my-1">—</strong>
-    <span id="networth-note" class="text-xs text-slate-500">Investments + assets − liabilities</span>
+    <strong id="networth-total" class="text-2xl md:text-3xl font-bold text-indigo-400 block my-1">—</strong>
+    <span id="networth-note" class="text-xs text-slate-400">Investments + assets − liabilities</span>
   </article>
 </section>
 
 <!-- Middle Row: Financial Health Indicators & Asset Breakdown -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
   <!-- Asset Class Distribution Bar -->
-  <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm">
-    <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-700/60 pb-3">
-      <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 font-display">
-        <span class="material-symbols-outlined text-teal-600">pie_chart</span>
+  <div class="lg:col-span-2 bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm text-white">
+    <div class="flex items-center justify-between mb-4 border-b border-slate-700/60 pb-3">
+      <h2 class="text-base font-bold text-white flex items-center gap-2 font-display">
+        <span class="material-symbols-outlined text-teal-400">pie_chart</span>
         <span>Asset Allocation Breakdown</span>
       </h2>
-      <span class="text-xs text-slate-500 font-medium">By Asset Class</span>
+      <span class="text-xs text-slate-400 font-medium font-mono">By Asset Class</span>
     </div>
     <div id="allocation-bar-container" class="space-y-4">
-      <div class="w-full bg-slate-100 dark:bg-slate-700 h-4 rounded-full overflow-hidden flex" id="allocation-stacked-bar">
-        <div class="bg-teal-600 h-full transition-all duration-500" style="width: 0%" title="Stocks"></div>
+      <div class="w-full bg-slate-900 h-4 rounded-full overflow-hidden flex border border-slate-700/60" id="allocation-stacked-bar">
+        <div class="bg-teal-500 h-full transition-all duration-500" style="width: 0%" title="Stocks"></div>
         <div class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%" title="MMF"></div>
         <div class="bg-indigo-500 h-full transition-all duration-500" style="width: 0%" title="Other"></div>
       </div>
-      <div class="grid grid-cols-3 gap-3 text-xs text-center">
-        <div class="p-3 rounded-xl bg-teal-50 dark:bg-teal-900/20 border border-teal-100 dark:border-teal-800/50">
-          <span class="block text-teal-700 dark:text-teal-300 font-semibold mb-1">Equities / Stocks</span>
-          <span id="alloc-stocks-val" class="font-bold font-mono text-slate-900 dark:text-white text-sm">KES 0 (0%)</span>
+      <div class="grid grid-cols-3 gap-3 text-xs text-center font-mono">
+        <div class="p-3 rounded-xl bg-teal-950/40 border border-teal-800/50">
+          <span class="block text-teal-300 font-semibold mb-1">Equities / Stocks</span>
+          <span id="alloc-stocks-val" class="font-bold text-white text-sm">KES 0 (0%)</span>
         </div>
-        <div class="p-3 rounded-xl bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-100 dark:border-emerald-800/50">
-          <span class="block text-emerald-700 dark:text-emerald-300 font-semibold mb-1">MMF Funds</span>
-          <span id="alloc-mmf-val" class="font-bold font-mono text-slate-900 dark:text-white text-sm">KES 0 (0%)</span>
+        <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-800/50">
+          <span class="block text-emerald-300 font-semibold mb-1">MMF Funds</span>
+          <span id="alloc-mmf-val" class="font-bold text-white text-sm">KES 0 (0%)</span>
         </div>
-        <div class="p-3 rounded-xl bg-indigo-50 dark:bg-indigo-900/20 border border-indigo-100 dark:border-indigo-800/50">
-          <span class="block text-indigo-700 dark:text-indigo-300 font-semibold mb-1">Other Holdings</span>
-          <span id="alloc-other-val" class="font-bold font-mono text-slate-900 dark:text-white text-sm">KES 0 (0%)</span>
+        <div class="p-3 rounded-xl bg-indigo-950/40 border border-indigo-800/50">
+          <span class="block text-indigo-300 font-semibold mb-1">Other Holdings</span>
+          <span id="alloc-other-val" class="font-bold text-white text-sm">KES 0 (0%)</span>
         </div>
       </div>
     </div>
   </div>
 
   <!-- Financial Health Ratios Card -->
-  <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm">
-    <h2 class="text-base font-bold text-slate-900 dark:text-white mb-4 border-b border-slate-100 dark:border-slate-700/60 pb-3 flex items-center gap-2 font-display">
-      <span class="material-symbols-outlined text-teal-600">health_and_safety</span>
+  <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm text-white">
+    <h2 class="text-base font-bold text-white mb-4 border-b border-slate-700/60 pb-3 flex items-center gap-2 font-display">
+      <span class="material-symbols-outlined text-teal-400">health_and_safety</span>
       <span>Financial Health Checks</span>
     </h2>
-    <div class="space-y-4 text-xs">
+    <div class="space-y-4 text-xs font-mono">
       <div>
         <div class="flex justify-between mb-1.5">
-          <span class="text-slate-600 dark:text-slate-400 font-semibold">Savings Rate</span>
-          <span id="health-savings-rate" class="font-bold text-teal-600 font-mono">0%</span>
+          <span class="text-slate-300 font-semibold">Savings Rate</span>
+          <span id="health-savings-rate" class="font-bold text-teal-400">0%</span>
         </div>
-        <div class="w-full bg-slate-100 dark:bg-slate-700 h-2 rounded-full overflow-hidden">
+        <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-700/60">
           <div id="health-savings-bar" class="bg-teal-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
         </div>
       </div>
       <div>
         <div class="flex justify-between mb-1">
-          <span class="text-slate-600 dark:text-slate-400 font-semibold">Emergency Coverage</span>
-          <span id="health-emergency-months" class="font-bold text-emerald-600 font-mono">0 mos</span>
+          <span class="text-slate-300 font-semibold">Emergency Coverage</span>
+          <span id="health-emergency-months" class="font-bold text-emerald-400">0 mos</span>
         </div>
-        <span class="text-[11px] text-slate-500">Target: 3–6 months essential expenses in MMF</span>
+        <span class="text-[11px] text-slate-400">Target: 3–6 months essential expenses in MMF</span>
       </div>
       <div>
         <div class="flex justify-between mb-1">
-          <span class="text-slate-600 dark:text-slate-400 font-semibold">Debt to Asset Ratio</span>
-          <span id="health-debt-ratio" class="font-bold text-indigo-600 font-mono">0%</span>
+          <span class="text-slate-300 font-semibold">Debt to Asset Ratio</span>
+          <span id="health-debt-ratio" class="font-bold text-indigo-400">0%</span>
         </div>
-        <span class="text-[11px] text-slate-500">Lower is better (&lt; 30% recommended)</span>
+        <span class="text-[11px] text-slate-400">Lower is better (&lt; 30% recommended)</span>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Bottom Section: Quick Quoted Positions & System Actions -->
-<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
-<!-- Bottom Section: Quick Quoted Positions & System Actions -->
+<!-- Bottom Section: Active Market Positions & System Actions -->
 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
   <!-- Stock & MMF Quick Overview Table -->
-  <div class="lg:col-span-2 bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm">
-    <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-700/60 pb-3">
-      <h2 class="text-base font-bold text-slate-900 dark:text-white flex items-center gap-2 font-display">
-        <span class="material-symbols-outlined text-teal-600">query_stats</span>
+  <div class="lg:col-span-2 bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm text-white">
+    <div class="flex items-center justify-between mb-4 border-b border-slate-700/60 pb-3">
+      <h2 class="text-base font-bold text-white flex items-center gap-2 font-display">
+        <span class="material-symbols-outlined text-teal-400">query_stats</span>
         <span>Active Market Positions</span>
       </h2>
-      <div class="flex items-center gap-3">
-        <button id="btn-view-detailed-positions" class="text-xs text-teal-600 hover:text-teal-700 font-semibold flex items-center gap-1 cursor-pointer border border-teal-200 dark:border-teal-800 px-2.5 py-1 rounded-lg bg-teal-50 dark:bg-teal-900/20">
+      <div class="flex items-center gap-3 font-mono">
+        <button id="btn-view-detailed-positions" type="button" class="text-xs text-teal-300 hover:text-teal-200 font-semibold flex items-center gap-1 cursor-pointer border border-teal-800 px-2.5 py-1 rounded-xl bg-teal-950/60 transition">
           <span class="material-symbols-outlined text-sm">visibility</span>
           <span>View Details</span>
         </button>
-        <a href="/portfolio" class="text-xs text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 font-semibold flex items-center gap-1">
+        <a href="/portfolio" class="text-xs text-slate-400 hover:text-slate-200 font-semibold flex items-center gap-1">
           <span>Full Ledger</span>
           <span class="material-symbols-outlined text-sm">arrow_forward</span>
         </a>
@@ -169,7 +160,7 @@
     </div>
     <div class="overflow-x-auto">
       <table class="w-full text-xs text-left cursor-pointer" id="quick-positions-table" title="Click any row to open detailed positions breakdown">
-        <thead class="bg-slate-50 dark:bg-slate-900/50 text-slate-500 uppercase font-semibold">
+        <thead class="bg-slate-900/80 text-slate-400 uppercase font-semibold font-mono">
           <tr>
             <th class="py-2.5 px-3">Asset</th>
             <th class="py-2.5 px-3">Type</th>
@@ -177,7 +168,7 @@
             <th class="py-2.5 px-3 text-right">P/L or Interest</th>
           </tr>
         </thead>
-        <tbody id="quick-positions-body" class="divide-y divide-slate-100 dark:divide-slate-700/60">
+        <tbody id="quick-positions-body" class="divide-y divide-slate-700/60 font-mono">
           <tr><td colspan="4" class="py-4 text-center text-slate-400">Loading holdings...</td></tr>
         </tbody>
       </table>
@@ -185,110 +176,169 @@
   </div>
 
   <!-- System Status & Refresh Actions -->
-  <div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm flex flex-col justify-between">
+  <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm flex flex-col justify-between text-white">
     <div>
       <div class="flex items-center gap-2 mb-2">
-        <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
-        <span class="text-xs font-bold text-slate-500 uppercase tracking-wider">LOCAL FIRST LEDGER</span>
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono">LOCAL FIRST LEDGER</span>
       </div>
-      <h2 class="text-base font-bold text-slate-900 dark:text-white mb-1 font-display flex items-center gap-2">
-        <span class="material-symbols-outlined text-teal-600">sync</span>
+      <h2 class="text-base font-bold text-white mb-1 font-display flex items-center gap-2">
+        <span class="material-symbols-outlined text-teal-400">sync</span>
         <span>Market Operations</span>
       </h2>
-      <p class="text-xs text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">Trigger direct price refreshes from Mansa API (NSE), yfinance (US), and daily MMF compounding math engine.</p>
+      <p class="text-xs text-slate-400 mb-4 leading-relaxed">Trigger direct price refreshes from Mansa API (NSE), yfinance (US), and daily MMF compounding math engine.</p>
     </div>
-    <div class="space-y-3">
-      <button id="btn-accrue-mmf" class="w-full bg-emerald-50 hover:bg-emerald-100 dark:bg-emerald-900/20 text-emerald-700 dark:text-emerald-300 font-semibold py-2.5 px-4 rounded-xl text-xs transition border border-emerald-200 dark:border-emerald-800 text-left flex items-center justify-between">
+    <div class="space-y-3 font-mono">
+      <button id="btn-accrue-mmf" type="button" class="w-full bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 font-semibold py-2.5 px-4 rounded-xl text-xs transition border border-emerald-800 text-left flex items-center justify-between shadow-sm">
         <span class="flex items-center gap-1.5">
           <span class="material-symbols-outlined text-base">bolt</span>
           <span>Accrue Daily MMF Interest</span>
         </span>
         <span class="font-bold">Run Engine</span>
       </button>
-      <div class="flex items-center justify-between text-xs pt-3 border-t border-slate-100 dark:border-slate-700/60">
-        <span id="dashboard-updated" class="text-slate-500 font-mono">Syncing...</span>
-        <a class="text-teal-600 hover:underline font-semibold" href="/settings">Settings</a>
+      <div class="flex items-center justify-between text-xs pt-3 border-t border-slate-700/60">
+        <span id="dashboard-updated" class="text-slate-400">Syncing...</span>
+        <a class="text-teal-400 hover:underline font-semibold" href="/settings">Settings</a>
       </div>
     </div>
   </div>
 </div>
 
-<!-- Modal: Quick Add Holding / Asset -->
-<dialog id="add-asset-dialog" class="p-0 rounded-2xl shadow-2xl border border-gray-200 dark:border-gray-700 bg-white dark:bg-slate-800 backdrop:bg-gray-900/50 max-w-lg w-full">
-  <div class="p-5 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center">
-    <h3 class="text-lg font-bold text-gray-900 dark:text-white">Add Existing Asset / Investment</h3>
-    <button id="close-add-modal" class="text-gray-400 hover:text-gray-600 dark:hover:text-gray-200 text-xl font-bold">&times;</button>
+<!-- Modal: Quick Add Holding / Asset (Matching Portfolio Entry Selector Pattern) -->
+<dialog id="add-asset-dialog" class="p-0 rounded-2xl shadow-2xl border border-slate-700 bg-slate-800 backdrop:bg-slate-950/80 max-w-xl w-full text-white font-mono">
+  <div class="p-5 border-b border-slate-700/60 flex justify-between items-center bg-slate-900/60 rounded-t-2xl">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-teal-400 text-xl">bolt</span>
+      <h3 class="text-base font-bold text-white font-display">⚡ Quick Add Asset / Investment</h3>
+    </div>
+    <button id="close-add-modal" type="button" class="text-slate-400 hover:text-white text-2xl font-bold p-1">&times;</button>
   </div>
-  <form id="quick-add-form" class="p-5 space-y-4">
+  <form id="quick-add-form" class="p-6 space-y-5">
+    <!-- Visual Asset Type Selector (Matching Portfolio page pattern) -->
     <div>
-      <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Asset Category</label>
-      <select id="modal-asset-type" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700">
-        <option value="NSE">NSE Stock (Kenya)</option>
-        <option value="US">US Stock (yfinance)</option>
-        <option value="MMF">Money Market Fund (MMF)</option>
-        <option value="GENERIC">Other Generic Asset</option>
-      </select>
+      <label class="block text-xs font-semibold text-slate-300 mb-2">Select Asset Type</label>
+      <input type="hidden" id="modal-asset-type" value="NSE">
+      <div id="modal-asset-type-cards" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <button type="button" data-type="NSE" class="modal-card-btn active p-3 rounded-xl border-2 border-teal-500 bg-teal-950/40 text-teal-200 text-left transition">
+          <div class="text-base">🇰🇪</div>
+          <div class="font-bold text-xs mt-1">NSE Stock</div>
+          <div class="text-[10px] text-slate-400">Mansa (KES)</div>
+        </button>
+        <button type="button" data-type="US" class="modal-card-btn p-3 rounded-xl border-2 border-slate-700 hover:border-teal-500 text-slate-300 text-left transition">
+          <div class="text-base">🇺🇸</div>
+          <div class="font-bold text-xs mt-1">US Stock</div>
+          <div class="text-[10px] text-slate-400">yfinance</div>
+        </button>
+        <button type="button" data-type="MMF" class="modal-card-btn p-3 rounded-xl border-2 border-slate-700 hover:border-teal-500 text-slate-300 text-left transition">
+          <div class="text-base">💰</div>
+          <div class="font-bold text-xs mt-1">Money Market</div>
+          <div class="text-[10px] text-slate-400">PesaCalc</div>
+        </button>
+        <button type="button" data-type="GENERIC" class="modal-card-btn p-3 rounded-xl border-2 border-slate-700 hover:border-teal-500 text-slate-300 text-left transition">
+          <div class="text-base">📊</div>
+          <div class="font-bold text-xs mt-1">Other Asset</div>
+          <div class="text-[10px] text-slate-400">Bonds, Land</div>
+        </button>
+      </div>
     </div>
 
-    <div id="modal-fields-stock" class="space-y-3">
+    <!-- NSE Stock Fields -->
+    <div id="modal-fields-nse" class="modal-asset-fields space-y-3">
       <div>
-        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Ticker / Stock Code</label>
-        <input id="modal-stock-ticker" placeholder="e.g. SCOM or AAPL" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 uppercase font-mono">
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Ticker / Stock Code</label>
+        <input id="modal-stock-ticker-nse" placeholder="SCOM, EQTY, KCB" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white uppercase font-mono">
       </div>
       <div class="grid grid-cols-2 gap-3">
         <div>
-          <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Shares Owned</label>
-          <input id="modal-stock-shares" type="number" min="0.000001" step="any" placeholder="100" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 font-mono">
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Shares Owned</label>
+          <input id="modal-stock-shares-nse" type="number" min="0.000001" step="any" placeholder="100" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
         </div>
         <div>
-          <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Avg Buy Price</label>
-          <input id="modal-stock-price" type="number" min="0" step="any" placeholder="15.50" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 font-mono">
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Avg Buy Price (KES)</label>
+          <input id="modal-stock-price-nse" type="number" min="0" step="any" placeholder="15.50" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
         </div>
       </div>
     </div>
 
-    <div id="modal-fields-mmf" class="space-y-3 hidden">
+    <!-- US Stock Fields -->
+    <div id="modal-fields-us" class="modal-asset-fields space-y-3 hidden">
       <div>
-        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">MMF Institution / Fund</label>
-        <input id="modal-mmf-name" placeholder="e.g. Cytonn Money Market Fund" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700">
+        <label class="block text-xs font-semibold text-slate-300 mb-1">US Ticker Code</label>
+        <input id="modal-stock-ticker-us" placeholder="AAPL, TSLA, NVDA" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white uppercase font-mono">
       </div>
-      <div>
-        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Initial Principal Balance (<span data-base-currency>KES</span>)</label>
-        <input id="modal-mmf-balance" type="number" min="0" step="0.01" placeholder="50000" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 font-mono">
-      </div>
-    </div>
-
-    <div id="modal-fields-generic" class="space-y-3 hidden">
-      <div>
-        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Asset Name</label>
-        <input id="modal-generic-name" placeholder="e.g. Land Plot in Nakuru" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700">
-      </div>
-      <div>
-        <label class="block text-xs font-semibold text-gray-700 dark:text-gray-300 mb-1">Estimated Value (<span data-base-currency>KES</span>)</label>
-        <input id="modal-generic-value" type="number" min="0" step="0.01" placeholder="1500000" class="w-full px-3 py-2 text-sm border rounded-lg dark:bg-slate-900 dark:border-gray-700 font-mono">
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Buy Price (USD / share)</label>
+          <input id="modal-stock-buy-us" type="number" min="0.000001" step="any" placeholder="190.00" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Shares Owned <span class="text-teal-400 font-normal">(Fractional)</span></label>
+          <input id="modal-stock-shares-us" type="number" min="0.000001" step="any" placeholder="0.010526" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+        </div>
       </div>
     </div>
 
-    <div class="flex justify-end gap-3 pt-4 border-t border-gray-100 dark:border-gray-700">
-      <button type="button" id="cancel-add-modal" class="px-4 py-2 text-sm font-semibold text-gray-600 hover:text-gray-800 dark:text-gray-400">Cancel</button>
-      <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-4 py-2 text-sm rounded-lg">Save Investment</button>
+    <!-- MMF Fields -->
+    <div id="modal-fields-mmf" class="modal-asset-fields space-y-3 hidden">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">MMF Institution / Fund</label>
+        <input id="modal-mmf-name" placeholder="e.g. Cytonn Money Market Fund" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Deposit Amount (<span data-base-currency>KES</span>)</label>
+          <input id="modal-mmf-balance" type="number" min="0" step="0.01" placeholder="50000" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Investment Start Date</label>
+          <input id="modal-mmf-date" type="date" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+        </div>
+      </div>
+    </div>
+
+    <!-- Generic Asset Fields -->
+    <div id="modal-fields-generic" class="modal-asset-fields space-y-3 hidden">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Asset Name</label>
+        <input id="modal-generic-name" placeholder="e.g. Land Plot in Nakuru, SACCO Savings" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Estimated Value</label>
+          <input id="modal-generic-value" type="number" min="0" step="0.01" placeholder="1500000" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Currency</label>
+          <select id="modal-generic-currency" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+            <option value="KES">KES</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3 pt-4 border-t border-slate-700/60">
+      <button type="button" id="cancel-add-modal" class="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white transition">Cancel</button>
+      <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold px-5 py-2 text-xs rounded-xl shadow-md transition">Save Investment</button>
     </div>
   </form>
 </dialog>
 
 <!-- Modal: Floating Detailed Asset Breakdown Page -->
-<dialog id="positions-detail-dialog" class="p-0 rounded-2xl shadow-2xl border border-slate-200 dark:border-slate-700 bg-white dark:bg-slate-800 backdrop:bg-slate-900/60 max-w-4xl w-full">
-  <div class="p-5 border-b border-slate-100 dark:border-slate-700/60 flex justify-between items-center bg-slate-50 dark:bg-slate-900/40 rounded-t-2xl">
+<dialog id="positions-detail-dialog" class="p-0 rounded-2xl shadow-2xl border border-slate-700 bg-slate-800 backdrop:bg-slate-950/80 max-w-4xl w-full text-white font-mono">
+  <div class="p-5 border-b border-slate-700/60 flex justify-between items-center bg-slate-900/60 rounded-t-2xl">
     <div>
-      <span class="text-xs font-bold text-teal-600 uppercase">PORTFOLIO BREAKDOWN</span>
-      <h3 class="text-lg font-bold text-slate-900 dark:text-white font-display">Active Market Positions & Asset Details</h3>
+      <span class="text-xs font-bold text-teal-400 uppercase">PORTFOLIO BREAKDOWN</span>
+      <h3 class="text-lg font-bold text-white font-display">Active Market Positions & Asset Details</h3>
     </div>
-    <button id="close-detail-modal" class="text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-2xl font-bold p-1">&times;</button>
+    <button id="close-detail-modal" type="button" class="text-slate-400 hover:text-white text-2xl font-bold p-1">&times;</button>
   </div>
   <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
     <div class="overflow-x-auto">
       <table class="w-full text-xs text-left">
-        <thead class="bg-slate-100 dark:bg-slate-900/80 text-slate-500 uppercase font-semibold">
+        <thead class="bg-slate-900/80 text-slate-400 uppercase font-semibold">
           <tr>
             <th class="py-3 px-3">Asset</th>
             <th class="py-3 px-3">Type</th>
@@ -300,14 +350,14 @@
             <th class="py-3 px-3 text-right">Unrealized P/L</th>
           </tr>
         </thead>
-        <tbody id="detail-positions-body" class="divide-y divide-slate-100 dark:divide-slate-700/60 font-mono">
+        <tbody id="detail-positions-body" class="divide-y divide-slate-700/60">
           <tr><td colspan="8" class="py-6 text-center text-slate-400">Loading position details...</td></tr>
         </tbody>
       </table>
     </div>
   </div>
-  <div class="p-4 border-t border-slate-100 dark:border-slate-700/60 flex justify-between items-center bg-slate-50 dark:bg-slate-900/40 rounded-b-2xl">
-    <span class="text-xs text-slate-500 font-mono" id="detail-modal-summary"></span>
+  <div class="p-4 border-t border-slate-700/60 flex justify-between items-center bg-slate-900/60 rounded-b-2xl">
+    <span class="text-xs text-slate-400" id="detail-modal-summary"></span>
     <a href="/portfolio" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-4 py-2 text-xs rounded-xl transition">Open Full Ledger</a>
   </div>
 </dialog>

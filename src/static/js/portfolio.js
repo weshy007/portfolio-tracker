@@ -1,7 +1,7 @@
 import Storage from './storage.js';
 import API from './api.js';
 import { NSE_SECURITIES, NSE_STOCKS_BY_TICKER, nseCompanyName } from './nse_catalog.js';
-import { amount, button, currencies, emptyState, formatMoney, formatPercent, row } from './ui.js';
+import { amount, button, currencies, emptyState, formatMoney, formatPercent, row, totalInBase } from './ui.js';
 
 const defaults = [
   ['NSE Stocks', 'Equities'], ['US Stocks', 'Equities'], ['Money Market Fund', 'Fixed Income'],
@@ -256,7 +256,8 @@ async function submitHolding(event) {
     if (type === 'nse' || type === 'us') await saveStock(type);
     else if (type === 'mmf') await saveMMF();
     else await saveGeneric(type);
-    event.currentTarget.reset();
+    const form = event.target.closest('form') || $('holding-form');
+    if (form && typeof form.reset === 'function') form.reset();
     setAssetType('nse');
     await render();
     window.showToast?.('Holding added successfully.');
