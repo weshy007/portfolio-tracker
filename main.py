@@ -9,12 +9,14 @@ from fastapi.staticfiles import StaticFiles
 from fastapi.templating import Jinja2Templates
 from starlette.requests import Request
 from starlette.middleware.base import BaseHTTPMiddleware
-from starlette.types import ASGIApp, Message, Receive, Scope, Send
+from starlette.types import Message
 
 from config import settings
 from database import init_db
 from src.api import calculations_router
 from src.api.market_tracking import router as market_tracking_router
+from src.api.mmf_enhancements import router as mmf_enhancements_router
+from src.api.yahoo_market import router as yahoo_market_router
 
 # Initialize database
 init_db()
@@ -35,9 +37,12 @@ class SecurityHeadersMiddleware(BaseHTTPMiddleware):
         response.headers["Referrer-Policy"] = "strict-origin-when-cross-origin"
         response.headers["Permissions-Policy"] = "camera=(), microphone=(), geolocation=()"
         response.headers["Content-Security-Policy"] = (
-            "default-src 'self'; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; "
-            "font-src 'self' https://fonts.gstatic.com; script-src 'self' 'unsafe-inline'; "
-            "connect-src 'self'; img-src 'self' data:"
+            "default-src 'self'; "
+            "style-src 'self' 'unsafe-inline' https://fonts.googleapis.com https://cdn.jsdelivr.net https://cdn.tailwindcss.com; "
+            "font-src 'self' https://fonts.gstatic.com; "
+            "script-src 'self' 'unsafe-inline' https://cdn.tailwindcss.com; "
+            "connect-src 'self'; "
+            "img-src 'self' data:"
         )
         if settings.is_production:
             response.headers["Strict-Transport-Security"] = "max-age=31536000; includeSubDomains"
@@ -70,6 +75,8 @@ templates = Jinja2Templates(directory=templates_dir)
 # Include API routes
 app.include_router(calculations_router)
 app.include_router(market_tracking_router)
+app.include_router(mmf_enhancements_router)
+app.include_router(yahoo_market_router)
 
 # Mount static files
 static_dir = app_dir / "static"

@@ -1,10 +1,245 @@
-{% extends "base.html" %}{% block title %}Monthly allocation - {{ super() }}{% endblock %}{% block content %}
-<section class="page-heading"><div><p class="eyebrow">Monthly allocation plan</p><h1>Give every shilling a role</h1><p>This is your intended recurring plan, not your current portfolio.</p></div></section>
-<section class="card"><div class="card-header"><h2 class="card-title">Add planned allocation</h2></div><form id="allocation-form" class="grid grid-3"><div class="form-group"><label>Name</label><input name="name" required maxlength="120"></div><div class="form-group"><label>Type</label><select name="allocation_type"><option>Expense</option><option>Saving</option><option>Investment</option><option>Debt</option><option>Other</option></select></div><div class="form-group"><label>Monthly amount</label><input name="amount" type="number" min="0" step=".01" required></div><div class="form-group"><label>Currency</label><select name="currency" id="allocation-currency"></select></div><div class="form-group form-actions"><button class="btn btn-primary">Save allocation</button></div></form></section>
-<section class="card"><div class="card-header"><h2 class="card-title">Plan overview</h2></div><div class="metric-grid"><div class="metric-card"><span class="metric-label">Income</span><strong id="plan-income" class="metric-value">—</strong></div><div class="metric-card"><span class="metric-label">Allocated</span><strong id="plan-allocated" class="metric-value">—</strong></div><div id="plan-remaining-card" class="metric-card"><span class="metric-label">Remaining</span><strong id="plan-remaining" class="metric-value">—</strong></div></div><p id="plan-message" class="notice"></p></section>
-<section class="card"><div class="card-header"><h2 class="card-title">Active allocations</h2></div><div id="allocation-list" class="record-list"></div></section>
+{% extends "base.html" %}
+{% block title %}Monthly Allocation - {{ super() }}{% endblock %}
+
+{% block content %}
+<section class="mb-6 flex flex-col md:flex-row md:items-end justify-between gap-4">
+    <div>
+        <p class="text-xs font-bold tracking-wider text-teal-600 uppercase">Monthly Allocation Plan</p>
+        <h1 class="text-2xl md:text-3xl font-bold text-slate-900 dark:text-white font-display">Give Every Shilling a Role</h1>
+        <p class="text-sm text-slate-600 dark:text-slate-400">Target distribution model for zero-based income allocation.</p>
+    </div>
+</section>
+
+<!-- Summary Metrics -->
+<div class="grid grid-cols-1 sm:grid-cols-3 gap-6 mb-6">
+    <!-- Card 1: Income -->
+    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+            <span>Monthly Inflow</span>
+            <span class="material-symbols-outlined text-teal-600 text-lg">south_east</span>
+        </div>
+        <div id="plan-income" class="text-2xl font-bold font-mono text-slate-900 dark:text-white">
+            —
+        </div>
+        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400 flex items-center gap-1">
+            <span class="material-symbols-outlined text-emerald-500 text-sm">check_circle</span>
+            <span>Verified Net Income</span>
+        </div>
+    </div>
+
+    <!-- Card 2: Allocated -->
+    <div class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm relative overflow-hidden">
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+            <span>Planned Allocation</span>
+            <span class="material-symbols-outlined text-sky-500 text-lg">north_east</span>
+        </div>
+        <div id="plan-allocated" class="text-2xl font-bold font-mono text-slate-900 dark:text-white">
+            —
+        </div>
+        <div class="mt-2 text-xs text-slate-500 dark:text-slate-400">
+            Expenses • Savings • Investments
+        </div>
+    </div>
+
+    <!-- Card 3: Remaining / Surplus -->
+    <div id="plan-remaining-card" class="bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm relative overflow-hidden transition-all">
+        <div class="flex items-center justify-between text-xs font-semibold text-slate-500 dark:text-slate-400 uppercase tracking-wider mb-2">
+            <span>Unallocated Surplus</span>
+            <span class="material-symbols-outlined text-emerald-500 text-lg">savings</span>
+        </div>
+        <div id="plan-remaining" class="text-2xl font-bold font-mono text-slate-900 dark:text-white">
+            —
+        </div>
+        <p id="plan-message" class="mt-2 text-xs font-medium text-slate-600 dark:text-slate-400"></p>
+    </div>
+</div>
+
+<!-- Add Planned Allocation Form -->
+<div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm mb-6">
+    <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-700/60 pb-3">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 font-display">
+            <span class="material-symbols-outlined text-teal-600 text-xl">add_chart</span>
+            <span>Add Planned Allocation</span>
+        </h2>
+    </div>
+    <form id="allocation-form" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 items-end">
+        <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Allocation Name</label>
+            <input name="name" required maxlength="120" placeholder="e.g. Sacco Savings, Rent, Emergency" class="w-full px-3 py-2 text-sm border rounded-xl dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+        </div>
+        <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Type</label>
+            <select name="allocation_type" class="w-full px-3 py-2 text-sm border rounded-xl dark:bg-slate-900 dark:border-slate-700 dark:text-white">
+                <option value="Expense">Expense</option>
+                <option value="Saving">Saving</option>
+                <option value="Investment">Investment</option>
+                <option value="Debt">Debt</option>
+                <option value="Other">Other</option>
+            </select>
+        </div>
+        <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Monthly Amount</label>
+            <input name="amount" type="number" min="0" step=".01" required placeholder="0.00" class="w-full px-3 py-2 text-sm border rounded-xl dark:bg-slate-900 dark:border-slate-700 dark:text-white font-mono">
+        </div>
+        <div>
+            <label class="block text-xs font-semibold text-slate-700 dark:text-slate-300 mb-1">Currency</label>
+            <div class="flex gap-2">
+                <select name="currency" id="allocation-currency" class="w-full px-3 py-2 text-sm border rounded-xl dark:bg-slate-900 dark:border-slate-700 dark:text-white font-mono"></select>
+                <button type="submit" class="bg-teal-700 hover:bg-teal-800 text-white font-semibold py-2 px-4 rounded-xl text-sm transition shrink-0 flex items-center gap-1">
+                    <span class="material-symbols-outlined text-lg">save</span>
+                    <span>Save</span>
+                </button>
+            </div>
+        </div>
+    </form>
+</div>
+
+<!-- Active Allocations List -->
+<div class="bg-white dark:bg-slate-800 p-6 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm">
+    <div class="flex items-center justify-between mb-4 border-b border-slate-100 dark:border-slate-700/60 pb-3">
+        <h2 class="text-lg font-bold text-slate-900 dark:text-white flex items-center gap-2 font-display">
+            <span class="material-symbols-outlined text-teal-600 text-xl">pie_chart</span>
+            <span>Active Planned Allocations</span>
+        </h2>
+    </div>
+    <div id="allocation-list" class="space-y-3"></div>
+</div>
+
 <script type="module">
-import Storage from '/static/js/storage.js';import API from '/static/js/api.js';import {amount,button,currencies,formatMoney,renderList,setText,totalInBase} from '/static/js/ui.js';const select=document.getElementById('allocation-currency');currencies.forEach(c=>select.add(new Option(c,c)));select.value=Storage.getBaseCurrency();
-async function render(){const [plans,incomes]=await Promise.all([Storage.getAll(Storage.STORES.planned_allocations),Storage.getAll(Storage.STORES.income_sources)]);const activePlans=plans.filter(x=>x.active!==false&&x.frequency==='Monthly'),activeIncome=incomes.filter(x=>x.active!==false&&x.frequency==='Monthly');const [allocated,income]=await Promise.all([totalInBase(activePlans,API),totalInBase(activeIncome,API)]);renderList(document.getElementById('allocation-list'),activePlans,x=>`${x.name} · ${x.allocation_type} · ${formatMoney(x.amount,x.currency)}`,async id=>{await Storage.deleteItem(Storage.STORES.planned_allocations,id);render();});const difference=income-allocated;setText('plan-income',income?formatMoney(income):'Not configured');setText('plan-allocated',formatMoney(allocated));setText('plan-remaining',income?formatMoney(Math.abs(difference)):'—');document.getElementById('plan-remaining-card').classList.toggle('negative',difference<0);setText('plan-message',!income?'Add monthly income in Budget before checking whether this plan fits.':difference<0?`Over-allocated by ${formatMoney(-difference)}. Review this plan before relying on it.`:`${formatMoney(difference)} remains unallocated.`);}
-document.getElementById('allocation-form').addEventListener('submit',async event=>{event.preventDefault();const data=new FormData(event.currentTarget);await Storage.setItem(Storage.STORES.planned_allocations,{id:crypto.randomUUID(),name:data.get('name').trim(),allocation_type:data.get('allocation_type'),amount:amount(data.get('amount')),currency:data.get('currency'),frequency:'Monthly',active:true,created_at:new Date().toISOString(),updated_at:new Date().toISOString()});event.currentTarget.reset();render();});render().catch(error=>setText('plan-message',error.message));
-</script>{% endblock %}
+import Storage from '/static/js/storage.js';
+import API from '/static/js/api.js';
+import { amount, currencies, formatMoney, setText, totalInBase } from '/static/js/ui.js';
+
+const select = document.getElementById('allocation-currency');
+currencies.forEach(c => select.add(new Option(c, c)));
+select.value = Storage.getBaseCurrency();
+
+function escapeHtml(str) {
+    const d = document.createElement('div');
+    d.textContent = str || '';
+    return d.innerHTML;
+}
+
+async function render() {
+    const [plans, incomes] = await Promise.all([
+        Storage.getAll(Storage.STORES.planned_allocations),
+        Storage.getAll(Storage.STORES.income_sources)
+    ]);
+
+    const activePlans = plans.filter(x => x.active !== false && x.frequency === 'Monthly');
+    const activeIncome = incomes.filter(x => x.active !== false && x.frequency === 'Monthly');
+
+    const [allocated, income] = await Promise.all([
+        totalInBase(activePlans, API),
+        totalInBase(activeIncome, API)
+    ]);
+
+    const list = document.getElementById('allocation-list');
+    list.replaceChildren();
+
+    if (activePlans.length === 0) {
+        list.innerHTML = `
+            <div class="p-8 text-center text-slate-500 dark:text-slate-400 border border-dashed border-slate-200 dark:border-slate-700 rounded-xl">
+                <span class="material-symbols-outlined text-3xl mb-1 text-slate-400">pie_chart</span>
+                <p class="text-sm font-medium">No active planned allocations.</p>
+                <p class="text-xs text-slate-400 mt-0.5">Add an allocation item above to build your monthly target budget.</p>
+            </div>
+        `;
+    } else {
+        const typeIcons = {
+            'Expense': 'payments',
+            'Saving': 'savings',
+            'Investment': 'trending_up',
+            'Debt': 'credit_card',
+            'Other': 'label'
+        };
+
+        const typeColors = {
+            'Expense': 'bg-rose-50 text-rose-700 dark:bg-rose-950/40 dark:text-rose-400 border-rose-200 dark:border-rose-800/50',
+            'Saving': 'bg-emerald-50 text-emerald-700 dark:bg-emerald-950/40 dark:text-emerald-400 border-emerald-200 dark:border-emerald-800/50',
+            'Investment': 'bg-teal-50 text-teal-700 dark:bg-teal-950/40 dark:text-teal-400 border-teal-200 dark:border-teal-800/50',
+            'Debt': 'bg-amber-50 text-amber-700 dark:bg-amber-950/40 dark:text-amber-400 border-amber-200 dark:border-amber-800/50',
+            'Other': 'bg-slate-100 text-slate-700 dark:bg-slate-800 dark:text-slate-300 border-slate-200 dark:border-slate-700'
+        };
+
+        activePlans.forEach(plan => {
+            const item = document.createElement('div');
+            item.className = "flex items-center justify-between p-4 bg-slate-50 dark:bg-slate-900/60 rounded-xl border border-slate-200 dark:border-slate-700/50 hover:border-slate-300 dark:hover:border-slate-600 transition";
+            
+            const icon = typeIcons[plan.allocation_type] || 'label';
+            const colorClass = typeColors[plan.allocation_type] || typeColors['Other'];
+
+            item.innerHTML = `
+                <div class="flex items-center gap-3">
+                    <div class="w-10 h-10 rounded-xl bg-white dark:bg-slate-800 border border-slate-200 dark:border-slate-700 flex items-center justify-center text-teal-600 dark:text-teal-400 shadow-sm">
+                        <span class="material-symbols-outlined text-xl">${icon}</span>
+                    </div>
+                    <div>
+                        <h4 class="font-semibold text-slate-900 dark:text-white text-sm">${escapeHtml(plan.name)}</h4>
+                        <span class="inline-block mt-0.5 px-2 py-0.5 text-xs font-medium rounded-full border ${colorClass}">${escapeHtml(plan.allocation_type)}</span>
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span class="font-mono font-bold text-slate-900 dark:text-white text-base">${formatMoney(plan.amount, plan.currency)}</span>
+                    <button type="button" class="delete-btn p-2 text-slate-400 hover:text-rose-600 hover:bg-rose-50 dark:hover:bg-rose-950/40 rounded-lg transition" title="Delete Allocation">
+                        <span class="material-symbols-outlined text-lg">delete</span>
+                    </button>
+                </div>
+            `;
+
+            item.querySelector('.delete-btn').addEventListener('click', async () => {
+                await Storage.deleteItem(Storage.STORES.planned_allocations, plan.id);
+                render();
+            });
+
+            list.appendChild(item);
+        });
+    }
+
+    const difference = income - allocated;
+    setText('plan-income', income ? formatMoney(income) : 'Not set');
+    setText('plan-allocated', formatMoney(allocated));
+    setText('plan-remaining', income ? formatMoney(Math.abs(difference)) : '—');
+
+    const remainingCard = document.getElementById('plan-remaining-card');
+    const messageEl = document.getElementById('plan-message');
+
+    if (!income) {
+        messageEl.textContent = 'Add monthly income in Budget page to evaluate plan fit.';
+        messageEl.className = 'mt-2 text-xs font-medium text-amber-600 dark:text-amber-400';
+        remainingCard.className = 'bg-white dark:bg-slate-800 p-5 rounded-2xl border border-amber-300 dark:border-amber-700/60 shadow-sm relative overflow-hidden';
+    } else if (difference < 0) {
+        messageEl.textContent = `Over-allocated by ${formatMoney(-difference)}. Adjust to avoid monthly deficit.`;
+        messageEl.className = 'mt-2 text-xs font-semibold text-rose-600 dark:text-rose-400';
+        remainingCard.className = 'bg-white dark:bg-slate-800 p-5 rounded-2xl border border-rose-400 dark:border-rose-600/80 shadow-sm relative overflow-hidden';
+    } else {
+        messageEl.textContent = `${formatMoney(difference)} remains unallocated buffer.`;
+        messageEl.className = 'mt-2 text-xs font-medium text-emerald-600 dark:text-emerald-400';
+        remainingCard.className = 'bg-white dark:bg-slate-800 p-5 rounded-2xl border border-slate-200 dark:border-slate-700/60 shadow-sm relative overflow-hidden';
+    }
+}
+
+document.getElementById('allocation-form').addEventListener('submit', async event => {
+    event.preventDefault();
+    const data = new FormData(event.currentTarget);
+    await Storage.setItem(Storage.STORES.planned_allocations, {
+        id: crypto.randomUUID(),
+        name: data.get('name').trim(),
+        allocation_type: data.get('allocation_type'),
+        amount: amount(data.get('amount')),
+        currency: data.get('currency'),
+        frequency: 'Monthly',
+        active: true,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString()
+    });
+    event.currentTarget.reset();
+    render();
+});
+
+render().catch(error => {
+    const messageEl = document.getElementById('plan-message');
+    if (messageEl) messageEl.textContent = error.message;
+});
+</script>
+{% endblock %}

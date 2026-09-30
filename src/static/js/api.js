@@ -146,6 +146,10 @@ async function deleteMMFAccount(accountId) {
     return apiRequest(`/market/mmfs/${encodeURIComponent(accountId)}`, 'DELETE');
 }
 
+async function refreshAllUSStocks() {
+    return apiRequest('/us-market/stocks/refresh-all', 'POST');
+}
+
 async function getMMFYields() {
     return apiRequest('/market/yields');
 }
@@ -186,6 +190,7 @@ const API = {
     scrapeMMFYields,
     getInstitutions,
     matchInstitution,
+    refreshAllUSStocks,
 };
 
 export default API;

@@ -1,873 +1,367 @@
 {% extends "base.html" %}
 {% block title %}Dashboard - {{ super() }}{% endblock %}
+
 {% block content %}
-<section class="page-heading">
+<section class="mb-6 flex flex-col sm:flex-row sm:items-center justify-between gap-4">
   <div>
-    <p class="eyebrow">Financial Dashboard</p>
-    <h1>Your Financial Command Center</h1>
-    <p>Real-time portfolio valuations, stock P/L, 24-hour compound MMF accruals, and cash flow.</p>
-  </div>
-  <div class="action-bar" style="align-self: flex-start; margin-top: 0.5rem;">
-    <button id="btn-refresh-stocks-top" type="button" class="btn btn-sm btn-secondary" title="Fetch latest closing prices from Mansa API">
-      ⚡ Refresh Stock Prices
-    </button>
-    <button id="btn-accrue-mmf-top" type="button" class="btn btn-sm btn-secondary" title="Run 24-hour compound interest engine">
-      🔄 Accrue MMF Interest
-    </button>
-    <button id="btn-scrape-yields-top" type="button" class="btn btn-sm btn-secondary" title="Scrape latest yields from PesaCalc">
-      🌐 Update MMF Yields
-    </button>
+    <p class="text-xs font-bold tracking-wider text-teal-400 uppercase font-mono">Financial Intelligence</p>
+    <h1 class="text-2xl md:text-3xl font-bold text-white font-display">Portfolio Overview</h1>
+    <p class="text-xs sm:text-sm text-slate-400">Real-time wealth tracking, market position values, and financial health metrics.</p>
   </div>
 </section>
 
-<!-- Unified Financial Summary Cards -->
-<section class="metric-grid">
-  <!-- Total Portfolio Value -->
-  <div class="metric-card">
-    <span class="metric-label">Total Portfolio Value</span>
-    <strong id="portfolio-total" class="metric-value">—</strong>
-    <span id="portfolio-note" class="metric-subtext">Stocks, MMFs, & holdings</span>
-  </div>
-
-  <!-- Stock Portfolio Profit/Loss -->
-  <div id="stock-pl-card" class="metric-card">
-    <span class="metric-label">Stock Portfolio Profit / Loss</span>
-    <strong id="stock-pl-total" class="metric-value">—</strong>
-    <span id="stock-pl-note" class="metric-subtext">Based on average buy price</span>
-  </div>
-
-  <!-- Total MMF Interest Accrued -->
-  <div class="metric-card">
-    <span class="metric-label">Total MMF Interest Accrued</span>
-    <strong id="mmf-interest-total" class="metric-value" style="color: var(--primary-color);">—</strong>
-    <span id="mmf-interest-note" class="metric-subtext">Compound daily interest</span>
-  </div>
-
-  <!-- Net Worth -->
-  <div class="metric-card">
-    <span class="metric-label">Net Worth</span>
-    <strong id="networth-total" class="metric-value">—</strong>
-    <span id="networth-note" class="metric-subtext">Assets less liabilities</span>
-  </div>
-
-  <!-- Monthly Surplus -->
-  <div id="surplus-card" class="metric-card">
-    <span class="metric-label">Monthly Surplus</span>
-    <strong id="surplus-total" class="metric-value">—</strong>
-    <span id="surplus-note" class="metric-subtext">Income less expenses</span>
-  </div>
-</section>
-
-<!-- Quick-Add Asset Form Card & Portfolio Allocation Chart -->
-<div class="grid grid-2">
-  <!-- Asset Quick-Add Form Card -->
-  <section class="card">
-    <div class="card-header">
-      <h2 class="card-title">Add existing asset</h2>
-      <span class="text-muted" style="font-size: 0.8rem;">Instant 24-hr tracking sync</span>
-    </div>
-
-    <!-- Tabs: Stock vs MMF -->
-    <div class="tab-bar">
-      <button type="button" id="tab-stock-btn" class="tab-btn active">📈 Stock (Equities)</button>
-      <button type="button" id="tab-mmf-btn" class="tab-btn">🏦 Money Market Fund (Fixed Income)</button>
-    </div>
-
-    <!-- Stock Add Form -->
-    <form id="dashboard-stock-form" class="grid grid-2">
-      <p class="text-muted grid-span-2" style="font-size: 0.8rem; margin: -0.5rem 0 0.5rem; line-height: 1.4; color: var(--primary-color);">
-        <strong>Equities Category:</strong> Ownership shares in publicly traded companies on the Nairobi Securities Exchange (NSE). EOD closing quotes are retrieved from Mansa API to compute market value and profit/loss.
-      </p>
-
-      <!-- Prepopulated NSE Ticker Selector -->
-      <div class="form-group grid-span-2">
-        <label for="dash-stock-select">Select NSE Stock (Prepopulated from Mansa)</label>
-        <select id="dash-stock-select">
-          <option value="">-- Choose Stock or type ticker below --</option>
-        </select>
+<!-- Headline Metrics Grid -->
+<section class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-5 mb-8 font-mono">
+  <article class="bg-gradient-to-br from-teal-950 via-slate-900 to-slate-900 text-white p-6 rounded-2xl border border-teal-800/60 shadow-lg flex flex-col justify-between">
+    <div class="flex justify-between items-center mb-2">
+      <div class="flex items-center gap-2 text-teal-300 text-xs font-bold uppercase tracking-wider">
+        <span class="material-symbols-outlined text-lg">account_balance</span>
+        <span>TOTAL PORTFOLIO VALUE</span>
       </div>
+      <span class="text-[10px] font-bold bg-teal-500/20 px-2 py-0.5 rounded-full text-teal-200 border border-teal-500/30">Primary</span>
+    </div>
+    <strong id="portfolio-total" class="text-3xl md:text-4xl font-extrabold block my-2 text-white">—</strong>
+    <span id="portfolio-note" class="text-xs text-teal-200/80">All tracked investments</span>
+  </article>
 
-      <!-- Ticker Input & Mansa Fetch Button -->
-      <div class="form-group grid-span-2">
-        <div style="display:flex; justify-content:space-between; align-items:center;">
-          <label for="dash-stock-ticker">Stock Ticker Symbol</label>
-          <button id="dash-btn-fetch-price" type="button" class="btn btn-sm btn-secondary" style="margin-bottom:0.25rem;">
-            ⚡ Fetch Mansa Price
-          </button>
+  <article class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm flex flex-col justify-between text-white">
+    <div class="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
+      <span class="material-symbols-outlined text-lg text-teal-400">receipt_long</span>
+      <span>MARKET COST BASIS</span>
+    </div>
+    <strong id="cost-total" class="text-2xl md:text-3xl font-bold text-white block my-1">—</strong>
+    <span id="cost-note" class="text-xs text-slate-400">Quoted market positions only</span>
+  </article>
+
+  <article class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm flex flex-col justify-between text-white">
+    <div class="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
+      <span class="material-symbols-outlined text-lg text-teal-400">trending_up</span>
+      <span>UNREALIZED P/L</span>
+    </div>
+    <strong id="pl-total" class="text-2xl md:text-3xl font-bold text-white block my-1">—</strong>
+    <span id="pl-note" class="text-xs text-slate-400">Market positions</span>
+  </article>
+
+  <article class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm flex flex-col justify-between text-white">
+    <div class="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
+      <span class="material-symbols-outlined text-lg text-emerald-400">savings</span>
+      <span>MMF INTEREST ACCRUED</span>
+    </div>
+    <strong id="interest-total" class="text-2xl md:text-3xl font-bold text-emerald-400 block my-1">—</strong>
+    <span id="interest-note" class="text-xs text-slate-400">Accrued interest</span>
+  </article>
+
+  <article class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm flex flex-col justify-between text-white">
+    <div class="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
+      <span class="material-symbols-outlined text-lg text-teal-400">account_balance_wallet</span>
+      <span>MONTHLY SURPLUS</span>
+    </div>
+    <strong id="surplus-total" class="text-2xl md:text-3xl font-bold text-white block my-1">—</strong>
+    <span id="surplus-note" class="text-xs text-slate-400">Income less expenses</span>
+  </article>
+
+  <article class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm flex flex-col justify-between text-white">
+    <div class="flex items-center gap-2 text-slate-400 text-xs font-bold uppercase tracking-wider mb-2">
+      <span class="material-symbols-outlined text-lg text-indigo-400">show_chart</span>
+      <span>NET WORTH</span>
+    </div>
+    <strong id="networth-total" class="text-2xl md:text-3xl font-bold text-indigo-400 block my-1">—</strong>
+    <span id="networth-note" class="text-xs text-slate-400">Investments + assets − liabilities</span>
+  </article>
+</section>
+
+<!-- Middle Row: Financial Health Indicators & Asset Breakdown -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+  <!-- Asset Class Distribution Bar -->
+  <div class="lg:col-span-2 bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm text-white">
+    <div class="flex items-center justify-between mb-4 border-b border-slate-700/60 pb-3">
+      <h2 class="text-base font-bold text-white flex items-center gap-2 font-display">
+        <span class="material-symbols-outlined text-teal-400">pie_chart</span>
+        <span>Asset Allocation Breakdown</span>
+      </h2>
+      <span class="text-xs text-slate-400 font-medium font-mono">By Asset Class</span>
+    </div>
+    <div id="allocation-bar-container" class="space-y-4">
+      <div class="w-full bg-slate-900 h-4 rounded-full overflow-hidden flex border border-slate-700/60" id="allocation-stacked-bar">
+        <div class="bg-teal-500 h-full transition-all duration-500" style="width: 0%" title="Stocks"></div>
+        <div class="bg-emerald-500 h-full transition-all duration-500" style="width: 0%" title="MMF"></div>
+        <div class="bg-indigo-500 h-full transition-all duration-500" style="width: 0%" title="Other"></div>
+      </div>
+      <div class="grid grid-cols-3 gap-3 text-xs text-center font-mono">
+        <div class="p-3 rounded-xl bg-teal-950/40 border border-teal-800/50">
+          <span class="block text-teal-300 font-semibold mb-1">Equities / Stocks</span>
+          <span id="alloc-stocks-val" class="font-bold text-white text-sm">KES 0 (0%)</span>
         </div>
-        <input id="dash-stock-ticker" name="ticker" required maxlength="32" placeholder="e.g. SCOM, EQTY, KCB" style="text-transform:uppercase;">
-        <span id="dash-stock-fetch-status" class="text-muted" style="font-size:0.75rem;"></span>
-      </div>
-
-      <!-- Shares Owned -->
-      <div class="form-group">
-        <label for="dash-stock-shares">Shares Owned</label>
-        <input id="dash-stock-shares" name="shares_owned" type="number" min="0.000001" step="any" required placeholder="e.g. 1000">
-      </div>
-
-      <!-- Average Buy Price -->
-      <div class="form-group">
-        <label for="dash-stock-buy-price">Average Buy Price (KES)</label>
-        <input id="dash-stock-buy-price" name="average_buy_price" type="number" min="0.0001" step="any" required placeholder="e.g. 15.50">
-      </div>
-
-      <!-- Current Price per Share -->
-      <div class="form-group grid-span-2">
-        <label for="dash-stock-current-price">Current Price per Share (KES)</label>
-        <input id="dash-stock-current-price" name="current_price" type="number" min="0.0001" step="any" placeholder="Auto-fetched or entered">
-      </div>
-
-      <!-- Live Calculation Box -->
-      <div id="dash-stock-calc-preview" class="calc-preview grid-span-2" hidden></div>
-
-      <div class="form-group grid-span-2 form-actions">
-        <button class="btn btn-primary" style="width:100%;">Add Stock Position</button>
-      </div>
-    </form>
-
-    <!-- MMF Add Form -->
-    <form id="dashboard-mmf-form" class="grid grid-2" hidden>
-      <p class="text-muted grid-span-2" style="font-size: 0.8rem; margin: -0.5rem 0 0.5rem; line-height: 1.4; color: var(--primary-color);">
-        🏦 <strong>Fixed Income Category:</strong> Highly liquid capital preservation funds investing in Treasury bills and bank deposits. Accrues compound interest every 24 hours at <code>Today's Interest = Current Balance * (Yield / 365.25)</code>.
-      </p>
-
-      <!-- Institution Selector -->
-      <div class="form-group grid-span-2">
-        <label for="dash-mmf-institution">Select Financial Institution / Fund</label>
-        <select id="dash-mmf-institution" required>
-          <option value="">-- Choose Institution to match yield --</option>
-        </select>
-        <p class="text-muted" style="font-size:0.78rem; margin-top:0.25rem;">
-          Yield is matched automatically from tracked PesaCalc rates.
-        </p>
-      </div>
-
-      <!-- Fund Name Input -->
-      <div class="form-group grid-span-2">
-        <label for="dash-mmf-fund-name">Fund Name</label>
-        <input id="dash-mmf-fund-name" name="fund_name" required maxlength="255" placeholder="e.g. CIC Money Market Fund">
-      </div>
-
-      <!-- Matched Yield Rate & Daily Est -->
-      <div class="form-group">
-        <label for="dash-mmf-yield">Matched Annual Yield (%)</label>
-        <input id="dash-mmf-yield" type="text" readonly style="background:var(--gray-100); font-weight:600;" placeholder="Auto-matched">
-      </div>
-
-      <!-- Current Principal Balance -->
-      <div class="form-group">
-        <label for="dash-mmf-principal">Current Principal Balance (KES)</label>
-        <input id="dash-mmf-principal" name="principal_balance" type="number" min="0.01" step="0.01" required placeholder="e.g. 100000.00">
-      </div>
-
-      <!-- MMF Live Calculation Preview -->
-      <div id="dash-mmf-calc-preview" class="calc-preview grid-span-2" hidden></div>
-
-      <div class="form-group grid-span-2 form-actions">
-        <button class="btn btn-primary" style="width:100%;">Add MMF Account</button>
-      </div>
-    </form>
-  </section>
-
-  <!-- Allocation Chart & Breakdown -->
-  <section class="card">
-    <div class="card-header">
-      <h2 class="card-title">Current portfolio allocation</h2>
-    </div>
-    <div id="portfolio-empty" class="empty-state"></div>
-    <div id="dashboard-chart-wrapper" class="allocation-visual" hidden>
-      <div id="dashboard-allocation-chart" class="donut-chart">
-        <span id="dashboard-allocation-total"></span>
-      </div>
-      <div style="flex:1;">
-        <p class="text-muted" style="font-size:0.85rem; margin-bottom:0.5rem;">Asset class distribution (KES):</p>
-        <div id="asset-class-pills" style="display:flex; flex-direction:column; gap:0.35rem; font-size:0.8rem;"></div>
+        <div class="p-3 rounded-xl bg-emerald-950/40 border border-emerald-800/50">
+          <span class="block text-emerald-300 font-semibold mb-1">MMF Funds</span>
+          <span id="alloc-mmf-val" class="font-bold text-white text-sm">KES 0 (0%)</span>
+        </div>
+        <div class="p-3 rounded-xl bg-indigo-950/40 border border-indigo-800/50">
+          <span class="block text-indigo-300 font-semibold mb-1">Other Holdings</span>
+          <span id="alloc-other-val" class="font-bold text-white text-sm">KES 0 (0%)</span>
+        </div>
       </div>
     </div>
-    <div id="portfolio-table-wrap" class="table-wrapper" hidden>
-      <table>
-        <thead>
-          <tr>
-            <th>Asset Category</th>
-            <th class="numeric">Value (KES)</th>
-            <th class="numeric">Share (%)</th>
-          </tr>
-        </thead>
-        <tbody id="portfolio-body"></tbody>
-      </table>
+  </div>
+
+  <!-- Financial Health Ratios Card -->
+  <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm text-white">
+    <h2 class="text-base font-bold text-white mb-4 border-b border-slate-700/60 pb-3 flex items-center gap-2 font-display">
+      <span class="material-symbols-outlined text-teal-400">health_and_safety</span>
+      <span>Financial Health Checks</span>
+    </h2>
+    <div class="space-y-4 text-xs font-mono">
+      <div>
+        <div class="flex justify-between mb-1.5">
+          <span class="text-slate-300 font-semibold">Savings Rate</span>
+          <span id="health-savings-rate" class="font-bold text-teal-400">0%</span>
+        </div>
+        <div class="w-full bg-slate-900 h-2 rounded-full overflow-hidden border border-slate-700/60">
+          <div id="health-savings-bar" class="bg-teal-500 h-full rounded-full transition-all duration-500" style="width: 0%"></div>
+        </div>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1">
+          <span class="text-slate-300 font-semibold">Emergency Coverage</span>
+          <span id="health-emergency-months" class="font-bold text-emerald-400">0 mos</span>
+        </div>
+        <span class="text-[11px] text-slate-400">Target: 3–6 months essential expenses in MMF</span>
+      </div>
+      <div>
+        <div class="flex justify-between mb-1">
+          <span class="text-slate-300 font-semibold">Debt to Asset Ratio</span>
+          <span id="health-debt-ratio" class="font-bold text-indigo-400">0%</span>
+        </div>
+        <span class="text-[11px] text-slate-400">Lower is better (&lt; 30% recommended)</span>
+      </div>
     </div>
-  </section>
+  </div>
 </div>
 
-<!-- Visual Breakdown Tables: Separating Stocks from MMFs -->
-<div class="grid grid-1" style="margin-top: 1.5rem;">
-  <!-- 1. Stock Holdings Table -->
-  <section class="card">
-    <div class="card-header table-heading">
-      <div>
-        <h2 class="card-title">Stock Portfolio (Mansa Markets)</h2>
-        <p class="text-muted">Equities valued at end-of-day closing prices with individual profit/loss metrics.</p>
+<!-- Bottom Section: Active Market Positions & System Actions -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+  <!-- Stock & MMF Quick Overview Table -->
+  <div class="lg:col-span-2 bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm text-white">
+    <div class="flex items-center justify-between mb-4 border-b border-slate-700/60 pb-3">
+      <h2 class="text-base font-bold text-white flex items-center gap-2 font-display">
+        <span class="material-symbols-outlined text-teal-400">query_stats</span>
+        <span>Active Market Positions</span>
+      </h2>
+      <div class="flex items-center gap-3 font-mono">
+        <button id="btn-view-detailed-positions" type="button" class="text-xs text-teal-300 hover:text-teal-200 font-semibold flex items-center gap-1 cursor-pointer border border-teal-800 px-2.5 py-1 rounded-xl bg-teal-950/60 transition">
+          <span class="material-symbols-outlined text-sm">visibility</span>
+          <span>View Details</span>
+        </button>
+        <a href="/portfolio" class="text-xs text-slate-400 hover:text-slate-200 font-semibold flex items-center gap-1">
+          <span>Full Ledger</span>
+          <span class="material-symbols-outlined text-sm">arrow_forward</span>
+        </a>
       </div>
-      <div class="action-bar">
-        <button id="btn-refresh-stocks-table" type="button" class="btn btn-sm btn-secondary">
-          ⚡ Refresh All Stock Quotes
+    </div>
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs text-left cursor-pointer" id="quick-positions-table" title="Click any row to open detailed positions breakdown">
+        <thead class="bg-slate-900/80 text-slate-400 uppercase font-semibold font-mono">
+          <tr>
+            <th class="py-2.5 px-3">Asset</th>
+            <th class="py-2.5 px-3">Type</th>
+            <th class="py-2.5 px-3 text-right">Value</th>
+            <th class="py-2.5 px-3 text-right">P/L or Interest</th>
+          </tr>
+        </thead>
+        <tbody id="quick-positions-body" class="divide-y divide-slate-700/60 font-mono">
+          <tr><td colspan="4" class="py-4 text-center text-slate-400">Loading holdings...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </div>
+
+  <!-- System Status & Refresh Actions -->
+  <div class="bg-slate-800 p-6 rounded-2xl border border-slate-700/60 shadow-sm flex flex-col justify-between text-white">
+    <div>
+      <div class="flex items-center gap-2 mb-2">
+        <span class="w-2.5 h-2.5 rounded-full bg-emerald-400 animate-pulse"></span>
+        <span class="text-xs font-bold text-slate-400 uppercase tracking-wider font-mono">LOCAL FIRST LEDGER</span>
+      </div>
+      <h2 class="text-base font-bold text-white mb-1 font-display flex items-center gap-2">
+        <span class="material-symbols-outlined text-teal-400">sync</span>
+        <span>Market Operations</span>
+      </h2>
+      <p class="text-xs text-slate-400 mb-4 leading-relaxed">Trigger direct price refreshes from Mansa API (NSE), yfinance (US), and daily MMF compounding math engine.</p>
+    </div>
+    <div class="space-y-3 font-mono">
+      <button id="btn-accrue-mmf" type="button" class="w-full bg-emerald-950/60 hover:bg-emerald-900/80 text-emerald-300 font-semibold py-2.5 px-4 rounded-xl text-xs transition border border-emerald-800 text-left flex items-center justify-between shadow-sm">
+        <span class="flex items-center gap-1.5">
+          <span class="material-symbols-outlined text-base">bolt</span>
+          <span>Accrue Daily MMF Interest</span>
+        </span>
+        <span class="font-bold">Run Engine</span>
+      </button>
+      <div class="flex items-center justify-between text-xs pt-3 border-t border-slate-700/60">
+        <span id="dashboard-updated" class="text-slate-400">Syncing...</span>
+        <a class="text-teal-400 hover:underline font-semibold" href="/settings">Settings</a>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Modal: Quick Add Holding / Asset (Matching Portfolio Entry Selector Pattern) -->
+<dialog id="add-asset-dialog" class="p-0 rounded-2xl shadow-2xl border border-slate-700 bg-slate-800 backdrop:bg-slate-950/80 max-w-xl w-full text-white font-mono">
+  <div class="p-5 border-b border-slate-700/60 flex justify-between items-center bg-slate-900/60 rounded-t-2xl">
+    <div class="flex items-center gap-2">
+      <span class="material-symbols-outlined text-teal-400 text-xl">bolt</span>
+      <h3 class="text-base font-bold text-white font-display">⚡ Quick Add Asset / Investment</h3>
+    </div>
+    <button id="close-add-modal" type="button" class="text-slate-400 hover:text-white text-2xl font-bold p-1">&times;</button>
+  </div>
+  <form id="quick-add-form" class="p-6 space-y-5">
+    <!-- Visual Asset Type Selector (Matching Portfolio page pattern) -->
+    <div>
+      <label class="block text-xs font-semibold text-slate-300 mb-2">Select Asset Type</label>
+      <input type="hidden" id="modal-asset-type" value="NSE">
+      <div id="modal-asset-type-cards" class="grid grid-cols-2 sm:grid-cols-4 gap-2.5">
+        <button type="button" data-type="NSE" class="modal-card-btn active p-3 rounded-xl border-2 border-teal-500 bg-teal-950/40 text-teal-200 text-left transition">
+          <div class="text-base">🇰🇪</div>
+          <div class="font-bold text-xs mt-1">NSE Stock</div>
+          <div class="text-[10px] text-slate-400">Mansa (KES)</div>
+        </button>
+        <button type="button" data-type="US" class="modal-card-btn p-3 rounded-xl border-2 border-slate-700 hover:border-teal-500 text-slate-300 text-left transition">
+          <div class="text-base">🇺🇸</div>
+          <div class="font-bold text-xs mt-1">US Stock</div>
+          <div class="text-[10px] text-slate-400">yfinance</div>
+        </button>
+        <button type="button" data-type="MMF" class="modal-card-btn p-3 rounded-xl border-2 border-slate-700 hover:border-teal-500 text-slate-300 text-left transition">
+          <div class="text-base">💰</div>
+          <div class="font-bold text-xs mt-1">Money Market</div>
+          <div class="text-[10px] text-slate-400">PesaCalc</div>
+        </button>
+        <button type="button" data-type="GENERIC" class="modal-card-btn p-3 rounded-xl border-2 border-slate-700 hover:border-teal-500 text-slate-300 text-left transition">
+          <div class="text-base">📊</div>
+          <div class="font-bold text-xs mt-1">Other Asset</div>
+          <div class="text-[10px] text-slate-400">Bonds, Land</div>
         </button>
       </div>
     </div>
 
-    <div id="stocks-empty" class="empty-state"></div>
-    <div id="stocks-table-wrap" class="table-wrapper" hidden>
-      <table>
-        <thead>
+    <!-- NSE Stock Fields -->
+    <div id="modal-fields-nse" class="modal-asset-fields space-y-3">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Ticker / Stock Code</label>
+        <input id="modal-stock-ticker-nse" placeholder="SCOM, EQTY, KCB" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white uppercase font-mono">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Shares Owned</label>
+          <input id="modal-stock-shares-nse" type="number" min="0.000001" step="any" placeholder="100" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Avg Buy Price (KES)</label>
+          <input id="modal-stock-price-nse" type="number" min="0" step="any" placeholder="15.50" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+        </div>
+      </div>
+    </div>
+
+    <!-- US Stock Fields -->
+    <div id="modal-fields-us" class="modal-asset-fields space-y-3 hidden">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">US Ticker Code</label>
+        <input id="modal-stock-ticker-us" placeholder="AAPL, TSLA, NVDA" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white uppercase font-mono">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Buy Price (USD / share)</label>
+          <input id="modal-stock-buy-us" type="number" min="0.000001" step="any" placeholder="190.00" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Shares Owned <span class="text-teal-400 font-normal">(Fractional)</span></label>
+          <input id="modal-stock-shares-us" type="number" min="0.000001" step="any" placeholder="0.010526" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+        </div>
+      </div>
+    </div>
+
+    <!-- MMF Fields -->
+    <div id="modal-fields-mmf" class="modal-asset-fields space-y-3 hidden">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">MMF Institution / Fund</label>
+        <input id="modal-mmf-name" placeholder="e.g. Cytonn Money Market Fund" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Deposit Amount (<span data-base-currency>KES</span>)</label>
+          <input id="modal-mmf-balance" type="number" min="0" step="0.01" placeholder="50000" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Investment Start Date</label>
+          <input id="modal-mmf-date" type="date" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+        </div>
+      </div>
+    </div>
+
+    <!-- Generic Asset Fields -->
+    <div id="modal-fields-generic" class="modal-asset-fields space-y-3 hidden">
+      <div>
+        <label class="block text-xs font-semibold text-slate-300 mb-1">Asset Name</label>
+        <input id="modal-generic-name" placeholder="e.g. Land Plot in Nakuru, SACCO Savings" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+      </div>
+      <div class="grid grid-cols-2 gap-3">
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Estimated Value</label>
+          <input id="modal-generic-value" type="number" min="0" step="0.01" placeholder="1500000" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+        </div>
+        <div>
+          <label class="block text-xs font-semibold text-slate-300 mb-1">Currency</label>
+          <select id="modal-generic-currency" class="w-full px-3 py-2 text-sm bg-slate-900 border border-slate-700 rounded-xl text-white font-mono">
+            <option value="KES">KES</option>
+            <option value="USD">USD</option>
+            <option value="EUR">EUR</option>
+            <option value="GBP">GBP</option>
+          </select>
+        </div>
+      </div>
+    </div>
+
+    <div class="flex justify-end gap-3 pt-4 border-t border-slate-700/60">
+      <button type="button" id="cancel-add-modal" class="px-4 py-2 text-xs font-semibold text-slate-400 hover:text-white transition">Cancel</button>
+      <button type="submit" class="bg-teal-600 hover:bg-teal-700 text-white font-bold px-5 py-2 text-xs rounded-xl shadow-md transition">Save Investment</button>
+    </div>
+  </form>
+</dialog>
+
+<!-- Modal: Floating Detailed Asset Breakdown Page -->
+<dialog id="positions-detail-dialog" class="p-0 rounded-2xl shadow-2xl border border-slate-700 bg-slate-800 backdrop:bg-slate-950/80 max-w-4xl w-full text-white font-mono">
+  <div class="p-5 border-b border-slate-700/60 flex justify-between items-center bg-slate-900/60 rounded-t-2xl">
+    <div>
+      <span class="text-xs font-bold text-teal-400 uppercase">PORTFOLIO BREAKDOWN</span>
+      <h3 class="text-lg font-bold text-white font-display">Active Market Positions & Asset Details</h3>
+    </div>
+    <button id="close-detail-modal" type="button" class="text-slate-400 hover:text-white text-2xl font-bold p-1">&times;</button>
+  </div>
+  <div class="p-6 space-y-4 max-h-[75vh] overflow-y-auto">
+    <div class="overflow-x-auto">
+      <table class="w-full text-xs text-left">
+        <thead class="bg-slate-900/80 text-slate-400 uppercase font-semibold">
           <tr>
-            <th>Ticker</th>
-            <th>Exchange</th>
-            <th class="numeric">Shares Owned</th>
-            <th class="numeric">Avg Buy Price (KES)</th>
-            <th class="numeric">Current Price (KES)</th>
-            <th class="numeric">Cost Basis (KES)</th>
-            <th class="numeric">Current Value (KES)</th>
-            <th class="numeric">Profit / Loss (KES)</th>
-            <th class="numeric">P/L (%)</th>
-            <th>Updated</th>
-            <th aria-label="Actions"></th>
+            <th class="py-3 px-3">Asset</th>
+            <th class="py-3 px-3">Type</th>
+            <th class="py-3 px-3 text-right">Shares / Units</th>
+            <th class="py-3 px-3 text-right">Avg Buy Price</th>
+            <th class="py-3 px-3 text-right">Current Price</th>
+            <th class="py-3 px-3 text-right">Cost Basis</th>
+            <th class="py-3 px-3 text-right">Market Value</th>
+            <th class="py-3 px-3 text-right">Unrealized P/L</th>
           </tr>
         </thead>
-        <tbody id="stocks-body"></tbody>
+        <tbody id="detail-positions-body" class="divide-y divide-slate-700/60">
+          <tr><td colspan="8" class="py-6 text-center text-slate-400">Loading position details...</td></tr>
+        </tbody>
       </table>
     </div>
-  </section>
-
-  <!-- 2. Money Market Funds Table -->
-  <section class="card">
-    <div class="card-header table-heading">
-      <div>
-        <h2 class="card-title">Money Market Funds (PesaCalc Engine)</h2>
-        <p class="text-muted">Daily compound interest accrual: Today's Interest = Current Balance * (Daily Yield / 365.25).</p>
-      </div>
-      <div class="action-bar">
-        <button id="btn-accrue-mmf-table" type="button" class="btn btn-sm btn-primary">
-          🔄 Accrue Today's Interest
-        </button>
-        <button id="btn-scrape-yields-table" type="button" class="btn btn-sm btn-secondary">
-          🌐 Update Daily Yields
-        </button>
-      </div>
-    </div>
-
-    <div id="mmf-empty" class="empty-state"></div>
-    <div id="mmf-table-wrap" class="table-wrapper" hidden>
-      <table>
-        <thead>
-          <tr>
-            <th>Fund / Institution</th>
-            <th class="numeric">Principal Balance (KES)</th>
-            <th class="numeric">Current Balance (KES)</th>
-            <th class="numeric">Annual Yield (%)</th>
-            <th class="numeric">Daily Yield (%)</th>
-            <th class="numeric">Interest Accrued (KES)</th>
-            <th class="numeric">Est. Daily Accrual (KES)</th>
-            <th>Last Accrued</th>
-            <th aria-label="Actions"></th>
-          </tr>
-        </thead>
-        <tbody id="mmf-body"></tbody>
-      </table>
-    </div>
-  </section>
-</div>
-
-<!-- Financial Health & Emergency Readiness -->
-<div class="grid grid-2" style="margin-top: 1.5rem;">
-  <!-- Emergency Fund Card -->
-  <section class="card">
-    <div class="card-header">
-      <h2 class="card-title">Emergency Fund Readiness</h2>
-    </div>
-    <div id="emergency-empty" class="empty-state"></div>
-    <div id="emergency-content" hidden>
-      <div class="record-line">
-        <span id="emergency-current"></span>
-        <strong id="emergency-percent"></strong>
-      </div>
-      <div class="progress-bar">
-        <div id="emergency-progress" class="progress-fill"></div>
-      </div>
-      <p id="emergency-note" class="notice"></p>
-    </div>
-  </section>
-
-  <!-- Financial Health & Rates -->
-  <section class="card">
-    <div class="card-header">
-      <h2 class="card-title">Financial Health Ratios</h2>
-    </div>
-    <div class="metric-grid">
-      <div>
-        <span class="metric-label">Savings Rate</span>
-        <strong id="savings-rate">—</strong>
-      </div>
-      <div>
-        <span class="metric-label">Investment Rate</span>
-        <strong id="investment-rate">—</strong>
-      </div>
-      <div>
-        <span class="metric-label">Emergency Coverage</span>
-        <strong id="coverage">—</strong>
-      </div>
-    </div>
-  </section>
-</div>
-
-<script type="module">
-import Storage from '/static/js/storage.js';
-import API from '/static/js/api.js';
-import { amount, button, emptyState, formatMoney, formatPercent, row, setText, totalInBase } from '/static/js/ui.js';
-
-let cachedInstitutions = [];
-let cachedNSETickers = [];
-
-// Tab switching: Stock vs MMF
-const tabStockBtn = document.getElementById('tab-stock-btn');
-const tabMMFBtn = document.getElementById('tab-mmf-btn');
-const stockForm = document.getElementById('dashboard-stock-form');
-const mmfForm = document.getElementById('dashboard-mmf-form');
-
-tabStockBtn.addEventListener('click', () => {
-  tabStockBtn.classList.add('active');
-  tabMMFBtn.classList.remove('active');
-  stockForm.hidden = false;
-  mmfForm.hidden = true;
-});
-
-tabMMFBtn.addEventListener('click', () => {
-  tabMMFBtn.classList.add('active');
-  tabStockBtn.classList.remove('active');
-  mmfForm.hidden = false;
-  stockForm.hidden = true;
-});
-
-// Load Prepopulated NSE Tickers
-async function initNSETickers() {
-  try {
-    cachedNSETickers = await API.getNSETickers();
-    const select = document.getElementById('dash-stock-select');
-    select.replaceChildren(new Option('-- Choose Stock to auto-fill Ticker & fetch Mansa price --', ''));
-    cachedNSETickers.forEach(stock => {
-      const opt = new Option(`${stock.ticker} - ${stock.name} (${stock.sector})`, stock.ticker);
-      select.add(opt);
-    });
-  } catch (err) {
-    console.warn('NSE Tickers load failed', err);
-  }
-}
-
-// Load Prepopulated Institutions for MMF
-async function initInstitutions() {
-  try {
-    cachedInstitutions = await API.getInstitutions();
-    const select = document.getElementById('dash-mmf-institution');
-    select.replaceChildren(new Option('-- Choose Institution to match yield --', ''));
-    cachedInstitutions.forEach(item => {
-      const opt = new Option(`${item.institution} (${item.yield_percentage}% p.a.)`, item.institution);
-      opt.dataset.yield = item.yield_percentage;
-      opt.dataset.fund = item.fund_name;
-      select.add(opt);
-    });
-  } catch (err) {
-    console.warn('Institutions load failed', err);
-  }
-}
-
-// Stock select handler
-document.getElementById('dash-stock-select').addEventListener('change', event => {
-  const ticker = event.target.value;
-  if (!ticker) return;
-  document.getElementById('dash-stock-ticker').value = ticker;
-  document.getElementById('dash-btn-fetch-price').click();
-});
-
-// Mansa price fetch handler
-document.getElementById('dash-btn-fetch-price').addEventListener('click', async () => {
-  const ticker = document.getElementById('dash-stock-ticker').value.trim().toUpperCase();
-  const statusEl = document.getElementById('dash-stock-fetch-status');
-
-  if (!ticker) {
-    statusEl.textContent = 'Please enter or select a ticker symbol.';
-    statusEl.className = 'text-negative';
-    return;
-  }
-
-  statusEl.textContent = `Fetching closing price for ${ticker} from Mansa API...`;
-  statusEl.className = 'text-muted';
-
-  try {
-    const data = await API.getStockPrice(ticker);
-    document.getElementById('dash-stock-current-price').value = data.price;
-    statusEl.textContent = `✓ Mansa EOD Close: KES ${data.price.toFixed(2)}`;
-    statusEl.className = 'text-positive';
-    updateStockCalcPreview();
-  } catch (err) {
-    statusEl.textContent = `Mansa API notice: ${err.message}. You can enter price manually.`;
-    statusEl.className = 'text-muted';
-  }
-});
-
-// Live stock calculation preview
-function updateStockCalcPreview() {
-  const shares = amount(document.getElementById('dash-stock-shares').value);
-  const buyPrice = amount(document.getElementById('dash-stock-buy-price').value);
-  const currPrice = amount(document.getElementById('dash-stock-current-price').value);
-  const preview = document.getElementById('dash-stock-calc-preview');
-
-  if (shares > 0 && buyPrice > 0) {
-    const cost = shares * buyPrice;
-    const val = currPrice > 0 ? shares * currPrice : cost;
-    const pl = val - cost;
-    const plPct = cost > 0 ? (pl / cost) * 100 : 0;
-    const plClass = pl >= 0 ? 'text-positive' : 'text-negative';
-
-    preview.hidden = false;
-    preview.innerHTML = `
-      <div class="calc-item"><span class="calc-label">Total Cost Basis</span><span class="calc-val">${formatMoney(cost)}</span></div>
-      <div class="calc-item"><span class="calc-label">Current Value</span><span class="calc-val">${formatMoney(val)}</span></div>
-      <div class="calc-item"><span class="calc-label">Gain / Loss</span><span class="calc-val ${plClass}">${formatMoney(pl)} (${formatPercent(plPct)})</span></div>
-    `;
-  } else {
-    preview.hidden = true;
-  }
-}
-
-['dash-stock-shares', 'dash-stock-buy-price', 'dash-stock-current-price'].forEach(id => {
-  const el = document.getElementById(id);
-  if (el) el.addEventListener('input', updateStockCalcPreview);
-});
-
-// MMF institution select handler
-document.getElementById('dash-mmf-institution').addEventListener('change', event => {
-  const opt = event.target.selectedOptions[0];
-  if (!opt || !opt.value) return;
-  if (opt.dataset.fund) document.getElementById('dash-mmf-fund-name').value = opt.dataset.fund;
-  if (opt.dataset.yield) document.getElementById('dash-mmf-yield').value = `${opt.dataset.yield}% p.a.`;
-  updateMMFCalcPreview();
-});
-
-// Live MMF calculation preview
-function updateMMFCalcPreview() {
-  const principal = amount(document.getElementById('dash-mmf-principal').value);
-  const instSelect = document.getElementById('dash-mmf-institution');
-  const opt = instSelect.selectedOptions[0];
-  const rate = opt && opt.dataset.yield ? amount(opt.dataset.yield) : 15.0;
-  const preview = document.getElementById('dash-mmf-calc-preview');
-
-  if (principal > 0) {
-    const dailyInterest = principal * (rate / 100 / 365.25);
-    const annualInterest = principal * (rate / 100);
-
-    preview.hidden = false;
-    preview.innerHTML = `
-      <div class="calc-item"><span class="calc-label">Principal Balance</span><span class="calc-val">${formatMoney(principal)}</span></div>
-      <div class="calc-item"><span class="calc-label">Today's Accrual (Est.)</span><span class="calc-val text-positive">${formatMoney(dailyInterest)}</span></div>
-      <div class="calc-item"><span class="calc-label">Est. Annual Return</span><span class="calc-val">${formatMoney(annualInterest)} (${rate.toFixed(2)}%)</span></div>
-    `;
-  } else {
-    preview.hidden = true;
-  }
-}
-
-document.getElementById('dash-mmf-principal').addEventListener('input', updateMMFCalcPreview);
-
-// Stock Form Submit
-document.getElementById('dashboard-stock-form').addEventListener('submit', async event => {
-  event.preventDefault();
-  const ticker = document.getElementById('dash-stock-ticker').value.trim().toUpperCase();
-  const shares = amount(document.getElementById('dash-stock-shares').value);
-  const buyPrice = amount(document.getElementById('dash-stock-buy-price').value);
-  let currentPrice = amount(document.getElementById('dash-stock-current-price').value);
-  if (!currentPrice) currentPrice = buyPrice;
-
-  try {
-    const stock = await API.createStock({
-      ticker,
-      exchange: 'NSE',
-      shares_owned: shares,
-      average_buy_price: buyPrice,
-      current_price: currentPrice,
-    });
-
-    // Also sync to local holdings store
-    const categories = await Storage.getAll(Storage.STORES.categories);
-    const stockCategory = categories.find(c => /Stocks|Equities/i.test(c.name)) || categories[0];
-    if (stockCategory) {
-      await Storage.setItem(Storage.STORES.holdings, {
-        id: crypto.randomUUID(),
-        name: `${ticker} Shares`,
-        category_id: stockCategory.id,
-        amount: shares * currentPrice,
-        units: shares,
-        average_buy_price: buyPrice,
-        current_price: currentPrice,
-        currency: 'KES',
-        backend_stock_id: stock.id,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      });
-    }
-
-    event.currentTarget.reset();
-    document.getElementById('dash-stock-calc-preview').hidden = true;
-    document.getElementById('dash-stock-fetch-status').textContent = '';
-    window.showToast?.(`Stock ${ticker} added successfully.`);
-    await renderDashboard();
-  } catch (err) {
-    alert(`Could not save stock: ${err.message}`);
-  }
-});
-
-// MMF Form Submit
-document.getElementById('dashboard-mmf-form').addEventListener('submit', async event => {
-  event.preventDefault();
-  const fundName = document.getElementById('dash-mmf-fund-name').value.trim();
-  const principal = amount(document.getElementById('dash-mmf-principal').value);
-
-  try {
-    const account = await API.createMMFAccount({
-      fund_name: fundName,
-      current_principal_balance: principal,
-    });
-
-    // Also sync to local holdings store
-    const categories = await Storage.getAll(Storage.STORES.categories);
-    const mmfCategory = categories.find(c => /Money Market/i.test(c.name)) || categories[0];
-    if (mmfCategory) {
-      await Storage.setItem(Storage.STORES.holdings, {
-        id: crypto.randomUUID(),
-        name: fundName,
-        category_id: mmfCategory.id,
-        amount: principal,
-        currency: 'KES',
-        backend_mmf_id: account.id,
-        created_at: new Date().toISOString(),
-        updated_at: new Date().toISOString(),
-      });
-    }
-
-    event.currentTarget.reset();
-    document.getElementById('dash-mmf-calc-preview').hidden = true;
-    window.showToast?.(`MMF account ${fundName} added successfully.`);
-    await renderDashboard();
-  } catch (err) {
-    alert(`Could not save MMF account: ${err.message}`);
-  }
-});
-
-// Action buttons handlers
-async function handleRefreshStocks() {
-  try {
-    window.showToast?.('Fetching latest stock quotes from Mansa API...', 'info');
-    const res = await API.refreshAllStocks();
-    window.showToast?.(`Refreshed ${res.refreshed} of ${res.total} stocks.`);
-    await renderDashboard();
-  } catch (err) {
-    window.showToast?.(`Stocks refresh error: ${err.message}`, 'error');
-  }
-}
-
-async function handleAccrueMMF() {
-  try {
-    window.showToast?.('Running 24-hour compound interest engine...', 'info');
-    const res = await API.accrueMMF();
-    window.showToast?.(`Accrued interest for ${res.accounts_accrued} accounts (+KES ${res.total_interest_added.toFixed(2)}).`);
-    await renderDashboard();
-  } catch (err) {
-    window.showToast?.(`MMF accrual error: ${err.message}`, 'error');
-  }
-}
-
-async function handleScrapeYields() {
-  try {
-    window.showToast?.('Scraping daily yields from PesaCalc...', 'info');
-    const res = await API.scrapeMMFYields();
-    window.showToast?.(`Updated ${res.yields_saved} yields from PesaCalc.`);
-    await renderDashboard();
-  } catch (err) {
-    window.showToast?.(`Yield scrape error: ${err.message}`, 'error');
-  }
-}
-
-document.getElementById('btn-refresh-stocks-top').addEventListener('click', handleRefreshStocks);
-document.getElementById('btn-refresh-stocks-table').addEventListener('click', handleRefreshStocks);
-document.getElementById('btn-accrue-mmf-top').addEventListener('click', handleAccrueMMF);
-document.getElementById('btn-accrue-mmf-table').addEventListener('click', handleAccrueMMF);
-document.getElementById('btn-scrape-yields-top').addEventListener('click', handleScrapeYields);
-document.getElementById('btn-scrape-yields-table').addEventListener('click', handleScrapeYields);
-
-// Main Dashboard Render Function
-async function renderDashboard() {
-  const [
-    marketSummary,
-    stocksList,
-    mmfsList,
-    categories,
-    holdings,
-    incomes,
-    expenses,
-    assets,
-    liabilities,
-  ] = await Promise.all([
-    API.getMarketSummary().catch(() => null),
-    API.getStocks().catch(() => []),
-    API.getMMFAccounts().catch(() => []),
-    Storage.getAll(Storage.STORES.categories),
-    Storage.getAll(Storage.STORES.holdings),
-    Storage.getAll(Storage.STORES.income_sources),
-    Storage.getAll(Storage.STORES.expenses),
-    Storage.getAll(Storage.STORES.assets),
-    Storage.getAll(Storage.STORES.liabilities),
-  ]);
-
-  const activeIncome = incomes.filter(x => x.active !== false && x.frequency === 'Monthly');
-  const activeExpenses = expenses.filter(x => x.active !== false);
-
-  const [incomeTotal, expenseTotal, essentialTotal, assetTotal, liabilityTotal, otherHoldingsTotal] = await Promise.all([
-    totalInBase(activeIncome, API),
-    totalInBase(activeExpenses, API),
-    totalInBase(activeExpenses.filter(x => x.essential), API),
-    totalInBase(assets, API),
-    totalInBase(liabilities, API),
-    totalInBase(holdings, API),
-  ]);
-
-  // Combined Portfolio Value: Stocks + MMFs + Other local holdings
-  const totalStockVal = marketSummary?.total_stock_value || 0;
-  const totalMMFVal = marketSummary?.total_mmf_value || 0;
-  const totalPortfolioVal = totalStockVal + totalMMFVal + otherHoldingsTotal;
-
-  // Render Metric Cards
-  setText('portfolio-total', formatMoney(totalPortfolioVal));
-  const totalHoldingsCount = (stocksList.length || 0) + (mmfsList.length || 0) + (holdings.length || 0);
-  setText('portfolio-note', `${stocksList.length} stock${stocksList.length === 1 ? '' : 's'}, ${mmfsList.length} MMF${mmfsList.length === 1 ? '' : 's'}`);
-
-  // Stock Portfolio Profit / Loss Card
-  const stockPL = marketSummary?.stock_profit_loss || 0;
-  const stockPLPct = marketSummary?.stock_profit_loss_percentage || 0;
-  const plSign = stockPL > 0 ? '+' : '';
-  setText('stock-pl-total', `${plSign}${formatMoney(stockPL)}`);
-  setText('stock-pl-note', `${formatPercent(stockPLPct)} return on cost`);
-  const plCard = document.getElementById('stock-pl-card');
-  plCard.classList.toggle('negative', stockPL < 0);
-  plCard.querySelector('.metric-value').className = stockPL >= 0 ? 'metric-value text-positive' : 'metric-value text-negative';
-
-  // Total MMF Interest Accrued Card
-  const mmfInterest = marketSummary?.total_mmf_interest_accrued || 0;
-  setText('mmf-interest-total', `+${formatMoney(mmfInterest)}`);
-  setText('mmf-interest-note', `${mmfsList.length} active account${mmfsList.length === 1 ? '' : 's'}`);
-
-  // Net Worth Card
-  const netWorth = (totalPortfolioVal + assetTotal) - liabilityTotal;
-  setText('networth-total', formatMoney(netWorth));
-
-  // Monthly Surplus Card
-  const surplus = incomeTotal - expenseTotal;
-  setText('surplus-total', incomeTotal ? formatMoney(surplus) : '—');
-  setText('surplus-note', incomeTotal ? `${formatMoney(incomeTotal)} in / ${formatMoney(expenseTotal)} out` : 'Add income in Budget');
-  document.getElementById('surplus-card').classList.toggle('negative', surplus < 0);
-
-  // 1. Render Stocks Table
-  const stocksBody = document.getElementById('stocks-body');
-  stocksBody.replaceChildren();
-
-  stocksList.forEach(stock => {
-    const plClass = stock.profit_loss >= 0 ? 'numeric text-positive' : 'numeric text-negative';
-    const dateFormatted = stock.price_updated_at ? new Date(stock.price_updated_at).toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) : 'EOD';
-
-    const tr = row([
-      { value: stock.ticker, className: 'strong' },
-      { value: stock.exchange || 'NSE' },
-      { value: Number(stock.shares_owned).toLocaleString(undefined, { maximumFractionDigits: 4 }), className: 'numeric' },
-      { value: formatMoney(stock.average_buy_price), className: 'numeric' },
-      { value: formatMoney(stock.current_price), className: 'numeric' },
-      { value: formatMoney(stock.cost_basis), className: 'numeric' },
-      { value: formatMoney(stock.current_value), className: 'numeric' },
-      { value: formatMoney(stock.profit_loss), className: plClass },
-      { value: formatPercent(stock.profit_loss_percentage), className: plClass },
-      { value: dateFormatted },
-    ]);
-
-    const actionsTd = document.createElement('td');
-    actionsTd.className = 'action-bar';
-    actionsTd.append(
-      button('⚡', 'btn btn-sm btn-secondary', async () => {
-        try {
-          window.showToast?.(`Refreshing quote for ${stock.ticker}...`, 'info');
-          await API.refreshStock(stock.id);
-          window.showToast?.(`Updated quote for ${stock.ticker}.`);
-          await renderDashboard();
-        } catch (e) {
-          window.showToast?.(e.message, 'error');
-        }
-      }),
-      button('Delete', 'btn btn-sm btn-danger', async () => {
-        if (confirm(`Delete position ${stock.ticker}?`)) {
-          await API.deleteStock(stock.id);
-          await renderDashboard();
-        }
-      })
-    );
-    tr.append(actionsTd);
-    stocksBody.append(tr);
-  });
-
-  document.getElementById('stocks-table-wrap').hidden = stocksList.length === 0;
-  if (!stocksList.length) {
-    emptyState(
-      document.getElementById('stocks-empty'),
-      'No stock positions yet.',
-      'Add your first NSE stock position using the form above to track closing quotes from Mansa API.'
-    );
-  } else {
-    document.getElementById('stocks-empty').replaceChildren();
-  }
-
-  // 2. Render MMF Table
-  const mmfBody = document.getElementById('mmf-body');
-  mmfBody.replaceChildren();
-
-  mmfsList.forEach(account => {
-    const tr = row([
-      { value: account.fund_name, className: 'strong' },
-      { value: formatMoney(account.principal_balance), className: 'numeric' },
-      { value: formatMoney(account.current_balance), className: 'numeric' },
-      { value: `${account.annual_yield_percentage.toFixed(2)}%`, className: 'numeric' },
-      { value: `${account.daily_yield_percentage?.toFixed(4) || (account.annual_yield_percentage / 365.25).toFixed(4)}%`, className: 'numeric' },
-      { value: `+${formatMoney(account.total_interest_accrued)}`, className: 'numeric text-positive' },
-      { value: `+${formatMoney(account.today_estimated_interest)}`, className: 'numeric text-positive' },
-      { value: account.last_accrued_on || 'Pending' },
-    ]);
-
-    const actionsTd = document.createElement('td');
-    actionsTd.append(
-      button('Delete', 'btn btn-sm btn-danger', async () => {
-        if (confirm(`Delete MMF account ${account.fund_name}?`)) {
-          await API.deleteMMFAccount(account.id);
-          await renderDashboard();
-        }
-      })
-    );
-    tr.append(actionsTd);
-    mmfBody.append(tr);
-  });
-
-  document.getElementById('mmf-table-wrap').hidden = mmfsList.length === 0;
-  if (!mmfsList.length) {
-    emptyState(
-      document.getElementById('mmf-empty'),
-      'No MMF accounts tracked.',
-      'Add your first Money Market Fund above to start daily compound interest accrual at (Yield / 365.25).'
-    );
-  } else {
-    document.getElementById('mmf-empty').replaceChildren();
-  }
-
-  // 3. Allocation Breakdown & Chart
-  const allocationMap = new Map();
-  if (totalStockVal > 0) allocationMap.set('NSE Stocks', totalStockVal);
-  if (totalMMFVal > 0) allocationMap.set('Money Market Funds', totalMMFVal);
-
-  for (const h of holdings) {
-    const cat = categories.find(c => c.id === h.category_id)?.name || 'Other';
-    const val = await totalInBase([h], API);
-    allocationMap.set(cat, (allocationMap.get(cat) || 0) + val);
-  }
-
-  const sortedAlloc = [...allocationMap.entries()].sort((a, b) => b[1] - a[1]);
-  const portfolioBody = document.getElementById('portfolio-body');
-  portfolioBody.replaceChildren();
-
-  sortedAlloc.forEach(([catName, val]) => {
-    const share = totalPortfolioVal > 0 ? (val / totalPortfolioVal) * 100 : 0;
-    portfolioBody.append(
-      row([
-        { value: catName },
-        { value: formatMoney(val), className: 'numeric' },
-        { value: `${share.toFixed(2)}%`, className: 'numeric' },
-      ])
-    );
-  });
-
-  const colors = ['#0f766e', '#10b981', '#f59e0b', '#3b82f6', '#8b5cf6', '#ec4899', '#334155'];
-  let offset = 0;
-  document.getElementById('dashboard-allocation-chart').style.background = `conic-gradient(${sortedAlloc
-    .map(([, val], i) => {
-      const start = offset;
-      offset += totalPortfolioVal > 0 ? (val / totalPortfolioVal) * 100 : 0;
-      return `${colors[i % colors.length]} ${start}% ${offset}%`;
-    })
-    .join(',')})`;
-
-  document.getElementById('dashboard-allocation-total').textContent = formatMoney(totalPortfolioVal);
-
-  // Asset pills preview
-  const pillsEl = document.getElementById('asset-class-pills');
-  pillsEl.replaceChildren();
-  sortedAlloc.slice(0, 4).forEach(([catName, val], i) => {
-    const pill = document.createElement('div');
-    pill.style.display = 'flex';
-    pill.style.justifyContent = 'space-between';
-    pill.innerHTML = `<span><span style="color:${colors[i % colors.length]};">●</span> ${catName}</span><strong>${formatMoney(val)}</strong>`;
-    pillsEl.append(pill);
-  });
-
-  const hasAnyAssets = totalPortfolioVal > 0;
-  document.getElementById('dashboard-chart-wrapper').hidden = !hasAnyAssets;
-  document.getElementById('portfolio-table-wrap').hidden = !hasAnyAssets;
-  if (!hasAnyAssets) {
-    emptyState(
-      document.getElementById('portfolio-empty'),
-      'Your portfolio is empty.',
-      'Add a stock or MMF position using the form above to see your asset allocation.'
-    );
-  } else {
-    document.getElementById('portfolio-empty').replaceChildren();
-  }
-
-  // 4. Emergency Fund Section
-  const emergencyHoldingVal = await totalInBase(
-    holdings.filter(h => categories.find(c => c.id === h.category_id)?.name === 'Emergency Fund'),
-    API
-  );
-  const totalEmergencyFund = emergencyHoldingVal + totalMMFVal; // MMFs also count towards liquid safety!
-
-  if (!essentialTotal) {
-    emptyState(
-      document.getElementById('emergency-empty'),
-      'Emergency fund needs expense baseline.',
-      'Add essential monthly expenses in Budget to calculate your 6-month safety net target.',
-      '/budget',
-      'Add Expenses'
-    );
-    document.getElementById('emergency-content').hidden = true;
-  } else {
-    const efResult = await API.calculateEmergencyFund(essentialTotal, 6, totalEmergencyFund);
-    document.getElementById('emergency-empty').replaceChildren();
-    document.getElementById('emergency-content').hidden = false;
-    setText('emergency-current', `${formatMoney(totalEmergencyFund)} of ${formatMoney(efResult.target)}`);
-    setText('emergency-percent', `${efResult.percentage_complete.toFixed(1)}% funded`);
-    document.getElementById('emergency-progress').style.width = `${Math.min(100, efResult.percentage_complete)}%`;
-    setText('emergency-note', `${efResult.months_covered.toFixed(1)} of 6 months covered.`);
-    setText('coverage', `${efResult.months_covered.toFixed(1)} months`);
-  }
-
-  // Financial health metrics
-  setText('savings-rate', incomeTotal ? `${((Math.max(0, surplus) / incomeTotal) * 100).toFixed(1)}%` : '—');
-  const investmentTotal = totalStockVal + totalMMFVal;
-  setText('investment-rate', incomeTotal ? `${((investmentTotal / (incomeTotal * 12 || 1)) * 100).toFixed(1)}%` : '—');
-  if (!essentialTotal) setText('coverage', '—');
-}
-
-// Initial page load
-Promise.all([initNSETickers(), initInstitutions()])
-  .then(() => renderDashboard())
-  .catch(err => console.warn('Dashboard initialization error', err));
-</script>
+  </div>
+  <div class="p-4 border-t border-slate-700/60 flex justify-between items-center bg-slate-900/60 rounded-b-2xl">
+    <span class="text-xs text-slate-400" id="detail-modal-summary"></span>
+    <a href="/portfolio" class="bg-teal-600 hover:bg-teal-700 text-white font-semibold px-4 py-2 text-xs rounded-xl transition">Open Full Ledger</a>
+  </div>
+</dialog>
 {% endblock %}
+
+{% block extra_js %}<script type="module" src="{{ url_for('static', path='js/dashboard.js') }}"></script>{% endblock %}
+

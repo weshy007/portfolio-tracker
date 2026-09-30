@@ -230,6 +230,7 @@ class MMFAccount(Base):
     principal_balance = Column(Numeric(18, 2), nullable=False)
     current_balance = Column(Numeric(18, 2), nullable=False)
     total_interest_accrued = Column(Numeric(18, 2), nullable=False, default=Decimal("0"))
+    investment_date = Column(Date, nullable=True)
     last_accrued_on = Column(Date, nullable=True)
     created_at = Column(DateTime, default=utc_now, nullable=False)
     updated_at = Column(DateTime, default=utc_now, onupdate=utc_now, nullable=False)

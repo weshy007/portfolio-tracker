@@ -1,71 +1,71 @@
 /**
- * Main application script
+ * Main application script - Handles theme initialization, mobile navigation drawer, and local storage state.
  */
 
 import Storage from './storage.js';
 import API from './api.js';
 
-// Initialize storage on page load
 document.addEventListener('DOMContentLoaded', async () => {
     try {
-        // Initialize storage
+        // Initialize local IndexedDB storage
         await Storage.init();
 
-        // Health check (silent, no console logging in production)
-        const health = await API.healthCheck();
-        if (!health) throw new Error('API unhealthy');
+        // Health check
+        const health = await API.healthCheck().catch(() => null);
 
         // Get user preferences
         const baseCurrency = Storage.getBaseCurrency();
         document.querySelectorAll('[data-base-currency]').forEach(el => {
             el.textContent = baseCurrency;
         });
-        const theme = Storage.getPreference('theme', 'light');
-        document.documentElement.dataset.theme = theme === 'auto'
-            ? (window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light')
-            : theme;
 
-        // Mark app as initialized
+        // Theme management: Default theme is DARK
+        const theme = Storage.getPreference('theme', 'dark');
+        const isDark = theme === 'dark' || (theme === 'auto' && window.matchMedia('(prefers-color-scheme: dark)').matches);
+
+        document.documentElement.classList.toggle('dark', isDark);
+        document.documentElement.dataset.theme = isDark ? 'dark' : 'light';
+        document.body.setAttribute('data-theme', isDark ? 'dark' : 'light');
+
+        // Mark app as ready
         document.body.classList.add('app-ready');
     } catch (error) {
-        // Keep the interface usable offline; pages can surface actionable errors locally.
         document.body.classList.add('app-error');
     }
 
-    // Mobile navigation control
+    // Mobile Navigation Drawer Control
     const menuButton = document.querySelector('.mobile-menu');
     const sidebar = document.querySelector('.sidebar');
+
     if (menuButton && sidebar) {
-        menuButton.addEventListener('click', () => {
+        menuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
             const isOpen = sidebar.classList.toggle('is-open');
             menuButton.setAttribute('aria-expanded', String(isOpen));
         });
-        // Close sidebar when nav item is clicked
-        sidebar.querySelectorAll('.nav-item').forEach(link => {
+
+        // Close sidebar when clicking links
+        sidebar.querySelectorAll('a').forEach(link => {
             link.addEventListener('click', () => {
                 sidebar.classList.remove('is-open');
                 menuButton.setAttribute('aria-expanded', 'false');
             });
         });
-        document.addEventListener('keydown', event => {
-            if (event.key === 'Escape' && sidebar.classList.contains('is-open')) {
+
+        // Close when clicking outside on mobile
+        document.addEventListener('click', (e) => {
+            if (window.innerWidth < 1024 && sidebar.classList.contains('is-open') && !sidebar.contains(e.target) && !menuButton.contains(e.target)) {
                 sidebar.classList.remove('is-open');
                 menuButton.setAttribute('aria-expanded', 'false');
-                menuButton.focus();
+            }
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && sidebar.classList.contains('is-open')) {
+                sidebar.classList.remove('is-open');
+                menuButton.setAttribute('aria-expanded', 'false');
             }
         });
     }
 });
 
-// Export for use in other modules
-window.Storage = Storage;
-window.API = API;
-window.showToast = (message, type = 'success') => {
-    const toast = document.getElementById('app-toast');
-    if (!toast) return;
-    toast.textContent = message;
-    toast.className = `toast toast-${type}`;
-    toast.hidden = false;
-    clearTimeout(window.__akibaToastTimer);
-    window.__akibaToastTimer = setTimeout(() => { toast.hidden = true; }, 4000);
-};

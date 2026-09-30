@@ -65,3 +65,11 @@ before refreshing server-side stock quotes.
 - Currency totals require an available live or cached exchange rate. Original
   currency values remain visible in the ledger.
 - The package is rooted at the project root so imports resolve as `portfolio_tracker.*` without requiring a `src` prefix.
+
+## Portfolio architecture
+
+- **Dashboard:** read-only summary metrics in the selected reporting currency.
+- **Portfolio:** the single place to add, remove, refresh, and inspect holdings.
+- **NSE catalogue:** bundled in the browser and backend as a ticker/name directory. Company names do not require a market-data request; price requests use the selected ticker only.
+- **Currencies:** each position keeps its native currency while dashboard totals convert to the browser's reporting currency using the cached FX service.
+- **MMF accruals:** an explicit investment date is stored. The daily worker uses the scraped yield for each completed valuation day and never substitutes an invented rate for a missing historical day.

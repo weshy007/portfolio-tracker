@@ -40,5 +40,18 @@ def get_db_context():
 
 
 def init_db():
-    """Initialize database tables."""
+    """Initialize database tables and apply tiny SQLite additions for local upgrades."""
     Base.metadata.create_all(bind=engine)
+
+    if "sqlite" in settings.database_url:
+        from sqlalchemy import inspect, text
+
+        inspector = inspect(engine)
+        columns = {column["name"] for column in inspector.get_columns("mmf_accounts")}
+        if "investment_date" not in columns:
+            with engine.begin() as connection:
+                connection.execute(text("ALTER TABLE mmf_accounts ADD COLUMN investment_date DATE"))
+                connection.execute(text(
+                    "UPDATE mmf_accounts SET investment_date = DATE(created_at) "
+                    "WHERE investment_date IS NULL"
+                ))

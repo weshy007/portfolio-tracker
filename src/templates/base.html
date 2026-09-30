@@ -1,72 +1,133 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="description" content="A local-first personal wealth and financial allocation tracker">
     <title>{% block title %}{{ app_name }}{% endblock %}</title>
-
+    <link rel="icon" type="image/svg+xml" href="{{ url_for('static', path='/favicon.svg') }}">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&family=Manrope:wght@600;700;800&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet" />
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script id="tailwind-config">
+      tailwind.config = {
+        darkMode: 'class',
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['"JetBrains Mono"', 'ui-monospace', 'monospace', 'sans-serif'],
+              mono: ['"JetBrains Mono"', 'ui-monospace', 'monospace'],
+              display: ['"JetBrains Mono"', 'sans-serif']
+            }
+          }
+        }
+      };
+    </script>
     <link rel="stylesheet" href="{{ url_for('static', path='/css/app.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/enhancements.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', path='/css/page-polish.css') }}">
     {% block extra_css %}{% endblock %}
 </head>
-<body data-theme="light">
-    <aside class="sidebar" aria-label="Primary navigation">
-        <div>
-            <a class="brand" href="/">
-                <span class="brand-mark" aria-hidden="true">◇</span>
-                <span>
-                    <strong>Akiba Finance</strong>
-                    <small>Base: <span data-base-currency>KES</span></small>
-                </span>
-            </a>
-            <a class="sidebar-action" href="/portfolio">+ <span>Add holding</span></a>
-            <nav class="sidebar-nav">
+<body data-theme="dark" class="bg-slate-900 text-slate-100 font-sans antialiased min-h-screen">
+    <!-- Desktop & Tablet Sidebar (Hidden on iPad & Mobile <= 1023px, Slide-over Drawer) -->
+    <aside class="sidebar fixed top-0 left-0 h-screen w-64 flex flex-col justify-between bg-slate-900 border-r border-slate-800 z-40 transition-all shadow-xl hidden lg:flex font-mono" aria-label="Primary navigation">
+        <div class="p-4 space-y-4">
+            <!-- Brand Header -->
+            <div class="flex items-center gap-3 px-2 py-2">
+                <div class="w-9 h-9 rounded-xl bg-teal-600 text-white flex items-center justify-center shadow-sm font-bold text-lg">
+                    <span class="material-symbols-outlined text-xl">savings</span>
+                </div>
+                <div>
+                    <div class="font-bold text-base text-white tracking-tight leading-tight">Akiba Finance</div>
+                    <div class="text-[11px] text-slate-400 font-medium">Base: <span data-base-currency>KES</span> • Personal</div>
+                </div>
+            </div>
+
+            <!-- Currency Indicator Badge -->
+            <div class="px-2">
+                <div class="bg-slate-800/80 border border-slate-700/60 rounded-xl p-2.5 flex items-center justify-between">
+                    <div class="flex items-center gap-1.5 text-xs text-slate-300 font-medium">
+                        <span class="material-symbols-outlined text-teal-400 text-sm">currency_exchange</span>
+                        <span>Base: <strong data-base-currency class="text-teal-300">KES</strong></span>
+                    </div>
+                    <span class="text-[10px] font-semibold px-2 py-0.5 rounded-md bg-teal-900/50 text-teal-300 border border-teal-700/50">Live</span>
+                </div>
+            </div>
+
+            <!-- Quick Add Investment Button -->
+            <div class="px-2">
+                <a href="/portfolio" class="w-full flex items-center justify-center gap-1.5 px-3 py-2 rounded-xl bg-teal-600 hover:bg-teal-700 text-white text-xs font-bold shadow-md transition">
+                    <span class="material-symbols-outlined text-base">bolt</span>
+                    <span>⚡ Quick Add</span>
+                </a>
+            </div>
+
+            <!-- Navigation Links -->
+            <nav class="flex flex-col space-y-1 pt-2">
                 {% set nav_items = [
-                    ('/', 'Dashboard', '▦'),
-                    ('/portfolio', 'Portfolio', '◫'),
-                    ('/budget', 'Budget', '▤'),
-                    ('/allocation', 'Monthly allocation', '◌'),
-                    ('/settings', 'Settings', '⚙')
+                    ('/', 'Dashboard', 'dashboard'),
+                    ('/portfolio', 'Portfolio', 'account_balance'),
+                    ('/budget', 'Budget & FI', 'account_balance_wallet'),
+                    ('/allocation', 'Monthly Allocation', 'pie_chart'),
+                    ('/settings', 'Settings', 'settings')
                 ] %}
                 {% for path, label, icon in nav_items %}
-                <a href="{{ path }}" class="nav-item{% if request.url.path == path %} active{% endif %}">
-                    <span class="nav-icon" aria-hidden="true">{{ icon }}</span>
-                    <span>{{ label }}</span>
+                <a href="{{ path }}" class="flex items-center gap-3 px-3 py-2 rounded-xl text-xs sm:text-sm font-medium transition-all {% if request.url.path == path %} bg-teal-950/80 text-teal-300 font-bold border-l-4 border-teal-500 shadow-sm {% else %} text-slate-400 hover:bg-slate-800/60 hover:text-white {% endif %}">
+                    <span class="material-symbols-outlined text-lg">{{ icon }}</span>
+                    <span class="whitespace-nowrap">{{ label }}</span>
                 </a>
                 {% endfor %}
             </nav>
         </div>
-        <div class="sidebar-footer">
-            <div class="storage-status"><span aria-hidden="true">●</span> Local storage active</div>
-            <a href="/settings" class="privacy-link">Your data stays on this device</a>
+
+        <!-- Sidebar Footer -->
+        <div class="p-4 border-t border-slate-800 space-y-2">
+            <div class="p-3 bg-slate-800/50 rounded-xl border border-slate-700/50">
+                <div class="flex items-center gap-1.5 text-teal-300 font-semibold text-xs">
+                    <span class="material-symbols-outlined text-sm">lock</span>
+                    <span>Local Device Storage</span>
+                </div>
+                <p class="text-[11px] text-slate-400 mt-1 leading-tight">Ledger runs 100% locally in browser memory.</p>
+            </div>
         </div>
     </aside>
 
-    <div class="app-shell">
-        <header class="topbar">
-            <button class="mobile-menu" type="button" aria-label="Open navigation" aria-expanded="false">☰</button>
-            <div class="topbar-title">{{ app_name }}</div>
-            <div class="topbar-meta">
-                <span class="currency-pill">KES <span aria-hidden="true">/</span> USD</span>
-                <span class="sync-label">● Local sync ready</span>
+    <!-- Main App Shell Container -->
+    <div class="app-shell lg:pl-64 flex-1 flex flex-col min-h-screen bg-slate-900 text-slate-100">
+        <!-- Top Navigation Bar -->
+        <header class="topbar sticky top-0 bg-slate-900/90 backdrop-blur-md border-b border-slate-800 z-20 px-4 md:px-8 py-3 flex items-center justify-between">
+            <div class="flex items-center gap-3">
+                <button class="mobile-menu lg:hidden p-2 rounded-xl text-slate-300 hover:bg-slate-800 border border-slate-700/60 transition" type="button" aria-label="Open navigation" aria-expanded="false">
+                    <span class="material-symbols-outlined text-xl">menu</span>
+                </button>
+                <div>
+                    <h1 class="font-bold text-lg md:text-xl text-white font-display tracking-tight">{{ app_name }}</h1>
+                    <p class="text-xs text-slate-400">Local-First Wealth & Asset Allocation</p>
+                </div>
+            </div>
+            <div class="flex items-center gap-3 text-xs">
+                <span class="px-3 py-1 rounded-full bg-teal-900/40 text-teal-300 font-semibold border border-teal-800 flex items-center gap-1.5 font-mono">
+                    <span class="w-2 h-2 rounded-full bg-teal-400 animate-pulse"></span>
+                    <span data-base-currency>KES</span> Reporting
+                </span>
             </div>
         </header>
-        <main class="main-content">
-            <div class="container">
-                {% block content %}{% endblock %}
-            </div>
+
+        <!-- Main Workspace Container -->
+        <main class="main-content flex-1 p-4 md:p-8 max-w-7xl mx-auto w-full">
+            {% block content %}{% endblock %}
         </main>
-        <footer class="app-footer">
-            Financial data is stored locally on this device. <a href="/settings">Privacy settings</a>
+
+        <footer class="border-t border-slate-800 py-4 px-8 text-center text-xs text-slate-500 font-mono">
+            Financial data is stored locally on this device. <a href="/settings" class="text-teal-400 hover:underline">Privacy settings</a>
         </footer>
     </div>
-    <div id="app-toast" class="toast" role="status" aria-live="polite" hidden></div>
 
-    <!-- Scripts -->
+    <div id="app-toast" class="toast fixed bottom-4 right-4 z-50 px-4 py-3 rounded-xl bg-slate-800 text-white border border-slate-700 shadow-xl text-xs font-semibold flex items-center gap-2" role="status" aria-live="polite" hidden></div>
     <script type="module" src="{{ url_for('static', path='/js/app.js') }}"></script>
     {% block extra_js %}{% endblock %}
 </body>
 </html>
+
